@@ -3,6 +3,22 @@ import { auth, database } from './firebase-config.js';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 import { ref, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
+// Show form based on role selection
+window.showForm = function(userType) {
+    const roleSelection = document.getElementById('role-selection');
+    const profForm = document.getElementById('professional-form');
+    const studForm = document.getElementById('student-form');
+
+    roleSelection.style.display = 'none';
+    if (userType === 'professional') {
+        profForm.style.display = 'block';
+        studForm.style.display = 'none';
+    } else {
+        studForm.style.display = 'block';
+        profForm.style.display = 'none';
+    }
+};
+
 // Login function
 window.login = function(userType) {
     const email = document.getElementById(userType === 'professional' ? 'prof-email' : 'stud-email').value;
@@ -10,8 +26,7 @@ window.login = function(userType) {
 
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            const user = userCredential.user;
-            console.log(`${userType} logged in: ${user.email}`);
+            console.log(`${userType} logged in: ${userCredential.user.email}`);
             window.location.href = userType === 'professional' ? 'professional.html' : 'student.html';
         })
         .catch((error) => {
@@ -27,7 +42,6 @@ window.signup = function(userType) {
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
-            // Store user type in Realtime Database
             set(ref(database, 'users/' + user.uid), {
                 email: user.email,
                 userType: userType,
@@ -41,15 +55,6 @@ window.signup = function(userType) {
         });
 };
 
-// Check auth state on page load
-auth.onAuthStateChanged((user) => {
-    if (user) {
-        console.log(`User logged in: ${user.email}`);
-    } else {
-        console.log('No user logged in');
-    }
-});
-
 // Logout function
 window.signOut = function() {
     auth.signOut()
@@ -60,3 +65,12 @@ window.signOut = function() {
             alert(`Logout failed: ${error.message}`);
         });
 };
+
+// Check auth state
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        console.log(`User logged in: ${user.email}`);
+    } else {
+        console.log('No user logged in');
+    }
+});

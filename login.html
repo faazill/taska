@@ -25,22 +25,46 @@
     <main>
         <section class="auth-container">
             <h1>Join Taska</h1>
-            <div class="auth-options">
-                <div class="auth-card">
+            <p class="intro-text">Welcome to Taska! Whether you're a professional looking to delegate tasks or a student seeking opportunities, we've got you covered. Choose your role below to get started.</p>
+
+            <!-- Role Selection -->
+            <div class="role-selection" id="role-selection">
+                <div class="role-card" onclick="showForm('professional')">
                     <h2>Professional</h2>
-                    <p>Post tasks and hire students</p>
-                    <input type="email" id="prof-email" placeholder="Email" required>
-                    <input type="password" id="prof-password" placeholder="Password" required>
-                    <button class="cta-button" onclick="login('professional')">Login</button>
-                    <button class="cta-button" onclick="signup('professional')">Signup</button>
+                    <p>Are you a busy professional needing help with microtasks? Post tasks, hire talented students, and get your work done efficiently.</p>
+                    <button class="select-button">Select</button>
                 </div>
-                <div class="auth-card">
+                <div class="role-card" onclick="showForm('student')">
                     <h2>Student</h2>
-                    <p>Find tasks and earn money</p>
-                    <input type="email" id="stud-email" placeholder="Email" required>
-                    <input type="password" id="stud-password" placeholder="Password" required>
-                    <button class="cta-button" onclick="login('student')">Login</button>
-                    <button class="cta-button" onclick="signup('student')">Signup</button>
+                    <p>Are you a student looking to earn money and build skills? Browse tasks, apply for opportunities, and showcase your abilities.</p>
+                    <button class="select-button">Select</button>
+                </div>
+            </div>
+
+            <!-- Forms (hidden initially) -->
+            <div class="auth-form" id="professional-form" style="display: none;">
+                <h2>Professional Access</h2>
+                <p>Login or signup to start posting tasks and managing your projects.</p>
+                <div class="form-container">
+                    <input type="email" id="prof-email" placeholder="Enter your email" required>
+                    <input type="password" id="prof-password" placeholder="Enter your password" required>
+                    <div class="form-buttons">
+                        <button class="cta-button" onclick="login('professional')">Login</button>
+                        <button class="cta-button signup-btn" onclick="signup('professional')">Signup</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="auth-form" id="student-form" style="display: none;">
+                <h2>Student Access</h2>
+                <p>Login or signup to explore tasks and start earning today.</p>
+                <div class="form-container">
+                    <input type="email" id="stud-email" placeholder="Enter your email" required>
+                    <input type="password" id="stud-password" placeholder="Enter your password" required>
+                    <div class="form-buttons">
+                        <button class="cta-button" onclick="login('student')">Login</button>
+                        <button class="cta-button signup-btn" onclick="signup('student')">Signup</button>
+                    </div>
                 </div>
             </div>
         </section>

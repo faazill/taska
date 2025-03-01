@@ -23,14 +23,29 @@
     </nav>
 
     <main>
-        <section class="contact fade-in">
+        <section class="contact-section">
             <h1>Contact Us</h1>
-            <form id="contact-form" class="slide-up">
-                <input type="text" placeholder="Name" required class="fade-in delay-1">
-                <input type="email" placeholder="Email" required class="fade-in delay-2">
-                <textarea placeholder="Message" required class="fade-in delay-3"></textarea>
-                <button type="submit" class="cta-button">Send Message</button>
-            </form>
+            <p class="intro-text">Have questions or need support? We're here to help! Reach out to the Taska team for assistance with your tasks, account, or anything else. Fill out the form below or use our contact details.</p>
+
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h2>Get in Touch</h2>
+                    <p><strong>Email:</strong> support@taska.com</p>
+                    <p><strong>Phone:</strong> +91 123-456-7890</p>
+                    <p><strong>Address:</strong> 123 Taska Lane, Bangalore, India</p>
+                    <p>We aim to respond within 24 hours!</p>
+                </div>
+
+                <div class="contact-form">
+                    <h2>Send a Message</h2>
+                    <form id="contact-form" onsubmit="handleContactSubmit(event)">
+                        <input type="text" id="contact-name" placeholder="Your Name" required>
+                        <input type="email" id="contact-email" placeholder="Your Email" required>
+                        <textarea id="contact-message" placeholder="Your Message" required></textarea>
+                        <button type="submit" class="cta-button">Send Message</button>
+                    </form>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -39,5 +54,15 @@
     </footer>
 
     <script src="js/main.js"></script>
+    <script>
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('contact-name').value;
+            const email = document.getElementById('contact-email').value;
+            const message = document.getElementById('contact-message').value;
+            alert(`Thank you, ${name}! Your message has been sent.\nEmail: ${email}\nMessage: ${message}`);
+            event.target.reset();
+        }
+    </script>
 </body>
 </html>

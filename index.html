@@ -23,15 +23,72 @@
     </nav>
 
     <main>
+        <!-- Hero Section -->
         <section class="hero">
-            <h1 class="fade-in">Welcome to Taska</h1>
-            <p class="fade-in delay-1">Connecting professionals and students for microtasks</p>
-            <button class="cta-button slide-up" onclick="window.location.href='login.html'">Get Started</button>
+            <h1>Connect with Professionals</h1>
+            <p>Earn experience and find microtasks now.</p>
+            <button class="cta-button" onclick="window.location.href='login.html'">Start Now</button>
         </section>
 
-        <section class="featured-tasks">
-            <h2 class="fade-in">Featured Tasks</h2>
-            <div class="tasks-grid" id="featured-tasks"></div>
+        <!-- Search/Filter Section -->
+        <section class="search-filter">
+            <div class="filter-bar">
+                <input type="text" id="search-input" placeholder="Search tasks (e.g., design, writing)">
+                <select id="category-filter" class="custom-dropdown">
+                    <option value="all">All Categories</option>
+                    <option value="design">Design</option>
+                    <option value="writing">Writing</option>
+                    <option value="research">Research</option>
+                    <option value="data">Data Entry</option>
+                    <option value="tech">Technology</option>
+                    <option value="marketing">Marketing</option>
+                </select>
+                <button class="cta-button" onclick="filterTasks()">Search</button>
+            </div>
+        </section>
+
+        <!-- Task Grid -->
+        <section class="task-grid-section">
+            <h2>Explore Microtasks</h2>
+            <div class="tasks-grid" id="tasks-grid"></div>
+            <div class="pagination">
+                <button class="pagination-btn" onclick="prevPage()">←</button>
+                <span id="page-info">Page 1 of 2</span>
+                <button class="pagination-btn" onclick="nextPage()">→</button>
+            </div>
+        </section>
+
+        <!-- Number Summary -->
+        <section class="number-summary">
+            <div class="summary-item"><span id="tasks-count" data-target="1200">0</span> Tasks Completed</div>
+            <div class="summary-item"><span id="users-count" data-target="650">0</span> Active Users</div>
+            <div class="summary-item"><span id="earnings-count" data-target="75000">0</span> INR Earned</div>
+        </section>
+
+        <!-- How Tasks Work -->
+        <section class="how-tasks-work">
+            <h2>How Tasks Work</h2>
+            <p>– Sign up as a professional or student.<br>– Post microtasks if you need help or browse gigs to earn.<br>– Work gets done quickly and efficiently.<br>– Payments are secure and fast.<br>– Build experience and connections with every task.</p>
+        </section>
+
+        <!-- User Feedback -->
+        <section class="user-feedback">
+            <h2>User Feedback</h2>
+            <div class="feedback-container" id="feedback-container">
+                <div class="feedback-item active">"Taska connects me to quick gigs effortlessly." - Priya, Student</div>
+                <div class="feedback-item">"I get my tasks done fast and reliably." - Rohan, Professional</div>
+                <div class="feedback-item">"A great way to earn while learning." - Anjali, Student</div>
+            </div>
+            <div class="feedback-nav">
+                <button onclick="prevFeedback()">←</button>
+                <button onclick="nextFeedback()">→</button>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="call-to-action">
+            <h2>Get Involved</h2>
+            <button class="cta-button" onclick="window.location.href='login.html'">Join Today</button>
         </section>
     </main>
 
@@ -39,6 +96,7 @@
         <p>© 2025 Taska. All rights reserved.</p>
     </footer>
 
+    <script type="module" src="js/firebase-config.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
