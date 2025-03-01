@@ -1,39 +1,62 @@
-// auth.js
+// js/auth.js
+import { auth, database } from './firebase-config.js';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+import { ref, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
-// Simulated user database (replace with real backend later)
-const users = {
-    professionals: [],
-    students: []
+// Login function
+window.login = function(userType) {
+    const email = document.getElementById(userType === 'professional' ? 'prof-email' : 'stud-email').value;
+    const password = document.getElementById(userType === 'professional' ? 'prof-password' : 'stud-password').value;
+
+    signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            console.log(`${userType} logged in: ${user.email}`);
+            window.location.href = userType === 'professional' ? 'professional.html' : 'student.html';
+        })
+        .catch((error) => {
+            alert(`Login failed: ${error.message}`);
+        });
 };
 
-// Handle login form submission
-function handleLogin(event, userType) {
-    event.preventDefault();
-    const form = event.target;
-    const email = form.querySelector('input[type="email"]').value;
-    const password = form.querySelector('input[type="password"]').value;
+// Signup function
+window.signup = function(userType) {
+    const email = document.getElementById(userType === 'professional' ? 'prof-email' : 'stud-email').value;
+    const password = document.getElementById(userType === 'professional' ? 'prof-password' : 'stud-password').value;
 
-    // Simulated login logic
-    console.log(`Logging in ${userType}:`, { email, password });
+    createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            // Store user type in Realtime Database
+            set(ref(database, 'users/' + user.uid), {
+                email: user.email,
+                userType: userType,
+                createdAt: Date.now()
+            });
+            console.log(`${userType} signed up: ${user.email}`);
+            window.location.href = userType === 'professional' ? 'professional.html' : 'student.html';
+        })
+        .catch((error) => {
+            alert(`Signup failed: ${error.message}`);
+        });
+};
 
-    // Redirect based on user type (replace with real authentication)
-    if (userType === 'professional') {
-        window.location.href = 'professional.html';
-    } else if (userType === 'student') {
-        window.location.href = 'student.html';
-    }
-}
-
-// Initialize login page
-document.addEventListener('DOMContentLoaded', () => {
-    const professionalForm = document.getElementById('professional-login');
-    const studentForm = document.getElementById('student-login');
-
-    if (professionalForm) {
-        professionalForm.addEventListener('submit', (e) => handleLogin(e, 'professional'));
-    }
-
-    if (studentForm) {
-        studentForm.addEventListener('submit', (e) => handleLogin(e, 'student'));
+// Check auth state on page load
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        console.log(`User logged in: ${user.email}`);
+    } else {
+        console.log('No user logged in');
     }
 });
+
+// Logout function
+window.signOut = function() {
+    auth.signOut()
+        .then(() => {
+            window.location.href = 'login.html';
+        })
+        .catch((error) => {
+            alert(`Logout failed: ${error.message}`);
+        });
+};

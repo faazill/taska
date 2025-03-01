@@ -1,71 +1,44 @@
-// student.js
+// js/student.js
+import { auth, database } from './firebase-config.js';
+import { ref, onValue, push, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
-// Simulated task and application data (replace with backend later)
-let availableTasks = [
-    { id: 1, title: "Presentation Making", desc: "Create 10 slides", price: 500, deadline: "2025-03-10" }
-];
-let applications = [
-    { taskId: 1, status: "Pending" }
-];
-let user = {
-    earnings: 0
-};
+let user = { earnings: 0 };
 
 // Display available tasks
 function displayTaskBrowser() {
     const taskBrowser = document.getElementById('task-browser');
     if (taskBrowser) {
-        taskBrowser.innerHTML = '';
-        availableTasks.forEach(task => {
-            const taskDiv = document.createElement('div');
-            taskDiv.className = 'task-item';
-            taskDiv.innerHTML = `
-                <h3>${task.title}</h3>
-                <p>${task.desc}</p>
-                <p>Price: ₹${task.price} | Deadline: ${task.deadline}</p>
-                <button onclick="applyForTask(${task.id})">Apply</button>
-            `;
-            taskBrowser.appendChild(taskDiv);
+        const tasksRef = ref(database, 'tasks');
+        onValue(tasksRef, (snapshot) => {
+            taskBrowser.innerHTML = '';
+            const tasks = snapshot.val();
+            for (let id in tasks) {
+                if (tasks[id].status === 'open') {
+                    const taskDiv = document.createElement('div');
+                    taskDiv.className = 'task-item';
+                    taskDiv.innerHTML = `
+                        <h3>${tasks[id].title}</h3>
+                        <p>${tasks[id].desc}</p>
+                        <p>Price: ₹${tasks[id].price} | Deadline: ${tasks[id].deadline}</p>
+                        <button onclick="applyForTask('${id}')">Apply</button>
+                    `;
+                    taskBrowser.appendChild(taskDiv);
+                }
+            }
         });
-    }
-}
-
-// Display application status
-function displayApplicationStatus() {
-    const applicationStatus = document.getElementById('application-status');
-    if (applicationStatus) {
-        applicationStatus.innerHTML = '';
-        applications.forEach(app => {
-            const appDiv = document.createElement('div');
-            appDiv.className = 'app-item';
-            appDiv.innerHTML = `
-                <p>Task ID: ${app.taskId}</p>
-                <p>Status: ${app.status}</p>
-            `;
-            applicationStatus.appendChild(appDiv);
-        });
-    }
-}
-
-// Update earnings
-function updateEarnings() {
-    const earningsSpan = document.getElementById('earnings');
-    if (earningsSpan) {
-        earningsSpan.textContent = user.earnings;
     }
 }
 
 // Handle task application
-function applyForTask(taskId) {
-    const newApplication = { taskId, status: "Pending" };
-    applications.push(newApplication);
-    displayApplicationStatus();
-    alert(`Applied for task ${taskId}!`);
-}
+window.applyForTask = function(taskId) {
+    const appRef = push(ref(database, 'applications'));
+    set(appRef, {
+        taskId: taskId,
+        studentId: auth.currentUser.uid,
+        status: 'pending'
+    }).then(() => alert('Application submitted!'));
+};
 
-// Initialize student dashboard
 document.addEventListener('DOMContentLoaded', () => {
     displayTaskBrowser();
-    displayApplicationStatus();
-    updateEarnings();
 });

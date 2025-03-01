@@ -11,13 +11,23 @@
     <link rel="stylesheet" href="css/responsive.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
+
+<!-- Add at the top of <body> -->
+    <script type="module">
+        import { auth } from './js/firebase-config.js';
+        auth.onAuthStateChanged((user) => {
+            if (!user) window.location.href = 'login.html';
+        });
+    </script>
+    <!-- Rest of the HTML remains the same -->
+
 <body>
     <nav class="navbar">
         <div class="logo">Taska</div>
         <ul class="nav-menu">
             <li><a href="index.html">Home</a></li>
             <li><a href="professional.html">Dashboard</a></li>
-            <li><a href="#" onclick="alert('Logout TBD')">Logout</a></li>
+            <li><a href="#" onclick="signOut()">Logout</a></li>
         </ul>
         <div class="hamburger">☰</div>
     </nav>
