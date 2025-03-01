@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taska - Professional Dashboard</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/forms.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Taska</div>
+        <ul class="nav-menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="professional.html">Dashboard</a></li>
+            <li><a href="#" onclick="alert('Logout TBD')">Logout</a></li>
+        </ul>
+        <div class="hamburger">☰</div>
+    </nav>
+
+    <main>
+        <section class="dashboard fade-in">
+            <h1>Professional Dashboard</h1>
+            <div class="dashboard-grid">
+                <div class="card slide-up">
+                    <h2>Post a Task</h2>
+                    <form id="task-form">
+                        <input type="text" placeholder="Task Title" required>
+                        <textarea placeholder="Task Description" required></textarea>
+                        <input type="number" placeholder="Price (INR)" required min="100">
+                        <input type="date" placeholder="Deadline" required>
+                        <button type="submit" class="cta-button">Post Task</button>
+                    </form>
+                </div>
+                <div class="card slide-up delay-1">
+                    <h2>Active Tasks</h2>
+                    <div id="active-tasks"></div>
+                </div>
+                <div class="card slide-up delay-2">
+                    <h2>Student Browser</h2>
+                    <div id="student-browser"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Taska. All rights reserved.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/professional.js"></script>
+</body>
+</html>

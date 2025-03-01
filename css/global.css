@@ -1,0 +1,101 @@
+/* global.css */
+body {
+    line-height: 1.6;
+    color: #333;
+    background: #f5f6fa;
+    font-size: 16px;
+}
+
+.navbar {
+    background: #fff;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    transition: background 0.3s ease;
+}
+
+.navbar.scrolled {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #4834d4;
+    padding: 0.5rem 0;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+}
+
+.nav-menu li {
+    margin: 0 1.5rem;
+}
+
+.nav-menu a {
+    color: #333;
+    font-weight: 400;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-menu a:hover {
+    color: #4834d4;
+    transform: translateY(-2px);
+}
+
+.hamburger {
+    display: none;
+    font-size: 1.8rem;
+    color: #4834d4;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.hamburger:hover {
+    transform: rotate(90deg);
+}
+
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    background: #fff;
+    border-top: 1px solid #eee;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: #666;
+    font-size: 0.9rem;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.cta-button {
+    background: #4834d4;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    background: #686de0;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(72, 52, 212, 0.3);
+}

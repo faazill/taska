@@ -1,0 +1,89 @@
+/* dashboard.css */
+.dashboard {
+    padding: 5rem 2rem;
+    max-width: 1200px;
+    margin: 90px auto 60px;
+}
+
+.dashboard h1 {
+    font-size: 2.5rem;
+    color: #4834d4;
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeIn 1s ease forwards;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2.5rem;
+}
+
+.card {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(72, 52, 212, 0.15);
+}
+
+.card h2 {
+    color: #4834d4;
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+}
+
+.card p {
+    color: #666;
+    font-size: 1rem;
+}
+
+#active-tasks, #student-browser, #task-browser, #application-status {
+    min-height: 100px;
+}
+
+/* Animations */
+.dashboard .fade-in {
+    animation: fadeIn 1s ease forwards;
+}
+
+.card {
+    opacity: 0;
+    animation: slideUp 0.8s ease forwards;
+}
+
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.4s; }
+
+
+/* dashboard.css (add to the end) */
+.task-item, .student-item, .app-item {
+    background: #f9f9f9;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+.task-item:hover, .student-item:hover, .app-item:hover {
+    background: #f0f0f0;
+}
+
+.task-item button, .student-item button {
+    background: #686de0;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.task-item button:hover, .student-item button:hover {
+    background: #4834d4;
+}

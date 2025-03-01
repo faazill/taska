@@ -1,0 +1,155 @@
+/* landing.css */
+main {
+    margin-top: 90px;
+    margin-bottom: 60px;
+}
+
+.hero {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: linear-gradient(135deg, #4834d4, #686de0);
+    color: white;
+    border-radius: 0 0 30px 30px;
+    box-shadow: 0 10px 30px rgba(72, 52, 212, 0.2);
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    animation: fadeIn 1s ease forwards;
+}
+
+.hero p {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    animation: fadeIn 1s ease 0.3s forwards;
+    opacity: 0;
+}
+
+.featured-tasks {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.featured-tasks h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #4834d4;
+    margin-bottom: 3rem;
+    animation: slideUp 0.8s ease forwards;
+}
+
+.tasks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.task-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.task-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(72, 52, 212, 0.15);
+}
+
+.task-card h3 {
+    color: #4834d4;
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+}
+
+.task-card p {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.task-card button {
+    background: #686de0;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.task-card button:hover {
+    background: #4834d4;
+}
+
+/* About Page Specific Styles */
+.about-section {
+    padding: 5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.about-section h1 {
+    font-size: 2.5rem;
+    color: #4834d4;
+    margin-bottom: 2rem;
+    animation: fadeIn 1s ease forwards;
+}
+
+.intro-text {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    animation: slideUp 0.8s ease forwards;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+}
+
+.team-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(72, 52, 212, 0.15);
+}
+
+.team-card h3 {
+    color: #4834d4;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+.team-card p {
+    color: #666;
+    font-size: 1rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.team-card:nth-child(1) { animation: slideUp 0.8s ease forwards; }
+.team-card:nth-child(2) { animation: slideUp 0.8s ease 0.2s forwards; }
+.team-card:nth-child(3) { animation: slideUp 0.8s ease 0.4s forwards; }
