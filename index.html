@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taska - Home</title>
+    <title>Taska Elite - Home</title>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/landing.css">
-    <link rel="stylesheet" href="css/responsive.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar">
-        <div class="logo">Taska</div>
+        <div class="logo">Taska Elite</div>
         <ul class="nav-menu">
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
@@ -20,37 +18,49 @@
             <li><a href="login.html">Login/Signup</a></li>
         </ul>
         <div class="hamburger">☰</div>
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
     </nav>
 
     <main>
-        <!-- Hero Section -->
+        <!-- Hero Section with Background Video -->
         <section class="hero">
-            <h1>Connect with Professionals</h1>
-            <p>Earn experience and find microtasks now.</p>
-            <button class="cta-button" onclick="window.location.href='login.html'">Start Now</button>
+            <video autoplay muted loop playsinline class="hero-video">
+                <source src="videos/campus-background.mp4.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="hero-content">
+                <h1>
+                    <span>Connect with IIT & NIT Talent</span>
+                    
+                </h1>
+                <p>Hire elite students as assistants for your projects.</p>
+                <button class="cta-button" onclick="window.location.href='login.html'">Get Started</button>
+            </div>
         </section>
 
         <!-- Search/Filter Section -->
         <section class="search-filter">
             <div class="filter-bar">
-                <input type="text" id="search-input" placeholder="Search tasks (e.g., design, writing)">
+                <input type="text" id="search-input" placeholder="Search IITians/NITians (e.g., design, coding)">
                 <select id="category-filter" class="custom-dropdown">
                     <option value="all">All Categories</option>
                     <option value="design">Design</option>
-                    <option value="writing">Writing</option>
+                    <option value="coding">Coding</option>
                     <option value="research">Research</option>
-                    <option value="data">Data Entry</option>
+                    <option value="data">Data Analysis</option>
                     <option value="tech">Technology</option>
-                    <option value="marketing">Marketing</option>
+                    <option value="content">Content Creation</option>
                 </select>
-                <button class="cta-button" onclick="filterTasks()">Search</button>
+                <button class="cta-button" onclick="filterStudents()">Search</button>
             </div>
         </section>
 
-        <!-- Task Grid -->
+        <!-- Meet IITians & NITians with Additional IITians -->
         <section class="task-grid-section">
-            <h2>Explore Microtasks</h2>
-            <div class="tasks-grid" id="tasks-grid"></div>
+            <h2>Meet IITians & NITians</h2>
+            <div class="students-grid" id="students-grid">
+                <!-- Student cards will be populated dynamically by JavaScript -->
+            </div>
             <div class="pagination">
                 <button class="pagination-btn" onclick="prevPage()">←</button>
                 <span id="page-info">Page 1 of 2</span>
@@ -60,24 +70,43 @@
 
         <!-- Number Summary -->
         <section class="number-summary">
-            <div class="summary-item"><span id="tasks-count" data-target="1200">0</span> Tasks Completed</div>
-            <div class="summary-item"><span id="users-count" data-target="650">0</span> Active Users</div>
-            <div class="summary-item"><span id="earnings-count" data-target="75000">0</span> INR Earned</div>
+            <div class="summary-item"><span id="students-count" data-target="500">0</span> IIT/NIT Students</div>
+            <div class="summary-item"><span id="professionals-count" data-target="200">0</span> Active Professionals</div>
+            <div class="summary-item"><span id="projects-count" data-target="1000">0</span> Projects Completed</div>
         </section>
 
-        <!-- How Tasks Work -->
+        <!-- How It Works with Updated Text and Icons -->
         <section class="how-tasks-work">
-            <h2>How Tasks Work</h2>
-            <p>– Sign up as a professional or student.<br>– Post microtasks if you need help or browse gigs to earn.<br>– Work gets done quickly and efficiently.<br>– Payments are secure and fast.<br>– Build experience and connections with every task.</p>
+            <h2>How It Works</h2>
+            <div class="how-steps">
+                <div class="step">
+                    <svg width="100" height="100" viewBox="0 0 24 24" fill="#007bff">
+                        <path d="M12 4a8 8 0 100 16 8 8 0 000-16zm0 2a6 6 0 110 12 6 6 0 010-12zm-1 2h2v4h-2zm0 6h2v2h-2z"/>
+                    </svg>
+                    <p>Hire an IITian/NITian for your project.</p>
+                </div>
+                <div class="step">
+                    <svg width="100" height="100" viewBox="0 0 24 24" fill="#007bff">
+                        <path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm-2 12H6v-2h12v2zm0-4H6V8h12v2z"/>
+                    </svg>
+                    <p>Assign tasks and set clear deadlines.</p>
+                </div>
+                <div class="step">
+                    <svg width="100" height="100" viewBox="0 0 24 24" fill="#007bff">
+                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                    </svg>
+                    <p>Get work done perfectly and on time.</p>
+                </div>
+            </div>
         </section>
 
         <!-- User Feedback -->
         <section class="user-feedback">
             <h2>User Feedback</h2>
             <div class="feedback-container" id="feedback-container">
-                <div class="feedback-item active">"Taska connects me to quick gigs effortlessly." - Priya, Student</div>
-                <div class="feedback-item">"I get my tasks done fast and reliably." - Rohan, Professional</div>
-                <div class="feedback-item">"A great way to earn while learning." - Anjali, Student</div>
+                <div class="feedback-item active">"Hiring IITians through Taska Elite saved me time and delivered quality." - Vikram, Professional</div>
+                <div class="feedback-item">"Great platform to showcase my skills and earn." - Riya, NIT Student</div>
+                <div class="feedback-item">"Top-notch assistance for my startup projects." - Sanjay, Entrepreneur</div>
             </div>
             <div class="feedback-nav">
                 <button onclick="prevFeedback()">←</button>
@@ -88,12 +117,12 @@
         <!-- Call to Action -->
         <section class="call-to-action">
             <h2>Get Involved</h2>
-            <button class="cta-button" onclick="window.location.href='login.html'">Join Today</button>
+            <button class="cta-button" onclick="window.location.href='login.html'">Join Now</button>
         </section>
     </main>
 
     <footer>
-        <p>© 2025 Taska. All rights reserved.</p>
+        <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
     </footer>
 
     <script type="module" src="js/firebase-config.js"></script>

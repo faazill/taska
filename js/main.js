@@ -1,139 +1,163 @@
-// main.js
-
-// Sample task data (12 tasks)
-const allTasks = [
-    { title: "Logo Design", desc: "Create a sleek logo", price: 800, category: "design", posted: "2 days ago" },
-    { title: "Blog Post", desc: "Write 500 words", price: 400, category: "writing", posted: "3 days ago" },
-    { title: "Market Research", desc: "Analyze 5 competitors", price: 600, category: "research", posted: "1 day ago" },
-    { title: "Data Entry", desc: "Enter 200 records", price: 300, category: "data", posted: "4 days ago" },
-    { title: "Website Fix", desc: "Debug a webpage", price: 1000, category: "tech", posted: "5 days ago" },
-    { title: "Poster Design", desc: "Design a poster", price: 700, category: "design", posted: "6 days ago" },
-    { title: "SEO Audit", desc: "Optimize a site", price: 900, category: "marketing", posted: "2 days ago" },
-    { title: "Code Review", desc: "Check 100 lines", price: 500, category: "tech", posted: "3 days ago" },
-    { title: "Article Edit", desc: "Polish 1000 words", price: 350, category: "writing", posted: "1 day ago" },
-    { title: "Survey Analysis", desc: "Process 50 responses", price: 450, category: "research", posted: "4 days ago" },
-    { title: "UI Design", desc: "Design app interface", price: 850, category: "design", posted: "5 days ago" },
-    { title: "Social Media Post", desc: "Create 3 posts", price: 400, category: "marketing", posted: "2 days ago" }
-];
-
-// Pagination variables
-let currentPage = 1;
-const tasksPerPage = 6;
-
-// Toggle mobile menu
-function toggleMenu() {
-    const navMenu = document.querySelector('.nav-menu');
-    navMenu.classList.toggle('active');
-}
-
-// Display tasks
-function displayTasks(containerId, tasks, page = 1) {
-    const container = document.getElementById(containerId);
-    if (container) {
-        container.innerHTML = '';
-        const start = (page - 1) * tasksPerPage;
-        const end = start + tasksPerPage;
-        const paginatedTasks = tasks.slice(start, end);
-
-        paginatedTasks.forEach(task => {
-            const taskCard = document.createElement('div');
-            taskCard.className = 'task-card';
-            taskCard.innerHTML = `
-                <h3>${task.title}</h3>
-                <p>${task.desc}</p>
-                <p>Price: ₹${task.price} • Posted: ${task.posted}</p>
-                <button onclick="window.location.href='login.html'">Apply</button>
-            `;
-            container.appendChild(taskCard);
-        });
-    }
-    updatePagination();
-}
-
-// Filter tasks
-window.filterTasks = function() {
-    const searchValue = document.getElementById('search-input').value.toLowerCase();
-    const categoryValue = document.getElementById('category-filter').value;
-
-    const filteredTasks = allTasks.filter(task => {
-        const matchesSearch = task.title.toLowerCase().includes(searchValue) || task.desc.toLowerCase().includes(searchValue);
-        const matchesCategory = categoryValue === 'all' || task.category === categoryValue;
-        return matchesSearch && matchesCategory;
-    });
-
-    currentPage = 1;
-    displayTasks('tasks-grid', filteredTasks, currentPage);
-};
-
-// Pagination
-function updatePagination() {
-    const totalPages = Math.ceil(allTasks.length / tasksPerPage);
-    document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages}`;
-}
-
-window.prevPage = function() {
-    if (currentPage > 1) {
-        currentPage--;
-        displayTasks('tasks-grid', allTasks, currentPage);
-    }
-};
-
-window.nextPage = function() {
-    const totalPages = Math.ceil(allTasks.length / tasksPerPage);
-    if (currentPage < totalPages) {
-        currentPage++;
-        displayTasks('tasks-grid', allTasks, currentPage);
-    }
-};
-
-// Number counting
-function countUp(elementId, target) {
-    let count = 0;
-    const element = document.getElementById(elementId);
-    const increment = target / 100;
-    const interval = setInterval(() => {
-        count += increment;
-        if (count >= target) {
-            count = target;
-            clearInterval(interval);
-        }
-        element.textContent = Math.round(count);
-    }, 20);
-}
-
-// Feedback swapping
-let currentFeedback = 0;
-function showFeedback(index) {
-    const items = document.querySelectorAll('.feedback-item');
-    items.forEach((item, i) => {
-        item.classList.toggle('active', i === index);
-    });
-}
-
-window.nextFeedback = function() {
-    const items = document.querySelectorAll('.feedback-item');
-    currentFeedback = (currentFeedback + 1) % items.length;
-    showFeedback(currentFeedback);
-};
-
-window.prevFeedback = function() {
-    const items = document.querySelectorAll('.feedback-item');
-    currentFeedback = (currentFeedback - 1 + items.length) % items.length;
-    showFeedback(currentFeedback);
-};
-
-// Initialize page
+// js/main.js
 document.addEventListener('DOMContentLoaded', () => {
-    const hamburger = document.querySelector('.hamburger');
-    if (hamburger) hamburger.addEventListener('click', toggleMenu);
+    // Dark Mode Toggle
+    window.toggleDarkMode = function() {
+        document.body.classList.toggle('dark-mode');
+        document.querySelector('.navbar').classList.toggle('dark-mode');
+        document.querySelectorAll('.cta-button').forEach(btn => btn.classList.toggle('dark-mode'));
+        document.querySelectorAll('.search-filter').forEach(section => section.classList.toggle('dark-mode'));
+        document.querySelectorAll('.task-grid-section').forEach(section => section.classList.toggle('dark-mode'));
+        document.querySelectorAll('.number-summary').forEach(section => section.classList.toggle('dark-mode'));
+        document.querySelectorAll('.how-tasks-work').forEach(section => section.classList.toggle('dark-mode'));
+        document.querySelectorAll('.user-feedback').forEach(section => section.classList.toggle('dark-mode'));
+        document.querySelectorAll('.call-to-action').forEach(section => section.classList.toggle('dark-mode'));
+        document.querySelectorAll('.nav-menu a').forEach(link => link.classList.toggle('dark-mode'));
+        document.querySelectorAll('#search-input, .custom-dropdown').forEach(input => input.classList.toggle('dark-mode'));
+        document.querySelectorAll('.student-card').forEach(card => card.classList.toggle('dark-mode'));
+        document.querySelectorAll('.feedback-item').forEach(item => item.classList.toggle('dark-mode'));
+        document.querySelectorAll('.feedback-nav button').forEach(btn => btn.classList.toggle('dark-mode'));
+        document.querySelector('footer').classList.toggle('dark-mode');
+        document.querySelector('.dark-mode-toggle').classList.toggle('dark-mode');
+        document.querySelector('.privacy-policy').classList.toggle('dark-mode');
+    };
 
-    displayTasks('tasks-grid', allTasks, currentPage);
+    // Animated Headline
+    const headlineWords = document.querySelectorAll('.hero h1 span');
+    headlineWords.forEach((word, index) => {
+        word.style.animation = `fadeInDown 1s ease forwards ${index * 0.2 + 0.1}s`;
+    });
 
-    // Start number counting
-    countUp('tasks-count', 1200);
-    countUp('users-count', 650);
-    countUp('earnings-count', 75000);
+    // Counter Animations
+    const counters = document.querySelectorAll('.summary-item span[data-target]');
+    counters.forEach(counter => {
+        const updateCount = () => {
+            const target = +counter.getAttribute('data-target');
+            const count = +counter.innerText.replace(/[^0-9]/g, '');
+            const speed = 200;
+            const inc = target / speed;
 
-    // Show initial feedback
-    showFeedback(0);
+            if (count < target) {
+                counter.innerText = Math.ceil(count + inc);
+                setTimeout(updateCount, 10);
+            } else {
+                counter.innerText = target;
+            }
+        };
+        updateCount();
+    });
+
+    // Feedback Slider
+    let currentFeedback = 0;
+    const feedbackItems = document.querySelectorAll('.feedback-item');
+    const totalFeedback = feedbackItems.length;
+
+    function updateFeedback() {
+        feedbackItems.forEach(item => item.classList.remove('active'));
+        feedbackItems[currentFeedback].classList.add('active');
+    }
+
+    window.prevFeedback = () => {
+        currentFeedback = (currentFeedback - 1 + totalFeedback) % totalFeedback;
+        updateFeedback();
+    };
+
+    window.nextFeedback = () => {
+        currentFeedback = (currentFeedback + 1) % totalFeedback;
+        updateFeedback();
+    };
+
+    // Pagination
+    let currentPage = 1;
+    let totalPages = 2;
+    const pageInfo = document.getElementById('page-info');
+
+    function updatePagination() {
+        pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+    }
+
+    window.prevPage = () => {
+        if (currentPage > 1) {
+            currentPage--;
+            updateStudents();
+            updatePagination();
+        }
+    };
+
+    window.nextPage = () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            updateStudents();
+            updatePagination();
+        }
+    };
+
+    // Student Filtering with Animation
+    window.filterStudents = () => {
+        const searchInput = document.getElementById('search-input').value.toLowerCase();
+        const categoryFilter = document.getElementById('category-filter').value.toLowerCase();
+        const studentsGrid = document.getElementById('students-grid');
+        studentsGrid.innerHTML = '';
+
+        const students = [
+            { name: 'Arjun Sharma', college: 'IIT Bombay', department: 'Computer Science', skills: ['Coding', 'Data Analysis'], experience: '2 years in tech projects', rating: 4.2 },
+            { name: 'Neha Patel', college: 'NIT Trichy', department: 'Electrical Engineering', skills: ['Design', 'Research'], experience: '1.5 years in design', rating: 3.8 },
+            { name: 'Ravi Kumar', college: 'IIT Delhi', department: 'Mechanical Engineering', skills: ['Research', 'Technology'], experience: '1 year in robotics', rating: 4.0 },
+            { name: 'Priya Singh', college: 'IIT Madras', department: 'Civil Engineering', skills: ['Design', 'Data Analysis'], experience: '2 years in infrastructure projects', rating: 4.5 },
+            { name: 'Amit Verma', college: 'IIT Kharagpur', department: 'Chemical Engineering', skills: ['Research', 'Content Creation'], experience: '1.5 years in lab research', rating: 3.9 },
+            { name: 'Sneha Gupta', college: 'IIT Kanpur', department: 'Aerospace Engineering', skills: ['Coding', 'Technology'], experience: '2 years in drone projects', rating: 4.3 },
+            { name: 'Karan Mehra', college: 'IIT Roorkee', department: 'Electrical Engineering', skills: ['Design', 'Coding'], experience: '1 year in circuit design', rating: 4.1 },
+            { name: 'Ananya Das', college: 'IIT Guwahati', department: 'Biotechnology', skills: ['Research', 'Data Analysis'], experience: '1.5 years in bioinformatics', rating: 4.0 },
+            { name: 'Vikram Joshi', college: 'IIT Hyderabad', department: 'Computer Science', skills: ['Coding', 'Technology'], experience: '2 years in software development', rating: 4.4 },
+        ];
+
+        const filteredStudents = students.filter(student => {
+            const matchesSearch = student.name.toLowerCase().includes(searchInput) || student.skills.some(skill => skill.toLowerCase().includes(searchInput));
+            const matchesCategory = categoryFilter === 'all' || student.skills.some(skill => skill.toLowerCase().includes(categoryFilter));
+            return matchesSearch && matchesCategory;
+        });
+
+        filteredStudents.forEach((student, index) => {
+            setTimeout(() => {
+                const studentCard = document.createElement('div');
+                studentCard.className = 'student-card';
+                studentCard.innerHTML = `
+                    <h3>${student.name}</h3>
+                    <p><strong>College:</strong> ${student.college}</p>
+                    <p><strong>Department:</strong> ${student.department}</p>
+                    <p><strong>Skills:</strong> 
+                        ${student.skills.map(skill => `<span class="skill-icon">${getSkillIcon(skill)}</span> ${skill}`).join(', ')}
+                    </p>
+                    <p><strong>Experience:</strong> ${student.experience}</p>
+                    <p><strong>Rating:</strong> <span class="rating">${'★'.repeat(Math.floor(student.rating))}${'☆'.repeat(5 - Math.floor(student.rating))}</span> (${student.rating})</p>
+                    <button class="cta-button" onclick="hireStudent('${student.name}')">Hire</button>
+                `;
+                studentCard.style.opacity = 0;
+                studentCard.style.animation = 'fadeIn 0.5s ease forwards';
+                studentsGrid.appendChild(studentCard);
+            }, index * 200); // Staggered animation
+        });
+
+        totalPages = Math.ceil(filteredStudents.length / 6);
+        currentPage = 1;
+        updatePagination();
+    };
+
+    // Hire Student
+    window.hireStudent = (name) => {
+        alert(`Hiring ${name} - Please log in to proceed with the hiring process.`);
+        window.location.href = 'login.html';
+    };
+
+    // Initial Load
+    filterStudents();
+    updatePagination();
+
+    // Skill Icons
+    function getSkillIcon(skill) {
+        const icons = { Coding: '💻', 'Data Analysis': '📊', Design: '🎨', Research: '🔬', Technology: '🖥️', 'Content Creation': '✍️' };
+        return icons[skill] || '⭐';
+    }
+
+    // Accessibility
+    document.querySelectorAll('button, input, select').forEach(el => el.setAttribute('aria-label', el.textContent || el.placeholder));
 });
