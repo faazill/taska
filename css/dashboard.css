@@ -1,89 +1,316 @@
-/* dashboard.css */
-.dashboard {
-    padding: 5rem 2rem;
-    max-width: 1200px;
-    margin: 90px auto 60px;
+/* css/dashboard.css */
+body {
+    background: #fff;
+    color: #333;
+    font-family: 'Poppins', sans-serif;
 }
 
-.dashboard h1 {
-    font-size: 2.5rem;
-    color: #4834d4;
-    text-align: center;
-    margin-bottom: 3rem;
-    animation: fadeIn 1s ease forwards;
+body.dark-mode {
+    background: #1a1f2b;
+    color: #fff;
 }
 
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2.5rem;
+.navbar {
+    background: #fff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
 }
 
-.card {
-    background: white;
-    padding: 2rem;
-    border-radius: 20px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.navbar.dark-mode {
+    background: #1a1f2b;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(72, 52, 212, 0.15);
+.logo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
 }
 
-.card h2 {
-    color: #4834d4;
-    font-size: 1.6rem;
-    margin-bottom: 1.5rem;
+.logo.dark-mode {
+    color: #fff;
 }
 
-.card p {
+.nav-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu li {
+    margin: 0 1rem;
+}
+
+.nav-menu a {
     color: #666;
+    text-decoration: none;
     font-size: 1rem;
-}
-
-#active-tasks, #student-browser, #task-browser, #application-status {
-    min-height: 100px;
-}
-
-/* Animations */
-.dashboard .fade-in {
-    animation: fadeIn 1s ease forwards;
-}
-
-.card {
-    opacity: 0;
-    animation: slideUp 0.8s ease forwards;
-}
-
-.card:nth-child(2) { animation-delay: 0.2s; }
-.card:nth-child(3) { animation-delay: 0.4s; }
-
-
-/* dashboard.css (add to the end) */
-.task-item, .student-item, .app-item {
-    background: #f9f9f9;
-    padding: 1rem;
-    margin: 0.5rem 0;
-    border-radius: 10px;
-    transition: background 0.3s ease;
-}
-
-.task-item:hover, .student-item:hover, .app-item:hover {
-    background: #f0f0f0;
-}
-
-.task-item button, .student-item button {
-    background: #686de0;
-    color: white;
-    border: none;
     padding: 0.5rem 1rem;
-    border-radius: 15px;
+    transition: color 0.3s ease;
+}
+
+.nav-menu a:hover {
+    color: #000;
+}
+
+.nav-menu a.active {
+    color: #000;
+    font-weight: 600;
+}
+
+.nav-menu a.dark-mode {
+    color: #ccc;
+}
+
+.nav-menu a.dark-mode:hover {
+    color: #fff;
+}
+
+.hamburger {
+    display: none;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.hamburger.dark-mode {
+    color: #fff;
+}
+
+.dark-mode-toggle {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.dark-mode-toggle.dark-mode {
+    color: #fff;
+}
+
+.dashboard-content {
+    margin-top: 60px;
+    padding: 2rem;
+    width: 100%; /* Full width to allow chat-interface to stretch */
+}
+
+.dashboard-section {
+    margin-bottom: 2rem;
+}
+
+.dashboard-section h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.dashboard-section h1.dark-mode {
+    color: #fff;
+}
+
+.dashboard-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.dashboard-section h2.dark-mode {
+    color: #fff;
+}
+
+/* Card Layout */
+.card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.card.dark-mode {
+    background: #2a3550;
+    border-color: #444;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.task-management {
+    min-height: 200px;
+}
+
+.task-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.task-header h3 {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.task-header h3.dark-mode {
+    color: #fff;
+}
+
+.task-header .professional-name {
+    font-size: 1rem;
+    color: #666;
+}
+
+.task-header .professional-name.dark-mode {
+    color: #ccc;
+}
+
+.deadline-bar {
+    width: 100%;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.deadline-bar-fill {
+    height: 100%;
+    background: #333;
+    transition: width 0.3s ease;
+}
+
+.deadline-bar-fill.dark-mode {
+    background: #fff;
+}
+
+.time-left {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.time-left.dark-mode {
+    color: #ccc;
+}
+
+.upload-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s ease;
 }
 
-.task-item button:hover, .student-item button:hover {
-    background: #4834d4;
+.upload-button:hover {
+    background: #555;
+}
+
+.upload-button.dark-mode {
+    background: #fff;
+    color: #333;
+}
+
+.upload-button.dark-mode:hover {
+    background: #ccc;
+}
+
+.marketplace {
+    margin-top: 2rem;
+}
+
+.marketplace h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.profile-card {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.profile-card .card {
+    padding: 1rem;
+}
+
+.cta-button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.cta-button:hover {
+    background: #555;
+}
+
+.cta-button.dark-mode {
+    background: #fff;
+    color: #333;
+}
+
+.cta-button.dark-mode:hover {
+    background: #ccc;
+}
+
+.custom-dropdown {
+    padding: 0.75rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.custom-dropdown.dark-mode {
+    background: #3a4060;
+    color: #fff;
+    border-color: #444;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background: #fff;
+    color: #666;
+    border-top: 1px solid #e0e0e0;
+}
+
+footer.dark-mode {
+    background: #1a1f2b;
+    color: #ccc;
+    border-top-color: #444;
+}
+
+.privacy-policy {
+    color: #333;
+    text-decoration: none;
+}
+
+.privacy-policy:hover {
+    text-decoration: underline;
+}
+
+.privacy-policy.dark-mode {
+    color: #fff;
 }
