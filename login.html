@@ -8,8 +8,23 @@
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/forms.css">
     <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/login.css"> <!-- New file for login-specific styles -->
+    <link rel="stylesheet" href="css/login.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        .auth-popup {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            font-size: 1rem;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -32,12 +47,12 @@
                 <div class="role-card" onclick="showForm('professional')">
                     <h2>Professional</h2>
                     <p>Are you a busy professional needing help with microtasks? Post tasks, hire talented students, and get your work done efficiently.</p>
-                    <button class="select-button">Select</button>
+                    <button class="select-button" type="button">Select</button>
                 </div>
                 <div class="role-card" onclick="showForm('student')">
                     <h2>Student</h2>
                     <p>Are you a student looking to earn money and build skills? Browse tasks, apply for opportunities, and showcase your abilities.</p>
-                    <button class="select-button">Select</button>
+                    <button class="select-button" type="button">Select</button>
                 </div>
             </div>
             <div class="auth-form" id="professional-form" style="display: none;">
@@ -71,6 +86,23 @@
         <p>© 2025 Taska. All rights reserved.</p>
     </footer>
 
+    <script type="module">
+        import { showForm, login, signup, signOut } from './js/auth.js';
+        // Expose functions to global scope for onclick handlers
+        window.showForm = showForm;
+        window.login = login;
+        window.signup = signup;
+        window.signOut = signOut;
+
+        // Add event listeners to buttons as a fallback
+        document.querySelectorAll('.select-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const role = e.target.closest('.role-card').getAttribute('onclick').match(/'([^']+)'/)[1];
+                console.log(`Select button clicked for: ${role}`);
+                window.showForm(role);
+            });
+        });
+    </script>
     <script type="module" src="js/firebase-config.js"></script>
     <script type="module" src="js/auth.js"></script>
     <script src="js/main.js"></script>

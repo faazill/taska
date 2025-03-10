@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Taska Elite - Update Profile</title>
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/update-profile.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">Taska Elite</div>
+    <ul class="nav-menu">
+      <li><a href="overview.html">Overview</a></li>
+      <li><a href="tasks.html">Tasks</a></li>
+      <li><a href="explore.html">Explore</a></li>
+      <li><a href="earnings.html">Earnings</a></li>
+      <li><a href="profile.html" class="active">Profile</a></li>
+      <li><a href="../index.html">Logout</a></li>
+    </ul>
+    <div class="hamburger">☰</div>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+  </nav>
+
+  <main class="dashboard-content">
+    <section class="update-section">
+      <div class="update-container">
+        <div class="update-header">
+          <h1>Update Your Profile</h1>
+          <br>
+          <p>Edit your professional details below.</p>
+        </div>
+        <form id="update-profile-form" class="update-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" class="custom-input" placeholder="Enter Details">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" class="custom-input" placeholder="Enter Details" readonly>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="location">Location</label>
+              <input type="text" id="location" class="custom-input" placeholder="Enter Details">
+            </div>
+            <div class="form-group">
+              <label for="profession">Profession</label>
+              <input type="text" id="profession" class="custom-input" placeholder="Enter Details">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="company">Company</label>
+              <input type="text" id="company" class="custom-input" placeholder="Enter Details">
+            </div>
+            <div class="form-group">
+              <label for="experience">Experience (Years)</label>
+              <input type="number" id="experience" class="custom-input" placeholder="Enter Details">
+            </div>
+          </div>
+          <div class="form-group full-width">
+            <label for="skills">Skills (comma-separated)</label>
+            <input type="text" id="skills" class="custom-input" placeholder="Enter Details">
+          </div>
+          <div class="form-group full-width">
+            <label for="education">Education</label>
+            <input type="text" id="education" class="custom-input" placeholder="Enter Details">
+          </div>
+          <div class="form-group full-width">
+            <label for="bio">Bio</label>
+            <textarea id="bio" class="custom-input" placeholder="Enter Details"></textarea>
+          </div>
+          <div class="form-group full-width">
+            <label for="hobbies">Hobbies (comma-separated)</label>
+            <input type="text" id="hobbies" class="custom-input" placeholder="Enter Details">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="cta-button">Save Changes</button>
+            <button type="button" class="cta-button cancel-btn" onclick="window.location.href='profile.html'">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+    import { getDatabase, ref, get, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
+        authDomain: "taska-45011.firebaseapp.com",
+        databaseURL: "https://taska-45011-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "taska-45011",
+        storageBucket: "taska-45011.firebasestorage.app",
+        messagingSenderId: "205487498813",
+        appId: "1:205487498813:web:0de2c9eab567482781ec54"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const userId = "john_doe_123"; // Replace with auth logic
+
+    function loadProfileData() {
+      const userRef = ref(database, 'professionalslist/' + userId);
+      get(userRef).then((snapshot) => {
+        const data = snapshot.val() || {};
+        document.getElementById('name').value = data.name || '';
+        document.getElementById('email').value = data.email || '';
+        document.getElementById('location').value = data.location || '';
+        document.getElementById('profession').value = data.profession || '';
+        document.getElementById('company').value = data.company || '';
+        document.getElementById('experience').value = data.experience || '';
+        document.getElementById('skills').value = data.skills || '';
+        document.getElementById('education').value = data.education || '';
+        document.getElementById('bio').value = data.bio || '';
+        document.getElementById('hobbies').value = data.hobbies || '';
+        console.log("Data loaded:", data);
+      }).catch((error) => {
+        console.error("Error fetching data:", error);
+        alert("Failed to load profile data.");
+      });
+    }
+
+    document.getElementById('update-profile-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const updatedData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        location: document.getElementById('location').value,
+        profession: document.getElementById('profession').value,
+        company: document.getElementById('company').value,
+        experience: document.getElementById('experience').value,
+        skills: document.getElementById('skills').value,
+        education: document.getElementById('education').value,
+        bio: document.getElementById('bio').value,
+        hobbies: document.getElementById('hobbies').value
+      };
+
+      const userRef = ref(database, 'professionalslist/' + userId);
+      set(userRef, updatedData)
+        .then(() => {
+          console.log("Data updated:", updatedData);
+          alert("Profile updated successfully!");
+          window.location.href = 'profile.html';
+        })
+        .catch((error) => {
+          console.error("Error updating data:", error);
+          alert("Failed to update profile.");
+        });
+    });
+
+    window.onload = loadProfileData;
+  </script>
+</body>
+</html>
