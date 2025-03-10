@@ -46,10 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Sample student data (replace with Firebase fetch)
     const students = [
-        { name: 'Amit Sharma', category: 'coding', institute: 'IIT Delhi', description: 'Skilled in Python and Java.', image: 'https://images.unsplash.com/photo-1568880893176-fb2bdab44e41?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3R1ZGVudCUyMHByb2ZpbGV8ZW58MHx8MHx8fDA%3D' },
-        { name: 'Krishna Patel', category: 'design', institute: 'NIT Trichy', description: 'Expert in UI/UX design.', image: 'https://history.ubc.ca/wp-content/uploads/sites/23/2020/01/Kevin-website.jpg' },
-        { name: 'Ravi Kumar', category: 'research', institute: 'IIT Bombay', description: 'Experienced in research.', image: 'https://thenanyan.com/wp-content/uploads/2018/12/img_56161.jpg' },
-        { name: 'Sneha Patel', category: 'data', institute: 'NIT Surathkal', description: 'Proficient in data analysis.', image: 'https://plus.unsplash.com/premium_photo-1661434380261-ca9305950dd3?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8c3R1ZGVudCUyMHByb2ZpbGV8ZW58MHx8MHx8fDA%3D' },
+        { name: 'Amit Sharma', category: 'coding', institute: 'IIT Delhi', description: 'Skilled in Python and Java.', image: 'assets/st1.jpeg' },
+        { name: 'Krishna Patel', category: 'design', institute: 'NIT Trichy', description: 'Expert in UI/UX design.', image: 'assets/st2.jpg' },
+        { name: 'Ravi Kumar', category: 'research', institute: 'IIT Bombay', description: 'Experienced in research.', image: 'assets/st3.jpg' },
+        { name: 'Sneha Patel', category: 'data', institute: 'NIT Surathkal', description: 'Proficient in data analysis.', image: 'assets/st4.jpeg' },
         { name: 'Vikram Rao', category: 'tech', institute: 'IIT Madras', description: 'Tech enthusiast and developer.', image: 'https://via.placeholder.com/150' },
         { name: 'Ananya Gupta', category: 'content', institute: 'NIT Warangal', description: 'Creative content writer.', image: 'https://via.placeholder.com/150' },
         { name: 'Karan Mehta', category: 'coding', institute: 'IIT Kanpur', description: 'Full-stack developer.', image: 'https://via.placeholder.com/150' },

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taska Elite - Professional Tasks</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Taska Elite</div>
+        <ul class="nav-menu">
+            <li><a href="overview.html">Overview</a></li>
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="tasks.html" class="active">Tasks</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="../index.html">Logout</a></li>
+        </ul>
+        <div class="hamburger">☰</div>
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+    </nav>
+
+    <main class="dashboard-content">
+        <section class="dashboard-section">
+            <h1>Your Task Management</h1>
+            <p>Assign and track tasks with IIT prodigies to streamline your workload.</p>
+
+            <!-- Existing Tasks Section -->
+            <div class="tasks-section">
+                <h2>Assigned Tasks</h2>
+                <div class="tasks-grid" id="tasks-grid">
+                    <!-- Tasks will be populated dynamically -->
+                </div>
+                <p class="no-tasks" id="no-tasks" style="display: none;">No tasks assigned yet.</p>
+            </div>
+
+            <!-- New Task Section -->
+            <div class="new-task-section">
+                <h2>Add New Task</h2>
+                <button class="cta-button" onclick="openTaskPopup()" aria-label="Add new task">Add Task</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
+    </footer>
+
+    <!-- Task Popup -->
+    <div class="popup" id="task-popup" style="display: none;">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeTaskPopup()">×</span>
+            <h2>Assign New Task</h2>
+            <form id="task-form">
+                <!-- Step 1: Task Details -->
+                <div id="step-1">
+                    <div class="form-group">
+                        <label for="task-name">Task Name:</label>
+                        <select id="task-name" class="custom-dropdown" required>
+                            <option value="">Select a Task</option>
+                            <option value="PPT Making">PPT Making</option>
+                            <option value="Research">Research</option>
+                            <option value="Code Debug">Code Debug</option>
+                            <option value="Content Writing">Content Writing</option>
+                            <option value="Data Entry">Data Entry</option>
+                            <option value="Spreadsheets">Spreadsheets</option>
+                            <option value="Graphic Design">Graphic Design</option>
+                            <option value="Video Editing">Video Editing</option>
+                            <option value="Web Development">Web Development</option>
+                            <option value="Data Analysis">Data Analysis</option>
+                            <option value="Documentation">Documentation</option>
+                            <option value="Transcription">Transcription</option>
+                            <option value="Schedule Management">Schedule Management</option>
+                            <option value="Proofreading">Proofreading</option>
+                            <option value="Cloud Management">Cloud Management</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-deadline">Deadline:</label>
+                        <input type="date" id="task-deadline" class="custom-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-student">Assign to Student:</label>
+                        <select id="task-student" class="custom-dropdown" required>
+                            <option value="">Select a Student</option>
+                            <option value="Priya Sharma">Priya Sharma</option>
+                            <option value="Amit Patel">Amit Patel</option>
+                            <option value="Rohan Gupta">Rohan Gupta</option>
+                        </select>
+                    </div>
+                    <button type="button" class="cta-button" onclick="showStep2()">Next</button>
+                </div>
+
+                <!-- Step 2: Payment Coins -->
+                <div id="step-2" style="display: none;">
+                    <div class="form-group">
+                        <label for="task-payment">Payment (Coins):</label>
+                        <input type="number" id="task-payment" class="custom-input" readonly>
+                        <p class="payment-info">Payment calculated by AI, based on task complexity, student, and deadline.</p>
+                    </div>
+                    <button type="submit" class="cta-button" onclick="assignTask(event)">Assign Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Task management state
+        let tasks = [
+            {
+                id: "1",
+                name: "PPT Making",
+                deadline: "2025-03-15",
+                payment: 500,
+                student: "Priya Sharma"
+            },
+            {
+                id: "2",
+                name: "Research",
+                deadline: "2025-03-20",
+                payment: 700,
+                student: "Amit Patel"
+            },
+            {
+                id: "3",
+                name: "Code Debug",
+                deadline: "2025-03-18",
+                payment: 600,
+                student: "Rohan Gupta"
+            }
+        ];
+
+        function openTaskPopup() {
+            document.getElementById('task-popup').style.display = 'flex';
+            document.getElementById('step-1').style.display = 'block';
+            document.getElementById('step-2').style.display = 'none';
+        }
+
+        function closeTaskPopup() {
+            document.getElementById('task-popup').style.display = 'none';
+            document.getElementById('task-form').reset();
+            document.getElementById('step-1').style.display = 'block';
+            document.getElementById('step-2').style.display = 'none';
+        }
+
+        function showStep2() {
+            const taskName = document.getElementById('task-name').value;
+            const taskDeadline = document.getElementById('task-deadline').value;
+            const taskStudent = document.getElementById('task-student').value;
+
+            if (taskName && taskDeadline && taskStudent) {
+                // Simulate LLM calculation for payment
+                const payment = calculatePayment(taskName, taskDeadline, taskStudent);
+                document.getElementById('task-payment').value = payment;
+
+                // Switch to Step 2
+                document.getElementById('step-1').style.display = 'none';
+                document.getElementById('step-2').style.display = 'block';
+            } else {
+                alert('Please fill all fields before proceeding.');
+            }
+        }
+
+        function calculatePayment(taskName, deadline, student) {
+            // Placeholder LLM logic (to be replaced with actual LLM integration)
+            const baseCoins = {
+                "PPT Making": 400,
+                "Research": 600,
+                "Code Debug": 500,
+                "Content Writing": 405,
+                "Data Entry": 300,
+                "Spreadsheets": 305,
+                "Graphic Design": 505,
+                "Video Editing": 600,
+                "Web Development": 700,
+                "Data Analysis": 650,
+                "Documentation": 400,
+                "Transcription": 350,
+                "Schedule Management": 300,
+                "Proofreading": 400,
+                "Cloud Management": 500
+            };
+
+            // Calculate days left
+            const today = new Date();
+            const deadlineDate = new Date(deadline);
+            const daysLeft = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
+
+            // Student experience factor (simulated)
+            const studentExperience = {
+                "Priya Sharma": 1.2, // Intermediate
+                "Amit Patel": 1.0,   // Beginner
+                "Rohan Gupta": 1.5   // Advanced
+            };
+
+            // Base payment + urgency factor + experience factor
+            const base = baseCoins[taskName] || 50;
+            const urgencyFactor = daysLeft <= 5 ? 1.3 : 1.0; // 30% more if less than 5 days
+            const experienceFactor = studentExperience[student] || 1.0;
+            return Math.round(base * urgencyFactor * experienceFactor);
+        }
+
+        function assignTask(event) {
+            event.preventDefault();
+            const taskName = document.getElementById('task-name').value;
+            const taskDeadline = document.getElementById('task-deadline').value;
+            const taskStudent = document.getElementById('task-student').value;
+            const taskPayment = document.getElementById('task-payment').value;
+
+            if (taskName && taskDeadline && taskStudent && taskPayment) {
+                const newTask = {
+                    id: Date.now().toString(),
+                    name: taskName,
+                    deadline: taskDeadline,
+                    payment: taskPayment,
+                    student: taskStudent
+                };
+                tasks.push(newTask);
+                updateTaskGrid();
+                closeTaskPopup();
+            }
+        }
+
+        function updateTaskGrid() {
+            const tasksGrid = document.getElementById('tasks-grid');
+            const noTasks = document.getElementById('no-tasks');
+            tasksGrid.innerHTML = '';
+
+            if (tasks.length === 0) {
+                noTasks.style.display = 'block';
+            } else {
+                noTasks.style.display = 'none';
+                tasks.forEach(task => {
+                    const taskCard = `
+                        <div class="task-card">
+                            <h3>${task.name}</h3>
+                            <p><strong>Deadline:</strong> ${new Date(task.deadline).toLocaleDateString()}</p>
+                            <p><strong>Payment:</strong> ${task.payment} Coins</p>
+                            <p><strong>Assigned to:</strong> ${task.student}</p>
+                        </div>
+                    `;
+                    tasksGrid.innerHTML += taskCard;
+                });
+            }
+        }
+
+        // Initial load
+        updateTaskGrid();
+
+        // Close popup on outside click
+        window.onclick = function(event) {
+            const popup = document.getElementById('task-popup');
+            if (event.target === popup) {
+                closeTaskPopup();
+            }
+        }
+    </script>
+</body>
+</html>
