@@ -3,28 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taska Elite - Home</title>
+    <title>Taska Elite - IIT Talent for Your Career</title>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/index.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="logo">Taska Elite</div>
         <ul class="nav-menu">
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
-            <li><a href="workplace/overview.html">Login/Signup</a></li>
+            <li><a href="login.html">Login</a></li>
         </ul>
         <div class="hamburger">☰</div>
         <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">🌙</button>
     </nav>
 
     <main>
-        <!-- Hero Section with Animated Heading -->
         <section class="hero">
             <video autoplay muted loop playsinline class="hero-video" loading="lazy">
                 <source src="videos/campus-background.mp4.mp4" type="video/mp4">
@@ -33,19 +31,18 @@
             <div class="hero-overlay"></div>
             <div class="hero-content">
                 <h1 class="animated-heading">
-                    <span>Hire Elite Talents from IIT & NIT</span>
+                    <span>Hire IIT Prodigies to Elevate Your Career</span>
                 </h1>
-                <p>Hire elite students as assistants for your projects and achieve excellence.</p>
+                <p>Partner with IIT’s brightest minds to streamline your worklife and boost your success.</p>
                 <button class="cta-button" onclick="window.location.href='workplace/overview.html'" aria-label="Get started">Get Started</button>
             </div>
         </section>
 
-        <!-- Search/Filter Section -->
         <section class="search-filter">
             <div class="filter-bar">
-                <input type="text" id="search-input" placeholder="Search IITians/NITians (e.g., design, coding)" class="custom-input" aria-label="Search students">
+                <input type="text" id="search-input" placeholder="Find IIT Talent (e.g., organizing, research)" class="custom-input" aria-label="Search students">
                 <select id="category-filter" class="custom-dropdown" aria-label="Filter by category">
-                    <option value="all">All Categories</option>
+                    <option value="all">All Skills</option>
                     <option value="design">Design</option>
                     <option value="coding">Coding</option>
                     <option value="research">Research</option>
@@ -53,13 +50,25 @@
                     <option value="tech">Technology</option>
                     <option value="content">Content Creation</option>
                 </select>
-                <button class="cta-button" onclick="filterStudents()" aria-label="Search students">Search</button>
+                <button class="cta-button" onclick="filterStudents()" aria-label="Search talent">Search</button>
             </div>
         </section>
 
-        <!-- Meet IITians & NITians -->
+        <section class="win-win-section">
+            <div class="win-win-container">
+                <div class="win-win-image">
+                    <img src="https://png.pngtree.com/png-vector/20231019/ourmid/pngtree-3d-illustration-business-manager-png-image_10267338.png" alt="Professional pondering repetitive tasks" loading="lazy">
+                </div>
+                <div class="win-win-text">
+                    <p>Stuck doing repetitive tasks in your worklife that don’t really need your level of expertise? 
+                       What if you handed them off to a prodigy eager to gain real-world experience? 
+                       You save time, they learn — it’s a win-win!</p>
+                </div>
+            </div>
+        </section>
+
         <section class="task-grid-section">
-            <h2>Meet IITians & NITians</h2>
+            <h2>Meet IIT’s Elite Talent</h2>
             <div class="students-grid" id="students-grid">
                 <!-- Student cards will be populated dynamically -->
             </div>
@@ -70,59 +79,64 @@
             </div>
         </section>
 
-        <!-- Number Summary -->
+        <!-- Restored Number Summary Section -->
         <section class="number-summary">
             <div class="summary-item">
                 <span id="students-count" data-target="500">0</span>
-                <p>IIT/NIT Students</p>
+                <p>IIT Prodigies</p> <!-- Updated label -->
             </div>
             <div class="summary-item">
                 <span id="professionals-count" data-target="200">0</span>
-                <p>Active Professionals</p>
+                <p>Professionals Empowered</p> <!-- Updated label -->
             </div>
             <div class="summary-item">
                 <span id="projects-count" data-target="1000">0</span>
-                <p>Projects Completed</p>
+                <p>Tasks Outsourced</p> <!-- Updated label -->
             </div>
         </section>
 
-        <!-- How It Works -->
         <section class="how-tasks-work">
-            <h2>How It Works</h2>
+            <h2>How Taska Simplifies Your Career with IIT Prodigies</h2>
             <div class="how-steps">
                 <div class="step">
-                    <img src="https://media.istockphoto.com/id/1163999037/vector/recruiting-professionals-studying-candidate-profiles.jpg?s=612x612&w=0&k=20&c=dGHZfTnZAmdKNIfbBslnSayJhhZO7ibjwJ9dyUCnsx0=" alt="Hiring Scene" class="step-image">
-                    <h3>Hire Talent</h3>
-                    <p>Hire an IITian/NITian for your project.</p>
+                    <img src="https://media.istockphoto.com/id/1163999037/vector/recruiting-professionals-studying-candidate-profiles.jpg?s=612x612&w=0&k=20&c=dGHZfTnZAmdKNIfbBslnSayJhhZO7ibjwJ9dyUCnsx0=" alt="Hiring an IIT Prodigy" class="step-image">
+                    <h3>Hire an IIT Prodigy</h3>
+                    <p>Find a top-tier IIT student skilled in your professional field. 
+                       Browse profiles to match their expertise with your needs. 
+                       Hire talent ready to make your workday smoother.</p>
                 </div>
                 <div class="step">
-                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/work-delegation-illustration-download-in-svg-png-gif-file-formats--manager-distribute-assign-tasks-team-member-colleagues-business-pack-illustrations-6729095.png?f=webp" alt="Task Assignment" class="step-image">
-                    <h3>Assign Tasks</h3>
-                    <p>Assign tasks and set clear deadlines.</p>
+                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/work-delegation-illustration-download-in-svg-png-gif-file-formats--manager-distribute-assign-tasks-team-member-colleagues-business-pack-illustrations-6729095.png?f=webp" alt="Outsourcing Tasks" class="step-image">
+                    <h3>Outsource Your Tasks</h3>
+                    <p>Connect with your chosen IIT prodigy effortlessly. 
+                       Share extra or repetitive tasks that bog you down. 
+                       Free up your time with their sharp skills and efficiency.</p>
                 </div>
                 <div class="step">
-                    <img src="https://img.freepik.com/premium-vector/completed-task-work-done-happy-woman-worker-business-secretary-cartoon-illustration_385073-97.jpg" alt="Completed Project" class="step-image">
-                    <h3>Get Results</h3>
-                    <p>Get work done perfectly and on time.</p>
+                    <img src="https://img.freepik.com/premium-vector/completed-task-work-done-happy-woman-worker-business-secretary-cartoon-illustration_385073-97.jpg" alt="Focusing on What Matters" class="step-image">
+                    <h3>Focus on What Matters</h3>
+                    <p>Let IIT prodigies handle the routine, non-challenging work. 
+                       Focus on high-impact priorities in your career. 
+                       Achieve more with their support driving your success.</p>
                 </div>
             </div>
         </section>
 
-        <!-- User Feedback -->
+        <!-- Restored User Feedback Section -->
         <section class="user-feedback">
-            <h2>User Feedback</h2>
+            <h2>What Our Users Say</h2>
             <div class="feedback-container" id="feedback-container">
                 <div class="feedback-item active">
-                    <p>"Hiring IITians through Taska Elite saved me time and delivered quality."</p>
+                    <p>"Taska’s IIT prodigies took over my repetitive tasks, saving me hours."</p> <!-- Updated text -->
                     <span>- Vikram, Professional</span>
                 </div>
                 <div class="feedback-item">
-                    <p>"Great platform to showcase my skills and earn."</p>
-                    <span>- Riya, NIT Student</span>
+                    <p>"Working with professionals sharpened my skills and confidence."</p> <!-- Updated text -->
+                    <span>- Riya, IIT Student</span> <!-- Updated label -->
                 </div>
                 <div class="feedback-item">
-                    <p>"Top-notch assistance for my startup projects."</p>
-                    <span>- Sanjay, Entrepreneur</span>
+                    <p>"Outsourcing to an IIT prodigy made my workday so much smoother."</p> <!-- Updated text -->
+                    <span>- Sanjay, Professional</span>
                 </div>
             </div>
             <div class="feedback-nav">
@@ -131,11 +145,10 @@
             </div>
         </section>
 
-        <!-- Call to Action -->
         <section class="call-to-action">
-            <h2>Get Involved Today</h2>
-            <p>Join a community of innovators and achieve your goals.</p>
-            <button class="cta-button" onclick="window.location.href='workplace/overview.html'" aria-label="Join now">Join Now</button>
+            <h2>Simplify Your Workday Today</h2>
+            <p>Join Taska and get college student assistants to support your worklife.</p>
+            <button class="cta-button" onclick="window.location.href='login.html'" aria-label="Join now">Join Now</button>
         </section>
     </main>
 
@@ -148,7 +161,6 @@
         </div>
     </footer>
 
-    <!-- Scroll to Top Button -->
     <button class="scroll-to-top" onclick="scrollToTop()" aria-label="Scroll to top">↑</button>
 
     <script type="module" src="js/firebase-config.js"></script>

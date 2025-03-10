@@ -168,3 +168,54 @@
 .connect-btn.dark-mode:hover {
     background: #ccc;
 }
+
+/* Append to css/explore.css */
+.students-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.student-card {
+    background: var(--background-light);
+    border: 1px solid var(--border-light);
+    padding: 1.5rem;
+    border-radius: 15px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.student-card.dark-mode {
+    background: var(--background-dark-alt);
+    border-color: var(--border-dark);
+}
+
+.student-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.student-card h3 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.student-card h3.dark-mode {
+    color: var(--pure-white);
+}
+
+.student-card p {
+    font-size: 1rem;
+    color: var(--secondary-color);
+    margin: 0.5rem 0;
+}
+
+.student-card p.dark-mode {
+    color: var(--light-grey);
+}
+
+.student-card button {
+    margin-top: 1rem;
+}

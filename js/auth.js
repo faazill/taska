@@ -27,7 +27,7 @@ window.login = function(userType) {
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             console.log(`${userType} logged in: ${userCredential.user.email}`);
-            window.location.href = userType === 'professional' ? 'professional.html' : 'student.html';
+            window.location.href = userType === 'professional' ? 'professional/overview.html' : 'workplace/overview.html';
         })
         .catch((error) => {
             alert(`Login failed: ${error.message}`);

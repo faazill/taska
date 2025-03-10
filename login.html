@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/forms.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/login.css"> <!-- New file for login-specific styles -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -17,18 +18,16 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
-            <li><a href="login.html">Login/Signup</a></li>
+            <li><a href="login.html">Login</a></li>
         </ul>
         <div class="hamburger">☰</div>
-        <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">🌙</button>
     </nav>
 
     <main>
         <section class="auth-container">
             <h1>Join Taska</h1>
             <p class="intro-text">Welcome to Taska! Whether you're a professional looking to delegate tasks or a student seeking opportunities, we've got you covered. Choose your role below to get started.</p>
-
-            <!-- Role Selection -->
             <div class="role-selection" id="role-selection">
                 <div class="role-card" onclick="showForm('professional')">
                     <h2>Professional</h2>
@@ -41,8 +40,6 @@
                     <button class="select-button">Select</button>
                 </div>
             </div>
-
-            <!-- Forms (hidden initially) -->
             <div class="auth-form" id="professional-form" style="display: none;">
                 <h2>Professional Access</h2>
                 <p>Login or signup to start posting tasks and managing your projects.</p>
@@ -55,7 +52,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="auth-form" id="student-form" style="display: none;">
                 <h2>Student Access</h2>
                 <p>Login or signup to explore tasks and start earning today.</p>

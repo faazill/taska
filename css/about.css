@@ -1,0 +1,124 @@
+/* css/about.css */
+.about-section {
+    background: #fff; /* Matches overview.html main areas */
+    padding: 5rem 2rem;
+    max-width: 1000px;
+    margin: 90px auto 60px;
+    text-align: center;
+}
+
+.about-section.dark-mode {
+    background: #1a1f2b; /* Matches overview.html dark mode */
+}
+
+.about-section h1 {
+    color: #333; /* Matches overview.html primary text */
+    font-size: 2.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.about-section h1.dark-mode {
+    color: #fff; /* Matches overview.html dark mode text */
+}
+
+.intro-text {
+    color: #666; /* Matches overview.html secondary text */
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+}
+
+.intro-text.dark-mode {
+    color: #ccc; /* Matches overview.html dark mode secondary text */
+}
+
+.team-grid {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.team-card {
+    background: #fff; /* Matches overview.html sidebar/chat-area */
+    border: 1px solid #e0e0e0; /* Matches overview.html borders */
+    padding: 2rem;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.team-card.dark-mode {
+    background: #2a3550; /* Matches overview.html dark mode headers */
+    border-color: #444; /* Matches overview.html dark mode borders */
+}
+
+.team-card h3 {
+    color: #333; /* Matches overview.html contact headers */
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.team-card h3.dark-mode {
+    color: #fff; /* Matches overview.html dark mode text */
+}
+
+.team-card p {
+    color: #666; /* Matches overview.html secondary text */
+    font-size: 1rem;
+}
+
+.team-card p.dark-mode {
+    color: #ccc; /* Matches overview.html dark mode secondary text */
+}
+
+/* Navbar color tweaks to match overview.html */
+.navbar {
+    background: #f5f5f5; /* Matches overview.html chat-header */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar.dark-mode {
+    background: #2a3550; /* Matches overview.html dark mode headers */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.nav-menu a {
+    color: #333; /* Matches overview.html text */
+}
+
+.nav-menu a:hover {
+    color: #666; /* Matches overview.html secondary text */
+}
+
+.nav-menu a.dark-mode {
+    color: #fff; /* Matches overview.html dark mode text */
+}
+
+.nav-menu a.dark-mode:hover {
+    color: #ccc; /* Matches overview.html dark mode secondary text */
+}
+
+.logo {
+    color: #333; /* Matches overview.html text */
+}
+
+.logo.dark-mode {
+    color: #fff; /* Matches overview.html dark mode text */
+}
+
+.hamburger {
+    color: #333; /* Matches overview.html text */
+}
+
+.hamburger.dark-mode {
+    color: #fff; /* Matches overview.html dark mode text */
+}
+
+.dark-mode-toggle {
+    color: #333; /* Matches overview.html text */
+}
+
+.dark-mode-toggle.dark-mode {
+    color: #fff; /* Matches overview.html dark mode text */
+}
