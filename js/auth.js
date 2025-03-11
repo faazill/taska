@@ -41,8 +41,11 @@ window.login = function(userType) {
         })
         .then((userCredential) => {
             const user = userCredential.user;
-            console.log(`${userType} logged in: ${user.email}`);
-            localStorage.setItem('userEmail', user.email); // Store email locally
+            console.log(`${userType} logged in: ${user.email}, UID: ${user.uid}`);
+            localStorage.setItem('userId', user.uid); // Store UID in localStorage
+            localStorage.setItem('userRole', userType); // Store role
+            console.log("Stored userId in localStorage:", user.uid); // Debug
+            console.log("Stored userRole in localStorage:", userType); // Debug
             window.location.href = userType === 'professional' ? 'professional/overview.html' : 'workplace/overview.html';
         })
         .catch((error) => {
@@ -63,23 +66,39 @@ window.signup = function(userType) {
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
-            console.log(`${userType} signed up: ${user.email}`);
-            localStorage.setItem('userEmail', user.email); // Store email locally
+            console.log(`${userType} signed up: ${user.email}, UID: ${user.uid}`);
+            localStorage.setItem('userId', user.uid); // Store UID in localStorage
+            localStorage.setItem('userRole', userType); // Store role
+            console.log("Stored userId in localStorage:", user.uid); // Debug
+            console.log("Stored userRole in localStorage:", userType); // Debug
 
-            // Store in Realtime Database under professionalslist or studentslist
+            // Store initial data in Realtime Database under professionalslist or studentslist with UID
             const list = userType === 'professional' ? 'professionalslist' : 'studentslist';
             const userRef = ref(database, `${list}/${user.uid}`);
-            set(userRef, {
-                email: user.email
-            })
-            .then(() => {
-                console.log("User email stored in database");
-                window.location.href = userType === 'professional' ? 'professional/update-profile.html' : 'workplace/update-profile.html';
-            })
-            .catch((error) => {
-                console.error("Error storing user data:", error);
-                alert("Signup succeeded, but failed to store data: " + error.message);
-            });
+            const initialData = {
+                email: user.email,
+                name: '',
+                location: '',
+                profession: '',
+                company: '',
+                experience: '',
+                skills: '',
+                education: '',
+                bio: '',
+                hobbies: '',
+                coins: 500, // Default for professionals; adjust for students if needed
+                isHiring: false // Default for professionals
+            };
+
+            set(userRef, initialData)
+                .then(() => {
+                    console.log("Initial data stored in database for UID:", user.uid, initialData);
+                    window.location.href = userType === 'professional' ? 'professional/update-profile.html' : 'workplace/update-profile.html';
+                })
+                .catch((error) => {
+                    console.error("Error storing initial data:", error);
+                    alert("Signup succeeded, but failed to store data: " + error.message);
+                });
         })
         .catch((error) => {
             console.error("Signup error:", error.code, error.message);
@@ -91,7 +110,9 @@ window.signup = function(userType) {
 window.signOut = function() {
     auth.signOut()
         .then(() => {
-            localStorage.removeItem('userEmail'); // Clear local storage on logout
+            console.log("User signed out, clearing localStorage");
+            localStorage.removeItem('userId'); // Clear UID
+            localStorage.removeItem('userRole'); // Clear role
             window.location.href = 'login.html';
         })
         .catch((error) => {
@@ -99,11 +120,30 @@ window.signOut = function() {
         });
 };
 
-// Check auth state
+// Check auth state and sync persistent value
 auth.onAuthStateChanged((user) => {
     if (user) {
-        console.log(`User logged in: ${user.email}`);
+        const storedUserId = localStorage.getItem('userId');
+        if (!storedUserId || storedUserId !== user.uid) {
+            localStorage.setItem('userId', user.uid);
+            localStorage.setItem('userRole', window.location.href.includes('professional') ? 'professional' : 'student');
+            console.log("Auth state changed, updated userId:", user.uid);
+            console.log("Auth state changed, updated userRole:", localStorage.getItem('userRole'));
+        }
+        console.log(`User logged in: ${user.email}, UID: ${user.uid}`);
     } else {
         console.log('No user logged in');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userRole');
     }
 });
+
+// Function to get the user ID
+window.getUserId = function() {
+    return localStorage.getItem('userId');
+};
+
+// Function to get the user role
+window.getUserRole = function() {
+    return localStorage.getItem('userRole');
+};

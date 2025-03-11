@@ -26,6 +26,7 @@
         <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
     </nav>
 
+
     <!-- Main Content -->
     <main class="dashboard-content">
         <section class="dashboard-section">
@@ -88,6 +89,13 @@
     <footer>
         <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
     </footer>
+
+    <p><strong>User ID:</strong> <span id="user-id">Loading...</span></p>
+
+    <script>
+      const userId = localStorage.getItem('userId');
+      document.getElementById('user-id').textContent = userId || 'Not found';
+    </script>
 
     <script src="../js/main.js"></script>
     <script src="../js/overview.js"></script>

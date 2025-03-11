@@ -9,6 +9,60 @@
     <link rel="stylesheet" href="css/index.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Inline CSS adjustments to ensure button is clickable */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            height: 100vh;
+        }
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3); /* Adjusted opacity for visibility */
+            z-index: 2;
+            pointer-events: none; /* Ensure overlay doesn't block clicks */
+        }
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            padding: 2rem;
+            color: #fff;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .cta-button {
+            padding: 1rem 2rem;
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 45px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            z-index: 4; /* Ensure button is above overlay */
+            pointer-events: auto; /* Explicitly enable pointer events */
+        }
+        .cta-button:hover {
+            background: #2980b9;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -35,11 +89,9 @@
                     <span>Hire IIT Prodigies to Elevate Your Career</span>
                 </h1>
                 <p>Partner with IIT’s brightest minds to streamline your worklife and boost your success.</p>
-                <button class="cta-button" onclick="window.location.href='workplace/overview.html'" aria-label="Get started">Get Started</button>
+                <button class="cta-button" onclick="handleGetStarted()" aria-label="Get started">Get Started</button>
             </div>
         </section>
-
-        
 
         <section class="win-win-section">
             <div class="win-win-container">
@@ -146,7 +198,6 @@
             </div>
         </section>
 
-        <!-- New Section: Outsource Regular Tasks -->
         <section class="outsource-tasks-section">
             <div class="outsource-tasks-container">
                 <h2>Outsource Regular Tasks</h2>
@@ -234,7 +285,7 @@
         <section class="call-to-action">
             <h2>Simplify Your Workload Today</h2>
             <p>Join Taska and get college student assistants to support your worklife.</p>
-            <button class="cta-button" onclick="window.location.href='workplace/overview.html'" aria-label="Join now">Join Now</button>
+            <button class="cta-button" onclick="window.location.href='login.html'" aria-label="Join now">Join Now</button>
         </section>
     </main>
 
@@ -251,5 +302,12 @@
 
     <script type="module" src="js/firebase-config.js"></script>
     <script src="js/main.js"></script>
-</body>
+    <script>
+        // Function to handle Get Started button click with debugging
+        function handleGetStarted() {
+            console.log("Get Started button clicked");
+            window.location.href = 'login.html';
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91e814a66fe9bf7c',t:'MTc0MTY2NDk1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
