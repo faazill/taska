@@ -11,210 +11,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(5px);
-        }
-        .dashboard-content {
-            padding: 3rem 1rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: calc(100vh - 120px);
-        }
-        .profile-container {
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            width: 100%;
-            max-width: 700px;
-            padding: 2rem;
-            transform: translateY(20px);
-            opacity: 0;
-            animation: slideIn 0.6s ease-out forwards;
-        }
-        @keyframes slideIn {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        .profile-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .profile-header h1 {
-            font-size: 2.5rem;
-            color: #2c3e50;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        .profile-avatar {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            border: 5px solid #3498db;
-            margin: 0 auto 2rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .profile-avatar:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
-        }
-        .profile-details {
-            background: rgba(245, 245, 245, 0.8);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .profile-details p {
-            margin: 0.8rem 0;
-            font-size: 1.1rem;
-            color: #34495e;
-            display: flex;
-            justify-content: space-between;
-            transition: transform 0.3s ease;
-        }
-        .profile-details p:hover {
-            transform: translateX(5px);
-        }
-        .profile-details strong {
-            color: #2c3e50;
-            font-weight: 600;
-            width: 150px;
-        }
-        .toggle-container {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .toggle-label {
-            font-size: 1.2rem;
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
-            display: block;
-            font-weight: 500;
-        }
-        .custom-toggle {
-            display: none;
-        }
-        .toggle-switch {
-            width: 70px;
-            height: 40px;
-            background: #ccc;
-            border-radius: 20px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            display: inline-block;
-        }
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 34px;
-            height: 34px;
-            left: 3px;
-            top: 3px;
-            background: #fff;
-            border-radius: 50%;
-            transition: transform 0.3s ease, background 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        .custom-toggle:checked + .toggle-switch {
-            background: #2ecc71;
-        }
-        .custom-toggle:checked + .toggle-switch::after {
-            transform: translateX(30px);
-            background: #fff;
-        }
-        .toggle-switch:hover::after {
-            transform: scale(1.1);
-        }
-        .custom-toggle:checked + .toggle-switch:hover::after {
-            transform: translateX(30px) scale(1.1);
-        }
-        .edit-btn {
-            display: inline-block;
-            padding: 0.8rem 2rem;
-            background: #3498db;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            transition: background 0.3s ease, transform 0.3s ease;
-        }
-        .edit-btn:hover {
-            background: #2980b9;
-            transform: translateY(-3px);
-        }
-        .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: #2ecc71;
-            color: #fff;
-            padding: 1.5rem 3rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            font-size: 1.2rem;
-            z-index: 1000;
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            text-align: center;
-        }
-        .popup.error {
-            background: #e74c3c;
-        }
-        .popup.show {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-        }
-        footer {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 1rem;
-            text-align: center;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .dark-mode .profile-container {
-            background: #2c3e50;
-        }
-        .dark-mode .profile-header h1,
-        .dark-mode .profile-details p,
-        .dark-mode .toggle-label {
-            color: #ecf0f1;
-        }
-        .dark-mode .profile-details {
-            background: rgba(44, 62, 80, 0.8);
-        }
-        .dark-mode .toggle-switch {
-            background: #7f8c8d;
-        }
-        .dark-mode .custom-toggle:checked + .toggle-switch {
-            background: #27ae60;
-        }
-        .dark-mode .edit-btn {
-            background: #2980b9;
-        }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; overflow-x: hidden; }
+        .navbar { background: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); }
+        .dashboard-content { padding: 3rem 1rem; display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 120px); }
+        .profile-container { background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); width: 100%; max-width: 700px; padding: 2rem; transform: translateY(20px); opacity: 0; animation: slideIn 0.6s ease-out forwards; }
+        @keyframes slideIn { to { transform: translateY(0); opacity: 1; } }
+        .profile-header { text-align: center; margin-bottom: 2rem; }
+        .profile-header h1 { font-size: 2.5rem; color: #2c3e50; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+        .profile-avatar { width: 160px; height: 160px; border-radius: 50%; border: 5px solid #3498db; margin: 0 auto 2rem; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .profile-avatar:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(52, 152, 219, 0.5); }
+        .profile-details { background: rgba(245, 245, 245, 0.8); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; }
+        .profile-details p { margin: 0.8rem 0; font-size: 1.1rem; color: #34495e; display: flex; justify-content: space-between; transition: transform 0.3s ease; }
+        .profile-details p:hover { transform: translateX(5px); }
+        .profile-details strong { color: #2c3e50; font-weight: 600; width: 150px; }
+        .toggle-container { text-align: center; margin-bottom: 2rem; }
+        .toggle-label { font-size: 1.2rem; color: #2c3e50; margin-bottom: 0.5rem; display: block; font-weight: 500; }
+        .custom-toggle { display: none; }
+        .toggle-switch { width: 70px; height: 40px; background: #ccc; border-radius: 20px; position: relative; cursor: pointer; transition: background 0.3s ease; display: inline-block; }
+        .toggle-switch::after { content: ''; position: absolute; width: 34px; height: 34px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform 0.3s ease, background 0.3s ease; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); }
+        .custom-toggle:checked + .toggle-switch { background: #2ecc71; }
+        .custom-toggle:checked + .toggle-switch::after { transform: translateX(30px); background: #fff; }
+        .toggle-switch:hover::after { transform: scale(1.1); }
+        .custom-toggle:checked + .toggle-switch:hover::after { transform: translateX(30px) scale(1.1); }
+        .edit-btn { display: inline-block; padding: 0.8rem 2rem; background: #3498db; color: #fff; text-decoration: none; border-radius: 25px; font-size: 1.1rem; transition: background 0.3s ease, transform 0.3s ease; }
+        .edit-btn:hover { background: #2980b9; transform: translateY(-3px); }
+        .popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: #2ecc71; color: #fff; padding: 1.5rem 3rem; border-radius: 15px; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); font-size: 1.2rem; z-index: 1000; opacity: 0; transition: transform 0.3s ease, opacity 0.3s ease; text-align: center; }
+        .popup.error { background: #e74c3c; }
+        .popup.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        footer { background: rgba(255, 255, 255, 0.95); padding: 1rem; text-align: center; position: fixed; bottom: 0; width: 100%; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); }
+        .dark-mode .profile-container { background: #2c3e50; }
+        .dark-mode .profile-header h1, .dark-mode .profile-details p, .dark-mode .toggle-label { color: #ecf0f1; }
+        .dark-mode .profile-details { background: rgba(44, 62, 80, 0.8); }
+        .dark-mode .toggle-switch { background: #7f8c8d; }
+        .dark-mode .custom-toggle:checked + .toggle-switch { background: #27ae60; }
+        .dark-mode .edit-btn { background: #2980b9; }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="logo">Taska Elite</div>
         <ul class="nav-menu">
             <li><a href="overview.html">Overview</a></li>
             <li><a href="explore.html">Explore</a></li>
-            <li><a href="tasks.html">Tasks</a></li>
+            <li><a href="connections.html">Connections</a></li>
             <li><a href="profile.html" class="active">Profile</a></li>
             <li><a href="../index.html">Logout</a></li>
         </ul>
@@ -222,7 +61,6 @@
         <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
     </nav>
 
-    <!-- Main Content -->
     <main class="dashboard-content">
         <div class="profile-container">
             <div class="profile-header">
@@ -247,6 +85,10 @@
                 <p><strong>Education:</strong> <span id="education">Loading...</span></p>
                 <p><strong>Bio:</strong> <span id="bio">Loading...</span></p>
                 <p><strong>Hobbies:</strong> <span id="hobbies">Loading...</span></p>
+                <h3>Connection Requests</h3>
+                <div id="request-list"></div>
+                <h3>Connections</h3>
+                <div id="connections-list"></div>
             </div>
             <div class="profile-actions">
                 <a href="update-profile.html" class="edit-btn">Edit Profile</a>
@@ -254,17 +96,15 @@
         </div>
     </main>
 
-    <!-- Popup -->
     <div class="popup" id="hiring-popup"></div>
 
     <footer>
         <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
     </footer>
 
-    <!-- Script to load profile data -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getDatabase, ref, get, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+        import { getDatabase, ref, get, set, onValue } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
@@ -278,12 +118,9 @@
 
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
-
         const userId = localStorage.getItem('userId');
-        console.log("Profile.html - Retrieved userId:", userId);
 
         if (!userId) {
-            console.error("Profile.html - No userId, redirecting to login");
             setTimeout(() => {
                 alert("Please log in or sign up first.");
                 window.location.href = '../login.html';
@@ -296,12 +133,8 @@
             try {
                 const userRef = ref(database, `professionalslist/${userId}`);
                 const snapshot = await get(userRef);
-                console.log("Profile.html - Snapshot exists:", snapshot.exists());
-                console.log("Profile.html - Snapshot data:", snapshot.val());
-
                 if (snapshot.exists()) {
                     const data = snapshot.val();
-
                     document.getElementById('name').textContent = data.name || 'Not set';
                     document.getElementById('email').textContent = data.email || 'Not set';
                     document.getElementById('location').textContent = data.location || 'Not set';
@@ -315,45 +148,12 @@
                     document.getElementById('bio').textContent = data.bio || 'Not set';
                     document.getElementById('hobbies').textContent = data.hobbies || 'Not set';
                     document.getElementById('hiring-toggle').checked = data.isHiring || false;
-
-                    if (data.profileImage) {
-                        document.getElementById('profile-avatar').src = data.profileImage;
-                    }
+                    if (data.profileImage) document.getElementById('profile-avatar').src = data.profileImage;
                 } else {
-                    console.warn("Profile.html - No data exists at:", `professionalslist/${userId}`);
                     alert("No profile data found. Please update your profile.");
-
-                    document.getElementById('name').textContent = 'Not set';
-                    document.getElementById('email').textContent = 'Not set';
-                    document.getElementById('location').textContent = 'Not set';
-                    document.getElementById('joined').textContent = 'Not set';
-                    document.getElementById('coins').textContent = '0';
-                    document.getElementById('profession').textContent = 'Not set';
-                    document.getElementById('company').textContent = 'Not set';
-                    document.getElementById('experience').textContent = 'Not set';
-                    document.getElementById('skills').textContent = 'Not set';
-                    document.getElementById('education').textContent = 'Not set';
-                    document.getElementById('bio').textContent = 'Not set';
-                    document.getElementById('hobbies').textContent = 'Not set';
-                    document.getElementById('hiring-toggle').checked = false;
                 }
             } catch (error) {
-                console.error("Profile.html - Error loading profile data:", error);
                 alert(`Failed to load profile: ${error.message}`);
-
-                document.getElementById('name').textContent = 'Error';
-                document.getElementById('email').textContent = 'Error';
-                document.getElementById('location').textContent = 'Error';
-                document.getElementById('joined').textContent = 'Error';
-                document.getElementById('coins').textContent = 'Error';
-                document.getElementById('profession').textContent = 'Error';
-                document.getElementById('company').textContent = 'Error';
-                document.getElementById('experience').textContent = 'Error';
-                document.getElementById('skills').textContent = 'Error';
-                document.getElementById('education').textContent = 'Error';
-                document.getElementById('bio').textContent = 'Error';
-                document.getElementById('hobbies').textContent = 'Error';
-                document.getElementById('hiring-toggle').checked = false;
             }
         }
 
@@ -361,26 +161,50 @@
             const toggle = document.getElementById('hiring-toggle');
             const isHiring = toggle.checked;
             const popup = document.getElementById('hiring-popup');
-
             try {
-                const userRef = ref(database, `professionalslist/${userId}/isHiring`);
-                await set(userRef, isHiring);
-                console.log(`Profile.html - Hiring status updated to ${isHiring}`);
-
-                // Show appropriate popup message
-                popup.textContent = isHiring 
-                    ? "Your profile is visible as hiring" 
-                    : "Your profile is no longer visible as hiring";
+                await set(ref(database, `professionalslist/${userId}/isHiring`), isHiring);
+                popup.textContent = isHiring ? "Your profile is visible as hiring" : "Your profile is no longer visible as hiring";
                 popup.classList.add('show');
-                setTimeout(() => {
-                    popup.classList.remove('show');
-                }, 2000);
+                setTimeout(() => popup.classList.remove('show'), 2000);
             } catch (error) {
-                console.error("Profile.html - Error updating hiring status:", error);
                 alert("Failed to update hiring status: " + error.message);
-                toggle.checked = !isHiring; // Revert on error
+                toggle.checked = !isHiring;
             }
         }
+
+        // Connection Requests
+        const requestList = document.getElementById('request-list');
+        onValue(ref(database, 'connection_requests'), (snapshot) => {
+            requestList.innerHTML = '<h4>Sent Requests</h4>';
+            snapshot.forEach((childSnapshot) => {
+                const req = childSnapshot.val();
+                if (req.from === userId && req.status === 'pending') {
+                    get(ref(database, `studentslist/${req.to}`)).then((snap) => {
+                        const student = snap.val();
+                        requestList.innerHTML += `<p>Pending request to ${student.name}</p>`;
+                    });
+                }
+            });
+        });
+
+        // Connections List
+        const connectionsList = document.getElementById('connections-list');
+        onValue(ref(database, `professionalslist/${userId}/connections`), (snapshot) => {
+            connectionsList.innerHTML = '';
+            if (snapshot.exists()) {
+                snapshot.forEach((childSnapshot) => {
+                    const studentId = childSnapshot.key;
+                    get(ref(database, `studentslist/${studentId}`)).then((snap) => {
+                        const student = snap.val();
+                        connectionsList.innerHTML += `
+                            <p>${student.name} - Connected since ${new Date(childSnapshot.val().connectedAt).toLocaleDateString()}</p>
+                        `;
+                    });
+                });
+            } else {
+                connectionsList.innerHTML = '<p>No connections yet.</p>';
+            }
+        });
     </script>
 </body>
 </html>

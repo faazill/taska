@@ -12,41 +12,39 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <!-- Navbar with professional hrefs -->
     <nav class="navbar">
         <div class="logo">Taska Elite</div>
         <ul class="nav-menu">
             <li><a href="overview.html" class="active">Overview</a></li>
             <li><a href="explore.html">Explore</a></li>
-            <li><a href="tasks.html">Tasks</a></li>
+            <li><a href="connections.html">Connections</a></li>
             <li><a href="profile.html">Profile</a></li>
+            <li><a href="tasks.html">Tasks</a></li>
             <li><a href="../index.html">Logout</a></li>
         </ul>
         <div class="hamburger">☰</div>
         <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
     </nav>
 
-
-    <!-- Main Content -->
     <main class="dashboard-content">
         <section class="dashboard-section">
             <h1>Your Professional Dashboard</h1>
-            <p>Welcome aboard! Simplify your workday by outsourcing tasks to IIT prodigies.</p>
+            <p>Welcome aboard! Simplify your workday by connecting with IIT prodigies.</p>
 
             <div class="dashboard-grid">
                 <div class="dashboard-card">
                     <h2>Active Tasks</h2>
-                    <p id="active-tasks">3</p>
-                    <a href="tasks.html" class="card-link">Manage Tasks</a>
+                    <p id="active-tasks">0</p>
+                    <a href="tasks.html" class="card-link">Manage Connections</a>
                 </div>
                 <div class="dashboard-card">
                     <h2>Hired Prodigies</h2>
-                    <p id="hired-students">1</p>
+                    <p id="hired-students">0</p>
                     <a href="explore.html" class="card-link">Explore More</a>
                 </div>
                 <div class="dashboard-card">
                     <h2>Hours Saved</h2>
-                    <p id="hours-saved">12</p>
+                    <p id="hours-saved">0</p>
                     <a href="analytics.html" class="card-link">View Analytics</a>
                 </div>
             </div>
@@ -57,15 +55,13 @@
                 <div class="search-bar">
                     <input type="text" id="search-contacts" placeholder="Search contacts..." class="custom-input">
                 </div>
-                <div class="contact-list" id="contact-list">
-                    <!-- Contacts will be populated by JavaScript -->
-                </div>
+                <div class="contact-list" id="contact-list"></div>
             </div>
             <div class="chat-area" id="chat-area">
                 <div class="chat-header" id="chat-header">
                     <div class="contact-info">
                         <div>
-                            <h3 id="contact-name"></h3>
+                            <h3 id="contact-name">Select a contact</h3>
                             <span id="contact-status"></span>
                         </div>
                     </div>
@@ -74,9 +70,7 @@
                         <button class="chat-action-btn"><i class="fas fa-ellipsis-v"></i></button>
                     </div>
                 </div>
-                <div class="chat-messages" id="chat-messages">
-                    <!-- Messages will be populated by JavaScript -->
-                </div>
+                <div class="chat-messages" id="chat-messages"></div>
                 <div class="chat-input">
                     <button class="attachment-btn"><i class="fas fa-paperclip"></i></button>
                     <input type="text" id="message-input" placeholder="Type a message..." class="custom-input">
@@ -92,42 +86,163 @@
 
     <p><strong>User ID:</strong> <span id="user-id">Loading...</span></p>
 
-    <script>
-      const userId = localStorage.getItem('userId');
-      document.getElementById('user-id').textContent = userId || 'Not found';
-    </script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getDatabase, ref, onValue, push, set, get } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
 
-    <script src="../js/main.js"></script>
-    <script src="../js/overview.js"></script>
-    <script>
-        function sendMessage() {
-            const input = document.getElementById('message-input');
-            const message = input.value.trim();
-            if (message) {
-                const chatMessages = document.getElementById('chat-messages');
-                const newMessage = `
-                    <div class="message sent">
-                        <p>${message}</p>
-                        <span class="timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                    </div>
-                `;
-                chatMessages.innerHTML += newMessage;
-                input.value = '';
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
+            authDomain: "taska-45011.firebaseapp.com",
+            databaseURL: "https://taska-45011-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "taska-45011",
+            storageBucket: "taska-45011.firebasestorage.app",
+            messagingSenderId: "205487498813",
+            appId: "1:205487498813:web:0de2c9eab567482781ec54"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const storage = getStorage(app);
+        const userId = localStorage.getItem('userId');
+        document.getElementById('user-id').textContent = userId || 'Not found';
+        let selectedConnectionId = null;
+
+        if (!userId) {
+            setTimeout(() => {
+                alert("Please log in or sign up first.");
+                window.location.href = '../login.html';
+            }, 1000);
         }
 
-        setTimeout(() => {
+        // Update dashboard stats and populate contacts
+        const userConnectionsRef = ref(db, `professionalslist/${userId}/connections`);
+        onValue(userConnectionsRef, (snapshot) => {
+            const contactList = document.getElementById('contact-list');
+            contactList.innerHTML = '';
+            const numConnections = snapshot.exists() ? snapshot.size : 0;
+            document.getElementById('hired-students').textContent = numConnections;
+            if (snapshot.exists()) {
+                snapshot.forEach((childSnapshot) => {
+                    const studentId = childSnapshot.key;
+                    get(ref(db, `studentslist/${studentId}`)).then((snap) => {
+                        const student = snap.val();
+                        contactList.innerHTML += `
+                            <div class="contact" onclick="loadChat('${userId}_${studentId}', '${student.name}')">
+                                <p>${student.name}</p>
+                            </div>
+                        `;
+                    });
+                });
+            } else {
+                contactList.innerHTML = '<p>No connections yet.</p>';
+            }
+        });
+
+        // Load chat when contact is clicked
+        window.loadChat = (connId, contactName) => {
+            selectedConnectionId = connId;
+            document.getElementById('contact-name').textContent = contactName;
+            document.getElementById('contact-status').textContent = 'Online'; // Add real status if needed
             const chatMessages = document.getElementById('chat-messages');
-            const incomingMessage = `
-                <div class="message received">
-                    <p>Just finished the initial analysis—check it out!</p>
-                    <span class="timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                </div>
-            `;
-            chatMessages.innerHTML += incomingMessage;
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }, 3000);
+            chatMessages.innerHTML = '<p>Loading messages...</p>';
+
+            const messagesRef = ref(db, `chats/${connId}/messages`);
+            onValue(messagesRef, (snapshot) => {
+                chatMessages.innerHTML = '';
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const msg = childSnapshot.val();
+                        const isSent = msg.sender === userId;
+                        let messageHtml = '';
+                        if (msg.type === 'file') {
+                            messageHtml = `
+                                <div class="message ${isSent ? 'sent' : 'received'}">
+                                    <p>${msg.fileName}</p>
+                                    <button onclick="downloadFile('${msg.content}')">Download</button>
+                                    <span class="timestamp">${new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                </div>
+                            `;
+                        } else {
+                            messageHtml = `
+                                <div class="message ${isSent ? 'sent' : 'received'}">
+                                    <p>${msg.content}</p>
+                                    <span class="timestamp">${new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                </div>
+                            `;
+                        }
+                        chatMessages.innerHTML += messageHtml;
+                    });
+                } else {
+                    chatMessages.innerHTML = '<p>No messages yet.</p>';
+                }
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, { onlyOnce: false }); // Real-time updates
+        };
+
+        // Send message
+        window.sendMessage = () => {
+            const input = document.getElementById('message-input');
+            const content = input.value.trim();
+            if (content && selectedConnectionId) {
+                const messageData = {
+                    sender: userId,
+                    content: content,
+                    timestamp: new Date().toISOString(),
+                    type: 'text'
+                };
+                push(ref(db, `chats/${selectedConnectionId}/messages`), messageData);
+                input.value = '';
+            }
+        };
+
+        // File upload
+        document.querySelector('.attachment-btn').addEventListener('click', () => {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (file && selectedConnectionId) {
+                    const fileId = Date.now().toString();
+                    const fileRef = storageRef(storage, `files/${fileId}`);
+                    await uploadBytes(fileRef, file);
+                    const fileData = {
+                        name: file.name,
+                        type: file.type,
+                        uploadedBy: userId,
+                        timestamp: new Date().toISOString()
+                    };
+                    await set(ref(db, `files/${fileId}`), fileData);
+                    const messageData = {
+                        sender: userId,
+                        content: fileId,
+                        timestamp: new Date().toISOString(),
+                        type: 'file',
+                        fileName: file.name
+                    };
+                    await push(ref(db, `chats/${selectedConnectionId}/messages`), messageData);
+                }
+            };
+            fileInput.click();
+        });
+
+        // Download file
+        window.downloadFile = async (fileId) => {
+            const fileRef = ref(db, `files/${fileId}`);
+            const snapshot = await get(fileRef);
+            if (snapshot.exists()) {
+                const fileData = snapshot.val();
+                const storageFileRef = storageRef(storage, `files/${fileId}`);
+                const url = await getDownloadURL(storageFileRef);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileData.name;
+                link.click();
+            } else {
+                alert('File not found.');
+            }
+        };
     </script>
+    <script src="../js/main.js"></script>
 </body>
 </html>

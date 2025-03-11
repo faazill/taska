@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taska Elite - Professional Connections</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Taska Elite</div>
+        <ul class="nav-menu">
+            <li><a href="overview.html">Overview</a></li>
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="connections.html" class="active">Connections</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="../index.html">Logout</a></li>
+        </ul>
+        <div class="hamburger">☰</div>
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+    </nav>
+
+    <main class="dashboard-content">
+        <section class="dashboard-section">
+            <h1>Your Connections</h1>
+            <p>Manage your connections with IIT prodigies.</p>
+
+            <div class="connections-section">
+                <h2>Active Connections</h2>
+                <div class="connections-grid" id="connections-grid"></div>
+                <p class="no-connections" id="no-connections" style="display: none;">No connections yet.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getDatabase, ref, onValue, get } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
+            authDomain: "taska-45011.firebaseapp.com",
+            databaseURL: "https://taska-45011-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "taska-45011",
+            storageBucket: "taska-45011.firebasestorage.app",
+            messagingSenderId: "205487498813",
+            appId: "1:205487498813:web:0de2c9eab567482781ec54"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const userId = localStorage.getItem('userId');
+
+        if (!userId) {
+            setTimeout(() => {
+                alert("Please log in or sign up first.");
+                window.location.href = '../login.html';
+            }, 1000);
+        }
+
+        const connectionsGrid = document.getElementById('connections-grid');
+        const noConnections = document.getElementById('no-connections');
+        onValue(ref(db, `professionalslist/${userId}/connections`), (snapshot) => {
+            connectionsGrid.innerHTML = '';
+            if (snapshot.exists()) {
+                noConnections.style.display = 'none';
+                snapshot.forEach((childSnapshot) => {
+                    const studentId = childSnapshot.key;
+                    get(ref(db, `studentslist/${studentId}`)).then((snap) => {
+                        const student = snap.val();
+                        connectionsGrid.innerHTML += `
+                            <div class="connection-card">
+                                <h3>${student.name}</h3>
+                                <p><strong>Skills:</strong> ${student.skills || 'Not set'}</p>
+                                <p><strong>Connected Since:</strong> ${new Date(childSnapshot.val().connectedAt).toLocaleDateString()}</p>
+                                <a href="overview.html" class="cta-button">Chat</a>
+                            </div>
+                        `;
+                    });
+                });
+            } else {
+                noConnections.style.display = 'block';
+            }
+        });
+    </script>
+    <script src="../js/main.js"></script>
+</body>
+</html>

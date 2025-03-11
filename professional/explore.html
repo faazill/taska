@@ -17,7 +17,7 @@
         <ul class="nav-menu">
             <li><a href="overview.html">Overview</a></li>
             <li><a href="explore.html" class="active">Explore</a></li>
-            <li><a href="tasks.html">Tasks</a></li>
+            <li><a href="connections.html">Connections</a></li>
             <li><a href="profile.html">Profile</a></li>
             <li><a href="../index.html">Logout</a></li>
         </ul>
@@ -28,19 +28,12 @@
     <main class="dashboard-content">
         <section class="dashboard-section">
             <h1>Explore IIT Talent</h1>
-            <p>Hire top IIT prodigies to simplify your professional workload.</p>
+            <p>Connect with top IIT prodigies to collaborate and share knowledge.</p>
 
-            <!-- Connect Prompt -->
-            <div class="connect-prompt">
-                <h2>Ready to Hire an IIT Prodigy?</h2>
-                <button class="cta-button" onclick="connectStudent()">Hire Now</button>
-            </div>
-
-            <!-- Search and Filter Options -->
             <div class="filter-options">
                 <div class="filter-group">
                     <label for="search-input">Search by Skill or Name</label>
-                    <input type="text" id="search-input" class="custom-input" placeholder="e.g., Coding, Priya" aria-label="Search students">
+                    <input type="text" id="search-input" class="custom-input" placeholder="e.g., Coding, Priya">
                 </div>
                 <div class="filter-group">
                     <label for="skills">Skills</label>
@@ -50,8 +43,6 @@
                         <option value="design">Design</option>
                         <option value="research">Research</option>
                         <option value="data-analysis">Data Analysis</option>
-                        <option value="content-creation">Content Creation</option>
-                        <option value="project-management">Project Management</option>
                     </select>
                 </div>
                 <div class="filter-group">
@@ -80,22 +71,10 @@
                         <option value="mumbai">Mumbai</option>
                     </select>
                 </div>
-                <div class="filter-group">
-                    <label for="rating">Minimum Rating</label>
-                    <select id="rating" class="custom-dropdown">
-                        <option value="all">All</option>
-                        <option value="3">3+ Stars</option>
-                        <option value="4">4+ Stars</option>
-                        <option value="5">5 Stars</option>
-                    </select>
-                </div>
                 <button class="apply-filter-btn" onclick="applyFilters()">Apply Filters</button>
             </div>
 
-            <!-- Students Grid -->
-            <div class="students-grid" id="students-grid">
-                <!-- Populated by JavaScript -->
-            </div>
+            <div class="students-grid" id="students-grid"></div>
         </section>
     </main>
 
@@ -103,7 +82,84 @@
         <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
     </footer>
 
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getDatabase, ref, onValue, push, get } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
+            authDomain: "taska-45011.firebaseapp.com",
+            databaseURL: "https://taska-45011-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "taska-45011",
+            storageBucket: "taska-45011.firebasestorage.app",
+            messagingSenderId: "205487498813",
+            appId: "1:205487498813:web:0de2c9eab567482781ec54"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const userId = localStorage.getItem('userId');
+        let studentsData = [];
+
+        if (!userId) {
+            setTimeout(() => {
+                alert("Please log in or sign up first.");
+                window.location.href = '../login.html';
+            }, 1000);
+        }
+
+        const studentsGrid = document.getElementById('students-grid');
+        const studentsRef = ref(db, 'studentslist');
+        onValue(studentsRef, (snapshot) => {
+            studentsData = [];
+            snapshot.forEach((childSnapshot) => {
+                const student = childSnapshot.val();
+                student.id = childSnapshot.key;
+                studentsData.push(student);
+            });
+            applyFilters();
+        });
+
+        window.applyFilters = () => {
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const skill = document.getElementById('skills').value;
+            const experience = document.getElementById('experience').value;
+            const availability = document.getElementById('availability').value;
+            const location = document.getElementById('location').value;
+
+            const filteredStudents = studentsData.filter(student => {
+                const matchesSearch = student.name.toLowerCase().includes(search) || (student.skills && student.skills.toLowerCase().includes(search));
+                const matchesSkill = skill === 'all' || (student.skills && student.skills.toLowerCase().includes(skill.toLowerCase()));
+                const matchesExp = experience === 'all' || (student.experience && student.experience.toLowerCase() === experience.toLowerCase());
+                const matchesAvail = availability === 'all' || (student.availability && student.availability.toLowerCase() === availability.toLowerCase());
+                const matchesLoc = location === 'all' || (student.location && student.location.toLowerCase() === location.toLowerCase());
+                return matchesSearch && matchesSkill && matchesExp && matchesAvail && matchesLoc;
+            });
+
+            studentsGrid.innerHTML = filteredStudents.map(student => `
+                <div class="student-card">
+                    <h3>${student.name}</h3>
+                    <p><strong>Skills:</strong> ${student.skills || 'Not set'}</p>
+                    <p><strong>Experience:</strong> ${student.experience || 'Not set'}</p>
+                    <p><strong>Availability:</strong> ${student.availability || 'Not set'}</p>
+                    <p><strong>Location:</strong> ${student.location || 'Not set'}</p>
+                    <button class="cta-button" onclick="sendConnectionRequest('${student.id}')">Connect</button>
+                </div>
+            `).join('');
+        };
+
+        window.sendConnectionRequest = async (studentId) => {
+            const requestData = {
+                from: userId,
+                to: studentId,
+                status: 'pending',
+                timestamp: new Date().toISOString()
+            };
+            await push(ref(db, 'connection_requests'), requestData);
+            alert('Connection request sent!');
+        };
+
+        applyFilters();
+    </script>
     <script src="../js/main.js"></script>
-    <script src="../js/explore.js"></script>
 </body>
 </html>

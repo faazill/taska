@@ -7,9 +7,37 @@
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="../css/index.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { background: #FFFFFF; min-height: 100vh; color: #000000; }
+        .navbar { background: #FFFFFF; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); padding: 1rem 2rem; position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .dashboard-content { padding: 5rem 2rem; margin-top: 60px; }
+        .dashboard-section h1 { font-size: 2.5rem; color: #000000; margin-bottom: 1rem; }
+        .dashboard-section p { font-size: 1.2rem; color: #000000; margin-bottom: 2rem; }
+        .tasks-section h2, .new-task-section h2 { font-size: 1.8rem; color: #000000; margin-bottom: 1.5rem; }
+        .tasks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .task-card { background: #FFFFFF; border-radius: 15px; padding: 1.5rem; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .task-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); }
+        .task-card h3 { font-size: 1.5rem; color: #000000; margin-bottom: 1rem; }
+        .task-card p { font-size: 1rem; color: #000000; margin: 0.5rem 0; }
+        .task-card p strong { color: #000000; }
+        .no-tasks { font-size: 1.2rem; color: #000000; text-align: center; margin-top: 2rem; }
+        .cta-button { display: inline-block; padding: 0.8rem 1.5rem; background: #3498db; color: #FFFFFF; text-decoration: none; border-radius: 8px; font-size: 1rem; transition: background 0.3s ease; cursor: pointer; border: none; }
+        .cta-button:hover { background: #2980b9; }
+        .popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 2000; }
+        .popup-content { background: #FFFFFF; border-radius: 15px; padding: 2rem; width: 100%; max-width: 500px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); position: relative; }
+        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 2rem; color: #000000; cursor: pointer; }
+        .close-btn:hover { color: #e74c3c; }
+        .popup-content h2 { font-size: 1.8rem; color: #000000; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 600; color: #000000; margin-bottom: 0.5rem; }
+        .custom-input, .custom-dropdown { width: 100%; padding: 0.8rem; border: 1px solid #000000; border-radius: 8px; font-size: 1rem; color: #000000; transition: border-color 0.3s ease; }
+        .custom-input:focus, .custom-dropdown:focus { border-color: #3498db; outline: none; }
+        .custom-input[readonly] { background: #F0F0F0; }
+        .payment-info { font-size: 0.9rem; color: #000000; margin-top: 0.5rem; }
+        footer { background: #FFFFFF; padding: 1rem; text-align: center; position: fixed; bottom: 0; width: 100%; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -17,7 +45,7 @@
         <ul class="nav-menu">
             <li><a href="overview.html">Overview</a></li>
             <li><a href="explore.html">Explore</a></li>
-            <li><a href="tasks.html" class="active">Tasks</a></li>
+            <li><a href="tasks-pro.html" class="active">Tasks</a></li>
             <li><a href="profile.html">Profile</a></li>
             <li><a href="../index.html">Logout</a></li>
         </ul>
@@ -28,21 +56,17 @@
     <main class="dashboard-content">
         <section class="dashboard-section">
             <h1>Your Task Management</h1>
-            <p>Assign and track tasks with IIT prodigies to streamline your workload.</p>
+            <p>Assign and track tasks with connected students to streamline your workload.</p>
 
-            <!-- Existing Tasks Section -->
             <div class="tasks-section">
                 <h2>Assigned Tasks</h2>
-                <div class="tasks-grid" id="tasks-grid">
-                    <!-- Tasks will be populated dynamically -->
-                </div>
+                <div class="tasks-grid" id="tasks-grid"></div>
                 <p class="no-tasks" id="no-tasks" style="display: none;">No tasks assigned yet.</p>
             </div>
 
-            <!-- New Task Section -->
             <div class="new-task-section">
                 <h2>Add New Task</h2>
-                <button class="cta-button" onclick="openTaskPopup()" aria-label="Add new task">Add Task</button>
+                <button class="cta-button" id="add-task-btn">Add Task</button>
             </div>
         </section>
     </main>
@@ -51,13 +75,11 @@
         <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
     </footer>
 
-    <!-- Task Popup -->
-    <div class="popup" id="task-popup" style="display: none;">
+    <div class="popup" id="task-popup">
         <div class="popup-content">
             <span class="close-btn" onclick="closeTaskPopup()">×</span>
             <h2>Assign New Task</h2>
             <form id="task-form">
-                <!-- Step 1: Task Details -->
                 <div id="step-1">
                     <div class="form-group">
                         <label for="task-name">Task Name:</label>
@@ -87,66 +109,124 @@
                     <div class="form-group">
                         <label for="task-student">Assign to Student:</label>
                         <select id="task-student" class="custom-dropdown" required>
-                            <option value="">Select a Student</option>
-                            <option value="Priya Sharma">Priya Sharma</option>
-                            <option value="Amit Patel">Amit Patel</option>
-                            <option value="Rohan Gupta">Rohan Gupta</option>
+                            <option value="">Select a Connected Student</option>
                         </select>
                     </div>
-                    <button type="button" class="cta-button" onclick="showStep2()">Next</button>
+                    <button type="button" class="cta-button" id="next-btn">Next</button>
                 </div>
-
-                <!-- Step 2: Payment Coins -->
                 <div id="step-2" style="display: none;">
                     <div class="form-group">
                         <label for="task-payment">Payment (Coins):</label>
                         <input type="number" id="task-payment" class="custom-input" readonly>
-                        <p class="payment-info">Payment calculated by AI, based on task complexity, student, and deadline.</p>
+                        <p class="payment-info">Payment calculated based on task complexity, student experience, and deadline.</p>
                     </div>
-                    <button type="submit" class="cta-button" onclick="assignTask(event)">Assign Task</button>
+                    <button type="submit" class="cta-button">Assign Task</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script src="../js/main.js"></script>
-    <script>
-        // Task management state
-        let tasks = [
-            {
-                id: "1",
-                name: "PPT Making",
-                deadline: "2025-03-15",
-                payment: 500,
-                student: "Priya Sharma"
-            },
-            {
-                id: "2",
-                name: "Research",
-                deadline: "2025-03-20",
-                payment: 700,
-                student: "Amit Patel"
-            },
-            {
-                id: "3",
-                name: "Code Debug",
-                deadline: "2025-03-18",
-                payment: 600,
-                student: "Rohan Gupta"
-            }
-        ];
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getDatabase, ref, onValue, push, get, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
+            authDomain: "taska-45011.firebaseapp.com",
+            databaseURL: "https://taska-45011-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "taska-45011",
+            storageBucket: "taska-45011.firebasestorage.app",
+            messagingSenderId: "205487498813",
+            appId: "1:205487498813:web:0de2c9eab567482781ec54"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const userId = localStorage.getItem('userId');
+
+        if (!userId) {
+            setTimeout(() => {
+                alert("Please log in or sign up first.");
+                window.location.href = '../login.html';
+            }, 1000);
+        } else {
+            loadConnectedStudents();
+            loadTasks();
+        }
+
+        document.getElementById('add-task-btn').addEventListener('click', () => {
+            console.log('Add Task button clicked');
+            openTaskPopup();
+        });
+
+        document.getElementById('next-btn').addEventListener('click', () => {
+            console.log('Next button clicked');
+            showStep2();
+        });
 
         function openTaskPopup() {
-            document.getElementById('task-popup').style.display = 'flex';
-            document.getElementById('step-1').style.display = 'block';
-            document.getElementById('step-2').style.display = 'none';
+            console.log('Opening task popup');
+            const popup = document.getElementById('task-popup');
+            if (popup) {
+                popup.style.display = 'flex';
+                document.getElementById('step-1').style.display = 'block';
+                document.getElementById('step-2').style.display = 'none';
+                document.getElementById('task-form').reset();
+            } else {
+                console.error('Popup element not found');
+            }
         }
 
         function closeTaskPopup() {
-            document.getElementById('task-popup').style.display = 'none';
-            document.getElementById('task-form').reset();
-            document.getElementById('step-1').style.display = 'block';
-            document.getElementById('step-2').style.display = 'none';
+            console.log('Closing task popup');
+            const popup = document.getElementById('task-popup');
+            if (popup) {
+                popup.style.display = 'none';
+            }
+        }
+
+        function loadConnectedStudents() {
+            const studentSelect = document.getElementById('task-student');
+            onValue(ref(db, `professionalslist/${userId}/connections`), (snapshot) => {
+                studentSelect.innerHTML = '<option value="">Select a Connected Student</option>';
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const studentId = childSnapshot.key;
+                        get(ref(db, `studentslist/${studentId}`)).then((snap) => {
+                            const student = snap.val();
+                            studentSelect.innerHTML += `<option value="${studentId}">${student.name}</option>`;
+                        }).catch((error) => {
+                            console.error('Error fetching student:', error);
+                        });
+                    });
+                } else {
+                    studentSelect.innerHTML += '<option value="">No connected students</option>';
+                }
+            }, (error) => {
+                console.error('Error loading connections:', error);
+            });
+        }
+
+        function calculatePayment(taskName, deadline, studentId) {
+            const baseCoins = {
+                "PPT Making": 400, "Research": 600, "Code Debug": 500, "Content Writing": 450,
+                "Data Entry": 300, "Spreadsheets": 350, "Graphic Design": 550, "Video Editing": 600,
+                "Web Development": 700, "Data Analysis": 650, "Documentation": 400, "Transcription": 350,
+                "Schedule Management": 300, "Proofreading": 400, "Cloud Management": 500
+            };
+            const today = new Date();
+            const deadlineDate = new Date(deadline);
+            const daysLeft = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
+            const urgencyFactor = daysLeft <= 5 ? 1.3 : 1.0;
+
+            return get(ref(db, `studentslist/${studentId}`)).then((snap) => {
+                const student = snap.val();
+                const experienceFactor = student.experience ? (1 + (student.experience / 10)) : 1.0;
+                const base = baseCoins[taskName] || 400;
+                return Math.round(base * urgencyFactor * experienceFactor);
+            }).catch((error) => {
+                console.error('Error calculating payment:', error);
+                return 400; // Fallback value
+            });
         }
 
         function showStep2() {
@@ -154,112 +234,98 @@
             const taskDeadline = document.getElementById('task-deadline').value;
             const taskStudent = document.getElementById('task-student').value;
 
-            if (taskName && taskDeadline && taskStudent) {
-                // Simulate LLM calculation for payment
-                const payment = calculatePayment(taskName, taskDeadline, taskStudent);
-                document.getElementById('task-payment').value = payment;
+            console.log('showStep2 called with:', { taskName, taskDeadline, taskStudent });
 
-                // Switch to Step 2
-                document.getElementById('step-1').style.display = 'none';
-                document.getElementById('step-2').style.display = 'block';
+            if (taskName && taskDeadline && taskStudent) {
+                console.log('All fields filled, calculating payment');
+                calculatePayment(taskName, taskDeadline, taskStudent).then((payment) => {
+                    console.log('Payment calculated:', payment);
+                    document.getElementById('task-payment').value = payment;
+                    document.getElementById('step-1').style.display = 'none';
+                    document.getElementById('step-2').style.display = 'block';
+                }).catch((error) => {
+                    console.error('Error in payment calculation:', error);
+                    alert('Error calculating payment: ' + error.message);
+                });
             } else {
+                console.log('Missing fields');
                 alert('Please fill all fields before proceeding.');
             }
         }
 
-        function calculatePayment(taskName, deadline, student) {
-            // Placeholder LLM logic (to be replaced with actual LLM integration)
-            const baseCoins = {
-                "PPT Making": 400,
-                "Research": 600,
-                "Code Debug": 500,
-                "Content Writing": 405,
-                "Data Entry": 300,
-                "Spreadsheets": 305,
-                "Graphic Design": 505,
-                "Video Editing": 600,
-                "Web Development": 700,
-                "Data Analysis": 650,
-                "Documentation": 400,
-                "Transcription": 350,
-                "Schedule Management": 300,
-                "Proofreading": 400,
-                "Cloud Management": 500
-            };
-
-            // Calculate days left
-            const today = new Date();
-            const deadlineDate = new Date(deadline);
-            const daysLeft = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
-
-            // Student experience factor (simulated)
-            const studentExperience = {
-                "Priya Sharma": 1.2, // Intermediate
-                "Amit Patel": 1.0,   // Beginner
-                "Rohan Gupta": 1.5   // Advanced
-            };
-
-            // Base payment + urgency factor + experience factor
-            const base = baseCoins[taskName] || 50;
-            const urgencyFactor = daysLeft <= 5 ? 1.3 : 1.0; // 30% more if less than 5 days
-            const experienceFactor = studentExperience[student] || 1.0;
-            return Math.round(base * urgencyFactor * experienceFactor);
-        }
-
-        function assignTask(event) {
-            event.preventDefault();
+        document.getElementById('task-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
             const taskName = document.getElementById('task-name').value;
             const taskDeadline = document.getElementById('task-deadline').value;
             const taskStudent = document.getElementById('task-student').value;
             const taskPayment = document.getElementById('task-payment').value;
 
             if (taskName && taskDeadline && taskStudent && taskPayment) {
-                const newTask = {
-                    id: Date.now().toString(),
+                const taskData = {
                     name: taskName,
                     deadline: taskDeadline,
-                    payment: taskPayment,
-                    student: taskStudent
+                    payment: parseInt(taskPayment),
+                    studentId: taskStudent,
+                    proId: userId,
+                    status: 'pending',
+                    assignedAt: new Date().toISOString()
                 };
-                tasks.push(newTask);
-                updateTaskGrid();
-                closeTaskPopup();
+                console.log('Submitting task:', taskData);
+                try {
+                    const taskRef = await push(ref(db, 'tasks'));
+                    await Promise.all([
+                        set(ref(db, `professionalslist/${userId}/tasks/${taskRef.key}`), taskData),
+                        set(ref(db, `studentslist/${taskStudent}/tasks/${taskRef.key}`), taskData)
+                    ]);
+                    alert('Task assigned successfully!');
+                    closeTaskPopup();
+                } catch (error) {
+                    console.error('Error assigning task:', error);
+                    alert('Failed to assign task: ' + error.message);
+                }
             }
-        }
+        });
 
-        function updateTaskGrid() {
+        function loadTasks() {
             const tasksGrid = document.getElementById('tasks-grid');
             const noTasks = document.getElementById('no-tasks');
-            tasksGrid.innerHTML = '';
-
-            if (tasks.length === 0) {
-                noTasks.style.display = 'block';
-            } else {
-                noTasks.style.display = 'none';
-                tasks.forEach(task => {
-                    const taskCard = `
-                        <div class="task-card">
-                            <h3>${task.name}</h3>
-                            <p><strong>Deadline:</strong> ${new Date(task.deadline).toLocaleDateString()}</p>
-                            <p><strong>Payment:</strong> ${task.payment} Coins</p>
-                            <p><strong>Assigned to:</strong> ${task.student}</p>
-                        </div>
-                    `;
-                    tasksGrid.innerHTML += taskCard;
-                });
-            }
+            onValue(ref(db, `professionalslist/${userId}/tasks`), (snapshot) => {
+                tasksGrid.innerHTML = '';
+                if (snapshot.exists()) {
+                    noTasks.style.display = 'none';
+                    snapshot.forEach((childSnapshot) => {
+                        const task = childSnapshot.val();
+                        get(ref(db, `studentslist/${task.studentId}`)).then((snap) => {
+                            const student = snap.val();
+                            tasksGrid.innerHTML += `
+                                <div class="task-card">
+                                    <h3>${task.name}</h3>
+                                    <p><strong>Deadline:</strong> ${new Date(task.deadline).toLocaleDateString()}</p>
+                                    <p><strong>Payment:</strong> ${task.payment} Coins</p>
+                                    <p><strong>Assigned to:</strong> ${student.name}</p>
+                                    <p><strong>Status:</strong> ${task.status}</p>
+                                </div>
+                            `;
+                        }).catch((error) => {
+                            console.error('Error fetching student for task:', error);
+                        });
+                    });
+                } else {
+                    noTasks.style.display = 'block';
+                }
+            }, (error) => {
+                console.error('Error loading tasks:', error);
+            });
         }
 
-        // Initial load
-        updateTaskGrid();
-
-        // Close popup on outside click
-        window.onclick = function(event) {
+        window.onclick = (event) => {
             const popup = document.getElementById('task-popup');
             if (event.target === popup) {
+                console.log('Clicked outside popup, closing');
                 closeTaskPopup();
             }
-        }
+        };
     </script>
+    <script src="../js/main.js"></script>
 </body>
 </html>
