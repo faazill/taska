@@ -24,15 +24,18 @@
         .card-link { display: inline-block; margin-top: 1rem; color: #3498db; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
         .card-link:hover { color: #2980b9; }
         .chat-interface { display: flex; gap: 2rem; background: #fff; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); padding: 1.5rem; }
+        .chat-heading { font-size: 1.8rem; color: #2c3e50; margin-bottom: 1.5rem; }
         .sidebar { flex: 1; max-width: 300px; }
         .search-bar { margin-bottom: 1.5rem; }
         .custom-input { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; color: #34495e; transition: border-color 0.3s ease; }
         .custom-input:focus { border-color: #3498db; outline: none; }
-        .contact-list { max-height: 400px; overflow-y: auto; }
-        .contact { padding: 1rem; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.3s ease; }
-        .contact:hover { background: #f5f7fa; }
-        .contact p { margin: 0; font-size: 1.1rem; color: #34495e; }
-        .chat-area { flex: 2; display: flex; flex-direction: column; }
+        .contact-list { max-height: 400px; overflow-y: auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); }
+        .contact { display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid #eee; cursor: pointer; transition: all 0.3s ease; }
+        .contact:hover { background: #e9ecef; transform: scale(1.02); }
+        .contact-avatar { width: 40px; height: 40px; border-radius: 50%; background: #3498db; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-right: 1rem; }
+        .contact p { margin: 0; font-size: 1.1rem; color: #2c3e50; font-weight: 500; }
+        .chat-area { flex: 2; display: none; flex-direction: column; } /* Hidden by default */
+        .chat-prompt { flex: 2; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #7f8c8d; }
         .chat-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
         .contact-info h3 { font-size: 1.5rem; color: #2c3e50; margin: 0; }
         .contact-status { font-size: 0.9rem; color: #7f8c8d; }
@@ -52,12 +55,6 @@
         .send-btn { background: #3498db; border: none; padding: 0.8rem; border-radius: 8px; color: #fff; cursor: pointer; transition: background 0.3s ease; }
         .send-btn:hover { background: #2980b9; }
         footer { background: rgba(255, 255, 255, 0.95); padding: 1rem; text-align: center; position: fixed; bottom: 0; width: 100%; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); }
-        .dark-mode .dashboard-section h1, .dark-mode .dashboard-section p { color: #ecf0f1; }
-        .dark-mode .dashboard-card, .dark-mode .chat-interface { background: #2c3e50; }
-        .dark-mode .dashboard-card h2, .dark-mode .contact-info h3, .dark-mode .message p { color: #ecf0f1; }
-        .dark-mode .message.sent { background: #2980b9; }
-        .dark-mode .message.received { background: #34495e; }
-        .dark-mode .send-btn { background: #2980b9; }
     </style>
 </head>
 <body>
@@ -86,7 +83,7 @@
                 <div class="dashboard-card">
                     <h2>Active Tasks</h2>
                     <p id="active-tasks">0</p>
-                    <a href="tasks.html" class="card-link">Manage Connections</a>
+                    <a href="tasks.html" class="card-link">View Tasks</a>
                 </div>
                 <div class="dashboard-card">
                     <h2>Connected Professionals</h2>
@@ -101,6 +98,8 @@
             </div>
         </section>
 
+        <div class="chat-heading">Interact with Connected Professionals</div>
+        <br>
         <section class="chat-interface">
             <div class="sidebar">
                 <div class="search-bar">
@@ -108,7 +107,9 @@
                 </div>
                 <div class="contact-list" id="contact-list"></div>
             </div>
+            <div class="chat-prompt" id="chat-prompt">Please select a chat to start interacting</div>
             <div class="chat-area" id="chat-area">
+                <div class="chat-heading">Interact with Connected Professionals</div>
                 <div class="chat-header" id="chat-header">
                     <div class="contact-info">
                         <div>
@@ -161,29 +162,60 @@
                 alert("Please log in or sign up first.");
                 window.location.href = '../login.html';
             }, 1000);
+        } else {
+            loadDashboardData();
+            loadConnections();
         }
 
-        onValue(ref(db, `studentslist/${userId}/connections`), (snapshot) => {
-            const contactList = document.getElementById('contact-list');
-            contactList.innerHTML = '';
-            const numConnections = snapshot.exists() ? snapshot.size : 0;
-            document.getElementById('hired-students').textContent = numConnections;
-            if (snapshot.exists()) {
-                snapshot.forEach((childSnapshot) => {
-                    const proId = childSnapshot.key;
-                    get(ref(db, `professionalslist/${proId}`)).then((snap) => {
-                        const pro = snap.val();
-                        contactList.innerHTML += `
-                            <div class="contact" onclick="loadChat('${proId}_${userId}', '${pro.name}')">
-                                <p>${pro.name}</p>
-                            </div>
-                        `;
+        function loadDashboardData() {
+            onValue(ref(db, `studentslist/${userId}/tasks`), (snapshot) => {
+                let activeTasks = 0;
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const task = childSnapshot.val();
+                        if (task.status === 'pending') activeTasks++;
                     });
-                });
-            } else {
-                contactList.innerHTML = '<p>No connections yet.</p>';
-            }
-        });
+                }
+                document.getElementById('active-tasks').textContent = activeTasks;
+            });
+
+            onValue(ref(db, `studentslist/${userId}/tasks`), (snapshot) => {
+                let completedTasks = 0;
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const task = childSnapshot.val();
+                        if (task.status === 'completed') completedTasks++;
+                    });
+                }
+                document.getElementById('hours-saved').textContent = completedTasks;
+            });
+        }
+
+        function loadConnections() {
+            onValue(ref(db, `studentslist/${userId}/connections`), (snapshot) => {
+                const contactList = document.getElementById('contact-list');
+                contactList.innerHTML = '';
+                const numConnections = snapshot.exists() ? snapshot.size : 0;
+                document.getElementById('hired-students').textContent = numConnections;
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const proId = childSnapshot.key;
+                        get(ref(db, `professionalslist/${proId}`)).then((snap) => {
+                            const pro = snap.val();
+                            const initial = pro.name.charAt(0).toUpperCase();
+                            contactList.innerHTML += `
+                                <div class="contact" onclick="loadChat('${proId}_${userId}', '${pro.name}')">
+                                    <div class="contact-avatar">${initial}</div>
+                                    <p>${pro.name}</p>
+                                </div>
+                            `;
+                        });
+                    });
+                } else {
+                    contactList.innerHTML = '<p>No connections yet.</p>';
+                }
+            });
+        }
 
         window.loadChat = (connId, contactName) => {
             selectedConnectionId = connId;
@@ -191,6 +223,10 @@
             document.getElementById('contact-status').textContent = 'Online';
             const chatMessages = document.getElementById('chat-messages');
             chatMessages.innerHTML = '<p>Loading messages...</p>';
+
+            // Show chat area, hide prompt
+            document.getElementById('chat-area').style.display = 'flex';
+            document.getElementById('chat-prompt').style.display = 'none';
 
             const messagesRef = ref(db, `chats/${connId}/messages`);
             onValue(messagesRef, (snapshot) => {
@@ -272,7 +308,7 @@
         window.downloadFile = async (fileId) => {
             const fileRef = ref(db, `files/${fileId}`);
             const snapshot = await get(fileRef);
-            if ((snapshot.exists())) {
+            if (snapshot.exists()) {
                 const fileData = snapshot.val();
                 const storageFileRef = storageRef(storage, `files/${fileId}`);
                 const url = await getDownloadURL(storageFileRef);

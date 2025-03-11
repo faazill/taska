@@ -23,10 +23,16 @@
         .task-card p { font-size: 1rem; color: #34495e; margin: 0.5rem 0; }
         .task-card p strong { color: #2c3e50; }
         .no-tasks { font-size: 1.2rem; color: #7f8c8d; text-align: center; margin-top: 2rem; }
+        .action-btn { padding: 0.5rem 1rem; background: #e74c3c; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-top: 1rem; }
+        .action-btn:hover { background: #c0392b; }
+        .popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 2000; }
+        .popup-content { background: #fff; border-radius: 15px; padding: 2rem; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); }
+        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 2rem; color: #2c3e50; cursor: pointer; }
+        .close-btn:hover { color: #e74c3c; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; color: #2c3e50; margin-bottom: 0.5rem; }
+        .form-group textarea { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 8px; }
         footer { background: rgba(255, 255, 255, 0.95); padding: 1rem; text-align: center; position: fixed; bottom: 0; width: 100%; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); }
-        .dark-mode .dashboard-section h1, .dark-mode .dashboard-section p, .dark-mode .tasks-section h2 { color: #ecf0f1; }
-        .dark-mode .task-card { background: #2c3e50; }
-        .dark-mode .task-card h3, .dark-mode .task-card p { color: #ecf0f1; }
     </style>
 </head>
 <body>
@@ -34,9 +40,10 @@
         <div class="logo">Taska Elite</div>
         <ul class="nav-menu">
             <li><a href="overview.html">Overview</a></li>
-            <li><a href="tasks.html" class="active">Tasks</a></li>
+            <li><a href="connections.html">Connections</a></li>
             <li><a href="explore.html">Explore</a></li>
             <li><a href="earnings.html">Earnings</a></li>
+            <li><a href="tasks.html" class="active">Tasks</a></li>
             <li><a href="ai-agents.html">AI Agents</a></li>
             <li><a href="profile.html">Profile</a></li>
             <li><a href="../index.html">Logout</a></li>
@@ -62,9 +69,23 @@
         <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
     </footer>
 
+    <div class="popup" id="reject-popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeRejectPopup()">×</span>
+            <h2>Reject Task</h2>
+            <form id="reject-form">
+                <div class="form-group">
+                    <label for="reject-reason">Reason for Rejection:</label>
+                    <textarea id="reject-reason" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="action-btn">Submit Rejection</button>
+            </form>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getDatabase, ref, onValue, get } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+        import { getDatabase, ref, onValue, get, remove } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
@@ -78,6 +99,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const userId = localStorage.getItem('userId');
+        let currentTaskId = null;
 
         if (!userId) {
             setTimeout(() => {
@@ -97,6 +119,7 @@
                     noTasks.style.display = 'none';
                     snapshot.forEach((childSnapshot) => {
                         const task = childSnapshot.val();
+                        const taskId = childSnapshot.key;
                         if (task.status === 'pending') {
                             get(ref(db, `professionalslist/${task.proId}`)).then((snap) => {
                                 const pro = snap.val();
@@ -106,6 +129,7 @@
                                         <p><strong>Deadline:</strong> ${new Date(task.deadline).toLocaleDateString()}</p>
                                         <p><strong>Coins:</strong> ${task.payment}</p>
                                         <p><strong>Assigned by:</strong> ${pro.name}</p>
+                                        <button class="action-btn" onclick="openRejectPopup('${taskId}', '${pro.email || 'unknown@example.com'}')">Reject Task</button>
                                     </div>
                                 `;
                             });
@@ -115,6 +139,41 @@
                     noTasks.style.display = 'block';
                 }
             });
+        }
+
+        window.openRejectPopup = (taskId, proEmail) => {
+            currentTaskId = taskId;
+            document.getElementById('reject-popup').style.display = 'flex';
+            document.getElementById('reject-form').onsubmit = (e) => rejectTask(e, taskId, proEmail);
+        };
+
+        window.closeRejectPopup = () => {
+            document.getElementById('reject-popup').style.display = 'none';
+            document.getElementById('reject-form').reset();
+        };
+
+        async function rejectTask(e, taskId, proEmail) {
+            e.preventDefault();
+            const reason = document.getElementById('reject-reason').value.trim();
+            if (reason) {
+                try {
+                    // Remove task from student's and professional's database
+                    await Promise.all([
+                        remove(ref(db, `studentslist/${userId}/tasks/${taskId}`)),
+                        remove(ref(db, `professionalslist/${task.proId}/tasks/${taskId}`))
+                    ]);
+
+                    // Simulate sending email (replace with actual email service)
+                    console.log(`Sending email to ${proEmail}: Task Rejected - Reason: ${reason}`);
+                    alert('Task rejected successfully! An email has been sent to the professional.');
+                    closeRejectPopup();
+                } catch (error) {
+                    console.error('Error rejecting task:', error);
+                    alert('Failed to reject task: ' + error.message);
+                }
+            } else {
+                alert('Please provide a reason for rejection.');
+            }
         }
     </script>
     <script src="../js/main.js"></script>

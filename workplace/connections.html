@@ -24,12 +24,10 @@
         .connection-card p strong { color: #2c3e50; }
         .cta-button { display: inline-block; padding: 0.8rem 1.5rem; background: #3498db; color: #fff; text-decoration: none; border-radius: 8px; font-size: 1rem; margin-top: 1rem; transition: background 0.3s ease; }
         .cta-button:hover { background: #2980b9; }
+        .action-btn { padding: 0.5rem 1rem; background: #e74c3c; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-top: 1rem; }
+        .action-btn:hover { background: #c0392b; }
         .no-connections { font-size: 1.2rem; color: #7f8c8d; text-align: center; margin-top: 2rem; }
         footer { background: rgba(255, 255, 255, 0.95); padding: 1rem; text-align: center; position: fixed; bottom: 0; width: 100%; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); }
-        .dark-mode .dashboard-section h1, .dark-mode .dashboard-section p, .dark-mode .connections-section h2 { color: #ecf0f1; }
-        .dark-mode .connection-card { background: #2c3e50; }
-        .dark-mode .connection-card h3, .dark-mode .connection-card p { color: #ecf0f1; }
-        .dark-mode .cta-button { background: #2980b9; }
     </style>
 </head>
 <body>
@@ -38,9 +36,9 @@
         <ul class="nav-menu">
             <li><a href="overview.html">Overview</a></li>
             <li><a href="connections.html" class="active">Connections</a></li>
-            <li><a href="tasks.html">Tasks</a></li>
             <li><a href="explore.html">Explore</a></li>
             <li><a href="earnings.html">Earnings</a></li>
+            <li><a href="tasks.html">Tasks</a></li>
             <li><a href="ai-agents.html">AI Agents</a></li>
             <li><a href="profile.html">Profile</a></li>
             <li><a href="../index.html">Logout</a></li>
@@ -68,7 +66,7 @@
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getDatabase, ref, onValue, get } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+        import { getDatabase, ref, onValue, get, remove } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
@@ -88,32 +86,51 @@
                 alert("Please log in or sign up first.");
                 window.location.href = '../login.html';
             }, 1000);
+        } else {
+            loadConnections();
         }
 
-        const connectionsGrid = document.getElementById('connections-grid');
-        const noConnections = document.getElementById('no-connections');
-        onValue(ref(db, `studentslist/${userId}/connections`), (snapshot) => {
-            connectionsGrid.innerHTML = '';
-            if (snapshot.exists()) {
-                noConnections.style.display = 'none';
-                snapshot.forEach((childSnapshot) => {
-                    const proId = childSnapshot.key;
-                    get(ref(db, `professionalslist/${proId}`)).then((snap) => {
-                        const pro = snap.val();
-                        connectionsGrid.innerHTML += `
-                            <div class="connection-card">
-                                <h3>${pro.name}</h3>
-                                <p><strong>Profession:</strong> ${pro.profession || 'Not set'}</p>
-                                <p><strong>Connected Since:</strong> ${new Date(childSnapshot.val().connectedAt).toLocaleDateString()}</p>
-                                <a href="overview.html" class="cta-button">Chat</a>
-                            </div>
-                        `;
+        function loadConnections() {
+            const connectionsGrid = document.getElementById('connections-grid');
+            const noConnections = document.getElementById('no-connections');
+            onValue(ref(db, `studentslist/${userId}/connections`), (snapshot) => {
+                connectionsGrid.innerHTML = '';
+                if (snapshot.exists()) {
+                    noConnections.style.display = 'none';
+                    snapshot.forEach((childSnapshot) => {
+                        const proId = childSnapshot.key;
+                        get(ref(db, `professionalslist/${proId}`)).then((snap) => {
+                            const pro = snap.val();
+                            connectionsGrid.innerHTML += `
+                                <div class="connection-card">
+                                    <h3>${pro.name}</h3>
+                                    <p><strong>Profession:</strong> ${pro.profession || 'Not set'}</p>
+                                    <p><strong>Connected Since:</strong> ${new Date(childSnapshot.val().connectedAt).toLocaleDateString()}</p>
+                                    <a href="overview.html" class="cta-button">Chat</a>
+                                    <button class="action-btn" onclick="disconnect('${proId}')">Disconnect</button>
+                                </div>
+                            `;
+                        });
                     });
-                });
-            } else {
-                noConnections.style.display = 'block';
+                } else {
+                    noConnections.style.display = 'block';
+                }
+            });
+        }
+
+        window.disconnect = async (proId) => {
+            if (confirm('Are you sure you want to disconnect from this professional?')) {
+                try {
+                    await Promise.all([
+                        remove(ref(db, `studentslist/${userId}/connections/${proId}`)),
+                        remove(ref(db, `professionalslist/${proId}/connections/${userId}`))
+                    ]);
+                    alert('Disconnected successfully!');
+                } catch (error) {
+                    alert('Failed to disconnect: ' + error.message);
+                }
             }
-        });
+        };
     </script>
     <script src="../js/main.js"></script>
 </body>
