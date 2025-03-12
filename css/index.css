@@ -1033,6 +1033,7 @@ footer p.dark-mode {
     letter-spacing: 2px;
     background: linear-gradient(90deg, #6b48ff, #a3bffa);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
