@@ -222,7 +222,6 @@
             <li><a href="overview.html">Overview</a></li>
             <li><a href="connections.html">Connections</a></li>
             <li><a href="explore.html">Explore</a></li>
-            <li><a href="earnings.html">Earnings</a></li>
             <li><a href="tasks.html">Tasks</a></li>
             <li><a href="ai-agents.html">AI Agents</a></li>
             <li><a href="profile.html" class="active">Profile</a></li>
@@ -238,11 +237,15 @@
                 <h1>Your Profile</h1>
                 <img src="../assets/st3.jpg" alt="Profile Avatar" class="profile-avatar" id="profile-avatar">
             </div>
+
+<!--
             <div class="toggle-container">
                 <label class="toggle-label">Visible as Available</label>
                 <input type="checkbox" id="hiring-toggle" class="custom-toggle" onchange="toggleAvailability()">
                 <label for="hiring-toggle" class="toggle-switch"></label>
             </div>
+        -->
+
             <div class="profile-details">
                 <p><strong>Name:</strong> <span id="name">Loading...</span></p>
                 <p><strong>Email:</strong> <span id="email">Loading...</span></p>
@@ -316,7 +319,7 @@
                     document.getElementById('tarprofession').textContent = data.tarprofession || 'Not set';
                     document.getElementById('bio').textContent = data.bio || 'Not set';
                     document.getElementById('hobbies').textContent = data.hobbies || 'Not set';
-                    document.getElementById('hiring-toggle').checked = data.isVisible || false;
+                    
                     if (data.profileImage) document.getElementById('profile-avatar').src = data.profileImage;
                 } else {
                     alert("No profile data found. Please update your profile.");
@@ -327,7 +330,7 @@
         }
 
         async function toggleAvailability() {
-            const toggle = document.getElementById('hiring-toggle');
+            const toggle = document.getElementById();
             const isVisible = toggle.checked;
             const popup = document.getElementById('hiring-popup');
             try {
