@@ -102,8 +102,8 @@
                             connectionsGrid.innerHTML += `
                                 <div class="connection-card">
                                     <h3>${student.name}</h3>
-                                    <p><strong>Skills:</strong> ${student.skills || 'Not set'}</p>
-                                    <p><strong>Connected Since:</strong> ${new Date(childSnapshot.val().connectedAt).toLocaleDateString()}</p>
+                                    <p><strong>College:</strong> ${student.college || 'Not set'}</p>
+                                    <p><strong>Degree:</strong> ${student.degree || 'Not set'}</p>
                                     <a href="overview.html" class="cta-button">Chat</a>
                                     <button class="action-btn" onclick="disconnect('${studentId}')">Disconnect</button>
                                 </div>

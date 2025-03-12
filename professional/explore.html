@@ -4,12 +4,322 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taska Elite - Explore IIT Talent</title>
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/global.css">
-    <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="../css/explore.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background: #fff;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-bottom: 60px;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-menu a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            color: #666;
+        }
+
+        .hamburger {
+            display: none;
+        }
+
+        .dark-mode-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .dashboard-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-section h1 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-section p {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .filter-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            background: #fafafa;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .custom-input, .custom-dropdown {
+            width: 100%;
+            padding: 0.85rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: #fff;
+            color: #333;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .custom-input:focus, .custom-dropdown:focus {
+            outline: none;
+            border-color: #888;
+            box-shadow: 0 0 5px rgba(136, 136, 136, 0.2);
+        }
+
+        .apply-filter-btn {
+            padding: 0.85rem 2rem;
+            background: #555;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: background 0.3s ease, transform 0.1s ease;
+            align-self: flex-end;
+        }
+
+        .apply-filter-btn:hover {
+            background: #444;
+            transform: translateY(-1px);
+        }
+
+        .apply-filter-btn:active {
+            transform: translateY(1px);
+        }
+
+        .students-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .student-card {
+            display: flex;
+            align-items: center;
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .student-card:hover {
+            background: #f5f5f5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .student-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #666;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            text-transform: uppercase;
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-info h3 {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin: 0 0 0.25rem 0;
+        }
+
+        .student-info p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0.2rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .student-info i {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .connect-btn {
+            padding: 0.5rem 1rem;
+            background: #555;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .connect-btn:hover:not(.sent) {
+            background: #444;
+        }
+
+        .connect-btn.sent {
+            background: #2ecc71;
+            cursor: default;
+        }
+
+        .view-profile {
+            color: #555;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-left: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .view-profile:hover {
+            color: #333;
+        }
+
+        /* Popup Styles */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .profile-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 2rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            z-index: 1000;
+        }
+
+        .profile-popup.active {
+            display: block;
+        }
+
+        .profile-popup h2 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin: 0 0 1rem 0;
+        }
+
+        .profile-popup p {
+            font-size: 1rem;
+            color: #666;
+            margin: 0.5rem 0;
+        }
+
+        .profile-popup .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .profile-popup .close-btn:hover {
+            color: #333;
+        }
+
+        footer {
+            background: #fff;
+            padding: 1rem;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            color: #333;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            border-top: 1px solid #e0e0e0;
+        }
+
+        footer a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #444;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -33,55 +343,46 @@
 
             <div class="filter-options">
                 <div class="filter-group">
-                    <label for="search-input">Search by Skill or Name</label>
-                    <input type="text" id="search-input" class="custom-input" placeholder="e.g., Coding, Priya">
+                    <label for="search-input">Search by Name</label>
+                    <input type="text" id="search-input" class="custom-input" placeholder="e.g., Priya">
                 </div>
                 <div class="filter-group">
-                    <label for="skills">Skills</label>
-                    <select id="skills" class="custom-dropdown">
-                        <option value="all">All Skills</option>
-                        <option value="coding">Coding</option>
-                        <option value="design">Design</option>
-                        <option value="research">Research</option>
-                        <option value="data-analysis">Data Analysis</option>
+                    <label for="college">College</label>
+                    <select id="college" class="custom-dropdown">
+                        <option value="all">All Colleges</option>
+                        <option value="iit bombay">IIT Bombay</option>
+                        <option value="iit delhi">IIT Delhi</option>
+                        <option value="iit madras">IIT Madras</option>
+                        <option value="iit kanpur">IIT Kanpur</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label for="experience">Experience Level</label>
-                    <select id="experience" class="custom-dropdown">
-                        <option value="all">All</option>
-                        <option value="beginner">Beginner</option>
-                        <option value="intermediate">Intermediate</option>
-                        <option value="advanced">Advanced</option>
+                    <label for="type">Type</label>
+                    <select id="type" class="custom-dropdown">
+                        <option value="all">All Types</option>
+                        <option value="fresher">Fresher</option>
+                        <option value="sophomore">Sophomore</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label for="availability">Availability</label>
-                    <select id="availability" class="custom-dropdown">
-                        <option value="all">All</option>
-                        <option value="full-time">Full-Time</option>
-                        <option value="part-time">Part-Time</option>
-                    </select>
+                    <button class="apply-filter-btn" onclick="applyFilters()">Apply Filters</button>
                 </div>
-                <div class="filter-group">
-                    <label for="location">Location</label>
-                    <select id="location" class="custom-dropdown">
-                        <option value="all">All</option>
-                        <option value="bangalore">Bangalore</option>
-                        <option value="delhi">Delhi</option>
-                        <option value="mumbai">Mumbai</option>
-                    </select>
-                </div>
-                <button class="apply-filter-btn" onclick="applyFilters()">Apply Filters</button>
             </div>
 
-            <div class="students-grid" id="students-grid"></div>
+            <div class="students-list" id="students-list"></div>
         </section>
     </main>
 
     <footer>
         <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
     </footer>
+
+    <!-- Profile Popup -->
+    <div class="overlay" id="overlay"></div>
+    <div class="profile-popup" id="profilePopup">
+        <button class="close-btn" onclick="closeProfilePopup()">×</button>
+        <div id="profileContent"></div>
+    </div>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
@@ -100,6 +401,7 @@
         const db = getDatabase(app);
         const userId = localStorage.getItem('userId');
         let studentsData = [];
+        const sentRequests = new Set();
 
         if (!userId) {
             setTimeout(() => {
@@ -108,8 +410,25 @@
             }, 1000);
         }
 
-        const studentsGrid = document.getElementById('students-grid');
+        const studentsList = document.getElementById('students-list');
         const studentsRef = ref(db, 'studentslist');
+        const profilePopup = document.getElementById('profilePopup');
+        const profileContent = document.getElementById('profileContent');
+        const overlay = document.getElementById('overlay');
+
+        async function checkConnectionStatus(studentId) {
+            const requestsRef = ref(db, 'connection_requests');
+            const snapshot = await get(requestsRef);
+            if (snapshot.exists()) {
+                snapshot.forEach((childSnapshot) => {
+                    const request = childSnapshot.val();
+                    if (request.from === userId && request.to === studentId && request.status === 'pending') {
+                        sentRequests.add(studentId);
+                    }
+                });
+            }
+        }
+
         onValue(studentsRef, (snapshot) => {
             studentsData = [];
             snapshot.forEach((childSnapshot) => {
@@ -120,47 +439,108 @@
             applyFilters();
         });
 
-        window.applyFilters = () => {
+        window.applyFilters = async () => {
             const search = document.getElementById('search-input').value.toLowerCase();
-            const skill = document.getElementById('skills').value;
-            const experience = document.getElementById('experience').value;
-            const availability = document.getElementById('availability').value;
-            const location = document.getElementById('location').value;
+            const college = document.getElementById('college').value;
+            const type = document.getElementById('type').value;
+
+            for (const student of studentsData) {
+                await checkConnectionStatus(student.id);
+            }
 
             const filteredStudents = studentsData.filter(student => {
-                const matchesSearch = student.name.toLowerCase().includes(search) || (student.skills && student.skills.toLowerCase().includes(search));
-                const matchesSkill = skill === 'all' || (student.skills && student.skills.toLowerCase().includes(skill.toLowerCase()));
-                const matchesExp = experience === 'all' || (student.experience && student.experience.toLowerCase() === experience.toLowerCase());
-                const matchesAvail = availability === 'all' || (student.availability && student.availability.toLowerCase() === availability.toLowerCase());
-                const matchesLoc = location === 'all' || (student.location && student.location.toLowerCase() === location.toLowerCase());
-                return matchesSearch && matchesSkill && matchesExp && matchesAvail && matchesLoc;
+                const matchesSearch = student.name.toLowerCase().includes(search);
+                const matchesCollege = college === 'all' || (student.college && student.college.toLowerCase() === college.toLowerCase());
+                const matchesType = type === 'all' || (student.type && student.type.toLowerCase() === type.toLowerCase());
+                return matchesSearch && matchesCollege && matchesType;
             });
 
-            studentsGrid.innerHTML = filteredStudents.map(student => `
+            studentsList.innerHTML = filteredStudents.map(student => `
                 <div class="student-card">
-                    <h3>${student.name}</h3>
-                    <p><strong>Skills:</strong> ${student.skills || 'Not set'}</p>
-                    <p><strong>Experience:</strong> ${student.experience || 'Not set'}</p>
-                    <p><strong>Availability:</strong> ${student.availability || 'Not set'}</p>
-                    <p><strong>Location:</strong> ${student.location || 'Not set'}</p>
-                    <button class="cta-button" onclick="sendConnectionRequest('${student.id}')">Connect</button>
+                    <div class="student-avatar">${student.name.charAt(0)}</div>
+                    <div class="student-info">
+                        <h3>${student.name}</h3>
+                        <p><i class="fas fa-university"></i> ${student.college || 'Not set'}</p>
+                        <p><i class="fas fa-user-graduate"></i> ${student.type || 'Not set'}</p>
+                    </div>
+                    <button class="connect-btn ${sentRequests.has(student.id) ? 'sent' : ''}" 
+                        onclick="sendConnectionRequest('${student.id}', this)"
+                        ${sentRequests.has(student.id) ? 'disabled' : ''}>
+                        ${sentRequests.has(student.id) ? 'Connection Sent' : 'Connect'}
+                    </button>
+                    <span class="view-profile" onclick="showProfile('${student.id}')">View Profile</span>
                 </div>
             `).join('');
         };
 
-        window.sendConnectionRequest = async (studentId) => {
+        window.sendConnectionRequest = async (studentId, button) => {
+            if (sentRequests.has(studentId)) return;
+
             const requestData = {
                 from: userId,
                 to: studentId,
                 status: 'pending',
                 timestamp: new Date().toISOString()
             };
-            await push(ref(db, 'connection_requests'), requestData);
+
+            const newRequestRef = await push(ref(db, 'connection_requests'), requestData);
+            sentRequests.add(studentId);
+            
+            button.classList.add('sent');
+            button.textContent = 'Connection Sent';
+            button.disabled = true;
+            
             alert('Connection request sent!');
         };
 
+        window.showProfile = async (targetUserId) => {
+            const studentsRef = ref(db, `studentslist/${targetUserId}`);
+            const professionalsRef = ref(db, `professionalslist/${targetUserId}`);
+
+            let profileData = null;
+            let userType = '';
+
+            const studentSnapshot = await get(studentsRef);
+            if (studentSnapshot.exists()) {
+                profileData = studentSnapshot.val();
+                userType = 'Student';
+            } else {
+                const professionalSnapshot = await get(professionalsRef);
+                if (professionalSnapshot.exists()) {
+                    profileData = professionalSnapshot.val();
+                    userType = 'Professional';
+                }
+            }
+
+            if (profileData) {
+                profileContent.innerHTML = `
+                    <h2>${profileData.name || 'Name not set'}</h2>
+                    <p><strong>Type:</strong> ${userType}</p>
+                    <p><strong>ID:</strong> ${targetUserId}</p>
+                    ${userType === 'Student' ? `
+                        <p><strong>College:</strong> ${profileData.college || 'Not set'}</p>
+                        <p><strong>Student Type:</strong> ${profileData.type || 'Not set'}</p>
+                    ` : `
+                        <p><strong>Company:</strong> ${profileData.company || 'Not set'}</p>
+                        <p><strong>Position:</strong> ${profileData.position || 'Not set'}</p>
+                    `}
+                `;
+                profilePopup.classList.add('active');
+                overlay.classList.add('active');
+            } else {
+                alert('Profile not found in students or professionals list.');
+            }
+        };
+
+        window.closeProfilePopup = () => {
+            profilePopup.classList.remove('active');
+            overlay.classList.remove('active');
+        };
+
+        // Close popup when clicking overlay
+        overlay.addEventListener('click', closeProfilePopup);
+
         applyFilters();
     </script>
-    <script src="../js/main.js"></script>
 </body>
 </html>

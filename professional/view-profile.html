@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: rgba(0, 0, 0, 0.3); /* Overlay effect */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-popup {
+            background: #fff;
+            padding: 2rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .profile-popup h2 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin: 0 0 1rem 0;
+        }
+
+        .profile-popup p {
+            font-size: 1rem;
+            color: #666;
+            margin: 0.5rem 0;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-popup">
+        <button class="close-btn" id="closeBtn">×</button>
+        <div id="profileContent"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
+            authDomain: "taska-45011.firebaseapp.com",
+            databaseURL: "https://taska-45011-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "taska-45011",
+            storageBucket: "taska-45011.firebasestorage.app",
+            messagingSenderId: "205487498813",
+            appId: "1:205487498813:web:0de2c9eab567482781ec54"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const profileContent = document.getElementById('profileContent');
+        const closeBtn = document.getElementById('closeBtn');
+
+        // Get userId from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('userId');
+
+        async function loadProfile() {
+            if (!userId) {
+                profileContent.innerHTML = '<p>No user ID provided.</p>';
+                return;
+            }
+
+            const studentsRef = ref(db, `studentslist/${userId}`);
+            const professionalsRef = ref(db, `professionalslist/${userId}`);
+
+            let profileData = null;
+            let userType = '';
+
+            const studentSnapshot = await get(studentsRef);
+            if (studentSnapshot.exists()) {
+                profileData = studentSnapshot.val();
+                userType = 'Student';
+            } else {
+                const professionalSnapshot = await get(professionalsRef);
+                if (professionalSnapshot.exists()) {
+                    profileData = professionalSnapshot.val();
+                    userType = 'Professional';
+                }
+            }
+
+            if (profileData) {
+                profileContent.innerHTML = `
+                    <h2>${profileData.name || 'Name not set'}</h2>
+                    <p><strong>Type:</strong> ${userType}</p>
+                    <p><strong>ID:</strong> ${userId}</p>
+                    ${userType === 'Student' ? `
+                        <p><strong>College:</strong> ${profileData.college || 'Not set'}</p>
+                        <p><strong>Student Type:</strong> ${profileData.type || 'Not set'}</p>
+                    ` : `
+                        <p><strong>Company:</strong> ${profileData.company || 'Not set'}</p>
+                        <p><strong>Position:</strong> ${profileData.position || 'Not set'}</p>
+                    `}
+                `;
+            } else {
+                profileContent.innerHTML = '<p>Profile not found.</p>';
+            }
+        }
+
+        closeBtn.addEventListener('click', () => {
+            window.close(); // Closes the popup window
+        });
+
+        loadProfile();
+    </script>
+</body>
+</html>
