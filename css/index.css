@@ -1004,3 +1004,156 @@ footer p.dark-mode {
         width: 95%;
     }
 }
+
+/* Human + AI Collaboration Section */
+.human-ai-collab {
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, #1e1e2f 0%, #2a3550 100%);
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.human-ai-collab.dark-mode {
+    background: linear-gradient(135deg, #2a3550 0%, #3e4a6b 100%);
+}
+
+.collab-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.human-ai-collab h2 {
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #6b48ff, #a3bffa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.collab-intro {
+    font-size: 1.3rem;
+    color: #ccc;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+}
+
+.collab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.collab-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+.collab-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.collab-card.ai-card {
+    background: linear-gradient(135deg, rgba(107, 72, 255, 0.2), rgba(163, 191, 250, 0.2));
+}
+
+.collab-card.fusion-card {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 184, 107, 0.2));
+}
+
+.icon-wrapper {
+    width: 60px;
+    height: 60px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.collab-card i {
+    font-size: 2rem;
+    color: #6b48ff;
+}
+
+.collab-card.ai-card i {
+    color: #9370db;
+}
+
+.collab-card.fusion-card i {
+    color: #ff6b6b;
+}
+
+.collab-card h3 {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 0.75rem;
+}
+
+.collab-card p {
+    font-size: 1rem;
+    color: #ddd;
+    line-height: 1.5;
+}
+
+.collab-cta {
+    background: linear-gradient(90deg, #6b48ff, #9370db);
+    padding: 1rem 2.5rem;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.collab-cta:hover {
+    background: linear-gradient(90deg, #9370db, #a3bffa);
+    transform: scale(1.05);
+}
+
+.collab-cta.dark-mode {
+    background: linear-gradient(90deg, #a3bffa, #fff);
+    color: #1e1e2f;
+}
+
+.collab-cta.dark-mode:hover {
+    background: linear-gradient(90deg, #fff, #ccc);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .human-ai-collab h2 {
+        font-size: 2rem;
+    }
+    .collab-intro {
+        font-size: 1.1rem;
+    }
+    .collab-card {
+        padding: 1.5rem;
+    }
+    .collab-card h3 {
+        font-size: 1.3rem;
+    }
+    .collab-cta {
+        padding: 0.85rem 2rem;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .collab-grid {
+        grid-template-columns: 1fr;
+    }
+}
