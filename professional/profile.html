@@ -77,15 +77,14 @@
                 <p><strong>Name:</strong> <span id="name">Loading...</span></p>
                 <p><strong>Email:</strong> <span id="email">Loading...</span></p>
                 <p><strong>Location:</strong> <span id="location">Loading...</span></p>
-                <p><strong>Joined:</strong> <span id="joined">Loading...</span></p>
-                <p><strong>Coins:</strong> <span id="coins">Loading...</span></p>
+                <p><strong>Phone number :</strong> <span id="phone">Loading...</span></p>
                 <p><strong>Profession:</strong> <span id="profession">Loading...</span></p>
                 <p><strong>Company:</strong> <span id="company">Loading...</span></p>
                 <p><strong>Experience:</strong> <span id="experience">Loading...</span></p>
-                <p><strong>Skills:</strong> <span id="skills">Loading...</span></p>
-                <p><strong>Education:</strong> <span id="education">Loading...</span></p>
+                <p><strong>Degree :</strong> <span id="degree">Loading...</span></p>
+                <p><strong>College Studied:</strong> <span id="education">Loading...</span></p>
+                <p><strong>Area of Study :</strong> <span id="study">Loading...</span></p>
                 <p><strong>Bio:</strong> <span id="bio">Loading...</span></p>
-                <p><strong>Hobbies:</strong> <span id="hobbies">Loading...</span></p>
                 <h3>Connection Requests</h3>
                 <div id="request-list"></div>
                 <h3>Connections</h3>
@@ -139,16 +138,15 @@
                     document.getElementById('name').textContent = data.name || 'Not set';
                     document.getElementById('email').textContent = data.email || 'Not set';
                     document.getElementById('location').textContent = data.location || 'Not set';
-                    document.getElementById('joined').textContent = data.joined || 'Not set';
-                    document.getElementById('coins').textContent = data.coins !== undefined ? data.coins : '0';
-                    document.getElementById('profession').textContent = data.profession || 'Not set';
+                    document.getElementById('phone').textContent = data.phone || 'Not set';
+                    document.getElementById('study').textContent = data.areaOfStudy || 'Not set';
+                    document.getElementById('profession').textContent = data.jobRole || 'Not set';
                     document.getElementById('company').textContent = data.company || 'Not set';
                     document.getElementById('experience').textContent = data.experience ? `${data.experience} Years` : 'Not set';
-                    document.getElementById('skills').textContent = data.skills || 'Not set';
-                    document.getElementById('education').textContent = data.education || 'Not set';
+                    document.getElementById('degree').textContent = data.degree || 'Not set';
+                    document.getElementById('education').textContent = data.college || 'Not set';
                     document.getElementById('bio').textContent = data.bio || 'Not set';
-                    document.getElementById('hobbies').textContent = data.hobbies || 'Not set';
-                    document.getElementById('hiring-toggle').checked = data.isHiring || false;
+                    document.getElementById('hiring-toggle').checked = data.isVisible || false;
                     if (data.profileImage) document.getElementById('profile-avatar').src = data.profileImage;
                 } else {
                     alert("No profile data found. Please update your profile.");
@@ -160,11 +158,11 @@
 
         async function toggleHiring() {
             const toggle = document.getElementById('hiring-toggle');
-            const isHiring = toggle.checked;
+            const isVisible = toggle.checked;
             const popup = document.getElementById('hiring-popup');
             try {
-                await set(ref(database, `professionalslist/${userId}/isHiring`), isHiring);
-                popup.textContent = isHiring ? "Your profile is visible as hiring" : "Your profile is no longer visible as hiring";
+                await set(ref(database, `professionalslist/${userId}/isVisible`), isVisible);
+                popup.textContent = isVisible ? "Your profile is visible as hiring" : "Your profile is no longer visible as hiring";
                 popup.classList.add('show');
                 setTimeout(() => popup.classList.remove('show'), 2000);
             } catch (error) {

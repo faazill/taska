@@ -87,7 +87,7 @@ window.signup = function(userType) {
                 bio: '',
                 hobbies: '',
                 coins: 500, // Default for professionals; adjust for students if needed
-                isHiring: false // Default for professionals
+                isHiring: true // Default for professionals
             };
 
             set(userRef, initialData)

@@ -247,13 +247,12 @@
                 <p><strong>Name:</strong> <span id="name">Loading...</span></p>
                 <p><strong>Email:</strong> <span id="email">Loading...</span></p>
                 <p><strong>Location:</strong> <span id="location">Loading...</span></p>
-                <p><strong>Joined:</strong> <span id="joined">Loading...</span></p>
-                <p><strong>Coins:</strong> <span id="coins">Loading...</span></p>
-                <p><strong>Field of Study:</strong> <span id="profession">Loading...</span></p>
-                <p><strong>Institute:</strong> <span id="company">Loading...</span></p>
-                <p><strong>Experience:</strong> <span id="experience">Loading...</span></p>
+                <p><strong>College:</strong> <span id="college">Loading...</span></p>
+                <p><strong>Degree:</strong> <span id="degree">Loading...</span></p>
+                <p><strong>Area of Study:</strong> <span id="areaOfStudy">Loading...</span></p>
+                <p><strong>Student Type:</strong> <span id="type">Loading...</span></p>
                 <p><strong>Skills:</strong> <span id="skills">Loading...</span></p>
-                <p><strong>Education:</strong> <span id="education">Loading...</span></p>
+                <p><strong>Interested Profession:</strong> <span id="tarprofession">Loading...</span></p>
                 <p><strong>Bio:</strong> <span id="bio">Loading...</span></p>
                 <p><strong>Hobbies:</strong> <span id="hobbies">Loading...</span></p>
                 <h3>Connection Requests</h3>
@@ -309,16 +308,15 @@
                     document.getElementById('name').textContent = data.name || 'Not set';
                     document.getElementById('email').textContent = data.email || 'Not set';
                     document.getElementById('location').textContent = data.location || 'Not set';
-                    document.getElementById('joined').textContent = data.joined || 'Not set';
-                    document.getElementById('coins').textContent = data.coins !== undefined ? data.coins : '0';
-                    document.getElementById('profession').textContent = data.profession || 'Not set';
-                    document.getElementById('company').textContent = data.company || 'Not set';
-                    document.getElementById('experience').textContent = data.experience ? `${data.experience} Years` : 'Not set';
+                    document.getElementById('college').textContent = data.college || 'Not set';
+                    document.getElementById('degree').textContent = data.degree || 'Not set';
+                    document.getElementById('areaOfStudy').textContent = data.areaOfStudy || 'Not set';
+                    document.getElementById('type').textContent = data.type || 'Not set';
                     document.getElementById('skills').textContent = data.skills || 'Not set';
-                    document.getElementById('education').textContent = data.education || 'Not set';
+                    document.getElementById('tarprofession').textContent = data.tarprofession || 'Not set';
                     document.getElementById('bio').textContent = data.bio || 'Not set';
                     document.getElementById('hobbies').textContent = data.hobbies || 'Not set';
-                    document.getElementById('hiring-toggle').checked = data.isAvailable || false;
+                    document.getElementById('hiring-toggle').checked = data.isVisible || false;
                     if (data.profileImage) document.getElementById('profile-avatar').src = data.profileImage;
                 } else {
                     alert("No profile data found. Please update your profile.");
@@ -330,16 +328,16 @@
 
         async function toggleAvailability() {
             const toggle = document.getElementById('hiring-toggle');
-            const isAvailable = toggle.checked;
+            const isVisible = toggle.checked;
             const popup = document.getElementById('hiring-popup');
             try {
-                await set(ref(db, `studentslist/${userId}/isAvailable`), isAvailable);
-                popup.textContent = isAvailable ? "You are visible as available" : "You are no longer visible as available";
+                await set(ref(db, `studentslist/${userId}/isVisible`), isVisible);
+                popup.textContent = isVisible ? "You are visible as available" : "You are no longer visible as available";
                 popup.classList.add('show');
                 setTimeout(() => popup.classList.remove('show'), 2000);
             } catch (error) {
                 alert("Failed to update availability status: " + error.message);
-                toggle.checked = !isAvailable;
+                toggle.checked = !isVisible;
             }
         }
 
