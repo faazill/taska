@@ -11,208 +11,121 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
+        body { 
+            background: #ffffff; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+            font-family: 'Poppins', sans-serif; 
         }
-        .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(5px);
-            padding: 1rem 2rem;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
+        .navbar { 
+            background: #ffffff; 
+            border-bottom: 1px solid #e0e0e0; 
+            padding: 1rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
         }
-        .dashboard-content {
-            padding: 3rem 1rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: calc(100vh - 120px);
-            margin-top: 60px;
+        .nav-menu { 
+            display: flex; 
+            gap: 1.5rem; 
+            list-style: none; 
         }
-        .profile-container {
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            width: 100%;
-            max-width: 700px;
-            padding: 2rem;
-            transform: translateY(20px);
-            opacity: 0;
-            animation: slideIn 0.6s ease-out forwards;
+        .nav-menu a { 
+            text-decoration: none; 
+            color: #2c3e50; 
+            font-weight: 400; 
         }
-        @keyframes slideIn {
-            to { transform: translateY(0); opacity: 1; }
+        .nav-menu a.active { 
+            font-weight: 600; 
+            color: #3498db; 
         }
-        .profile-header {
-            text-align: center;
-            margin-bottom: 2rem;
+        .dashboard-content { 
+            padding: 2rem; 
+            display: grid; 
+            place-items: center; 
         }
-        .profile-header h1 {
-            font-size: 2.5rem;
-            color: #2c3e50;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        .profile-container { 
+            background: #ffffff; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 10px; 
+            width: 100%; 
+            max-width: 700px; 
+            padding: 2rem; 
+            display: grid; 
+            gap: 1.5rem; 
         }
-        .profile-avatar {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            border: 5px solid #3498db;
-            margin: 0 auto 2rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .profile-header { 
+            text-align: center; 
         }
-        .profile-avatar:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+        .profile-header h1 { 
+            font-size: 2rem; 
+            color: #2c3e50; 
+            margin: 0; 
+            text-transform: uppercase; 
         }
-        .profile-details {
-            background: rgba(245, 245, 245, 0.8);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+        .profile-avatar { 
+            width: 120px; 
+            height: 120px; 
+            border-radius: 50%; 
+            border: 3px solid #3498db; 
+            margin: 0 auto 1rem; 
+            background: #3498db; 
+            color: #ffffff; 
+            display: grid; 
+            place-items: center; 
+            font-size: 3rem; 
+            font-weight: 600; 
+            text-transform: uppercase; 
         }
-        .profile-details p {
-            margin: 0.8rem 0;
-            font-size: 1.1rem;
-            color: #34495e;
-            display: flex;
-            justify-content: space-between;
-            transition: transform 0.3s ease;
+        .details-grid { 
+            background: #f9f9f9; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 10px; 
+            padding: 1.5rem; 
+            display: grid; 
+            gap: 0.8rem; 
         }
-        .profile-details p:hover {
-            transform: translateX(5px);
+        .details-grid h2 { 
+            font-size: 1.5rem; 
+            color: #2c3e50; 
+            margin-bottom: 0.5rem; 
         }
-        .profile-details strong {
-            color: #2c3e50;
-            font-weight: 600;
-            width: 150px;
+        .details-grid p { 
+            margin: 0; 
+            font-size: 1rem; 
+            color: #34495e; 
+            display: grid; 
+            grid-template-columns: 150px 1fr; 
         }
-        .profile-details h3 {
-            color: #2c3e50;
-            margin-top: 1.5rem;
-            font-size: 1.4rem;
+        .details-grid strong { 
+            color: #2c3e50; 
+            font-weight: 600; 
         }
-        .profile-details button {
-            margin-left: 1rem;
-            padding: 0.5rem 1rem;
-            background: #3498db;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
+        .profile-actions { 
+            text-align: center; 
         }
-        .profile-details button:hover {
-            background: #2980b9;
+        .edit-btn { 
+            display: inline-block; 
+            padding: 0.8rem 2rem; 
+            background: #3498db; 
+            color: #ffffff; 
+            text-decoration: none; 
+            border-radius: 10px; 
+            font-size: 1rem; 
         }
-        .toggle-container {
-            text-align: center;
-            margin-bottom: 2rem;
+        footer { 
+            background: #ffffff; 
+            padding: 1rem; 
+            text-align: center; 
+            border-top: 1px solid #e0e0e0; 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
         }
-        .toggle-label {
-            font-size: 1.2rem;
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
-            display: block;
-            font-weight: 500;
+        footer a { 
+            color: #3498db; 
+            text-decoration: none; 
         }
-        .custom-toggle {
-            display: none;
-        }
-        .toggle-switch {
-            width: 70px;
-            height: 40px;
-            background: #ccc;
-            border-radius: 20px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            display: inline-block;
-        }
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 34px;
-            height: 34px;
-            left: 3px;
-            top: 3px;
-            background: #fff;
-            border-radius: 50%;
-            transition: transform 0.3s ease, background 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        .custom-toggle:checked + .toggle-switch {
-            background: #2ecc71;
-        }
-        .custom-toggle:checked + .toggle-switch::after {
-            transform: translateX(30px);
-            background: #fff;
-        }
-        .toggle-switch:hover::after {
-            transform: scale(1.1);
-        }
-        .custom-toggle:checked + .toggle-switch:hover::after {
-            transform: translateX(30px) scale(1.1);
-        }
-        .edit-btn {
-            display: inline-block;
-            padding: 0.8rem 2rem;
-            background: #3498db;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            transition: background 0.3s ease, transform 0.3s ease;
-            text-align: center;
-        }
-        .edit-btn:hover {
-            background: #2980b9;
-            transform: translateY(-3px);
-        }
-        .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: #2ecc71;
-            color: #fff;
-            padding: 1.5rem 3rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            font-size: 1.2rem;
-            z-index: 1000;
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            text-align: center;
-        }
-        .popup.error {
-            background: #e74c3c;
-        }
-        .popup.show {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-        }
-        footer {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 1rem;
-            text-align: center;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .dark-mode .profile-container { background: #2c3e50; }
-        .dark-mode .profile-header h1, .dark-mode .profile-details p, .dark-mode .toggle-label { color: #ecf0f1; }
-        .dark-mode .profile-details { background: rgba(44, 62, 80, 0.8); }
-        .dark-mode .toggle-switch { background: #7f8c8d; }
-        .dark-mode .custom-toggle:checked + .toggle-switch { background: #27ae60; }
-        .dark-mode .edit-btn { background: #2980b9; }
     </style>
 </head>
 <body>
@@ -234,41 +147,37 @@
         <div class="profile-container">
             <div class="profile-header">
                 <h1>Your Profile</h1>
-                <img src="../assets/st3.jpg" alt="Profile Avatar" class="profile-avatar" id="profile-avatar">
+                <div class="profile-avatar" id="profile-avatar"></div>
             </div>
 
-<!--
-            <div class="toggle-container">
-                <label class="toggle-label">Visible as Available</label>
-                <input type="checkbox" id="hiring-toggle" class="custom-toggle" onchange="toggleAvailability()">
-                <label for="hiring-toggle" class="toggle-switch"></label>
-            </div>
-        -->
-
-            <div class="profile-details">
+            <div class="details-grid">
+                <h2>Personal Details</h2>
                 <p><strong>Name:</strong> <span id="name">Loading...</span></p>
                 <p><strong>Email:</strong> <span id="email">Loading...</span></p>
                 <p><strong>Location:</strong> <span id="location">Loading...</span></p>
+                <p><strong>Hobbies:</strong> <span id="hobbies">Loading...</span></p>
+                <p><strong>Bio:</strong> <span id="bio">Loading...</span></p>
+            </div>
+
+            <div class="details-grid">
+                <h2>Educational Details</h2>
                 <p><strong>College:</strong> <span id="college">Loading...</span></p>
                 <p><strong>Degree:</strong> <span id="degree">Loading...</span></p>
                 <p><strong>Area of Study:</strong> <span id="areaOfStudy">Loading...</span></p>
                 <p><strong>Student Type:</strong> <span id="type">Loading...</span></p>
+            </div>
+
+            <div class="details-grid">
+                <h2>Career Interests</h2>
                 <p><strong>Skills:</strong> <span id="skills">Loading...</span></p>
                 <p><strong>Interested Profession:</strong> <span id="tarprofession">Loading...</span></p>
-                <p><strong>Bio:</strong> <span id="bio">Loading...</span></p>
-                <p><strong>Hobbies:</strong> <span id="hobbies">Loading...</span></p>
-                <h3>Connection Requests</h3>
-                <div id="request-list"></div>
-                <h3>Connections</h3>
-                <div id="connections-list"></div>
             </div>
+
             <div class="profile-actions">
                 <a href="update-profile.html" class="edit-btn">Edit Profile</a>
             </div>
         </div>
     </main>
-
-    <div class="popup" id="hiring-popup"></div>
 
     <footer>
         <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
@@ -276,7 +185,7 @@
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getDatabase, ref, get, set, onValue } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+        import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
@@ -307,19 +216,19 @@
                 const snapshot = await get(userRef);
                 if (snapshot.exists()) {
                     const data = snapshot.val();
-                    document.getElementById('name').textContent = data.name || 'Not set';
+                    const name = data.name || 'Not set';
+                    document.getElementById('name').textContent = name;
                     document.getElementById('email').textContent = data.email || 'Not set';
                     document.getElementById('location').textContent = data.location || 'Not set';
+                    document.getElementById('hobbies').textContent = data.hobbies || 'Not set';
+                    document.getElementById('bio').textContent = data.bio || 'Not set';
                     document.getElementById('college').textContent = data.college || 'Not set';
                     document.getElementById('degree').textContent = data.degree || 'Not set';
                     document.getElementById('areaOfStudy').textContent = data.areaOfStudy || 'Not set';
                     document.getElementById('type').textContent = data.type || 'Not set';
                     document.getElementById('skills').textContent = data.skills || 'Not set';
                     document.getElementById('tarprofession').textContent = data.tarprofession || 'Not set';
-                    document.getElementById('bio').textContent = data.bio || 'Not set';
-                    document.getElementById('hobbies').textContent = data.hobbies || 'Not set';
-                    
-                    if (data.profileImage) document.getElementById('profile-avatar').src = data.profileImage;
+                    document.getElementById('profile-avatar').textContent = name.charAt(0);
                 } else {
                     alert("No profile data found. Please update your profile.");
                 }
@@ -327,91 +236,6 @@
                 alert(`Failed to load profile: ${error.message}`);
             }
         }
-
-        async function toggleAvailability() {
-            const toggle = document.getElementById();
-            const isVisible = toggle.checked;
-            const popup = document.getElementById('hiring-popup');
-            try {
-                await set(ref(db, `studentslist/${userId}/isVisible`), isVisible);
-                popup.textContent = isVisible ? "You are visible as available" : "You are no longer visible as available";
-                popup.classList.add('show');
-                setTimeout(() => popup.classList.remove('show'), 2000);
-            } catch (error) {
-                alert("Failed to update availability status: " + error.message);
-                toggle.checked = !isVisible;
-            }
-        }
-
-        const requestList = document.getElementById('request-list');
-        onValue(ref(db, 'connection_requests'), (snapshot) => {
-            requestList.innerHTML = '<h4>Sent Requests</h4>';
-            let hasPending = false;
-            snapshot.forEach((childSnapshot) => {
-                const req = childSnapshot.val();
-                const reqId = childSnapshot.key;
-                if (req.to === userId && req.status === 'pending') {
-                    hasPending = true;
-                    get(ref(db, `professionalslist/${req.from}`)).then((snap) => {
-                        const pro = snap.val();
-                        requestList.innerHTML += `
-                            <p>Request from ${pro.name}
-                                <button onclick="acceptRequest('${reqId}')">Accept</button>
-                                <button onclick="rejectRequest('${reqId}')">Reject</button>
-                            </p>`;
-                    });
-                } else if (req.from === userId && req.status === 'pending') {
-                    hasPending = true;
-                    get(ref(db, `professionalslist/${req.to}`)).then((snap) => {
-                        const pro = snap.val();
-                        requestList.innerHTML += `<p>Pending request to ${pro.name}</p>`;
-                    });
-                }
-            });
-            if (!hasPending) requestList.innerHTML += '<p>No pending requests.</p>';
-        });
-
-        const connectionsList = document.getElementById('connections-list');
-        onValue(ref(db, `studentslist/${userId}/connections`), (snapshot) => {
-            connectionsList.innerHTML = '';
-            if (snapshot.exists()) {
-                snapshot.forEach((childSnapshot) => {
-                    const proId = childSnapshot.key;
-                    get(ref(db, `professionalslist/${proId}`)).then((snap) => {
-                        const pro = snap.val();
-                        connectionsList.innerHTML += `
-                            <p>${pro.name} - Connected since ${new Date(childSnapshot.val().connectedAt).toLocaleDateString()}</p>
-                        `;
-                    });
-                });
-            } else {
-                connectionsList.innerHTML = '<p>No connections yet.</p>';
-            }
-        });
-
-        window.acceptRequest = async (requestId) => {
-            const reqRef = ref(db, `connection_requests/${requestId}`);
-            const snapshot = await get(reqRef);
-            const req = snapshot.val();
-            if (req.to === userId && req.status === 'pending') {
-                const connData = { connectedAt: new Date().toISOString() };
-                await set(ref(db, `studentslist/${userId}/connections/${req.from}`), connData);
-                await set(ref(db, `professionalslist/${req.from}/connections/${userId}`), connData);
-                await set(reqRef, { ...req, status: 'accepted' });
-                alert('Connection accepted!');
-            }
-        };
-
-        window.rejectRequest = async (requestId) => {
-            const reqRef = ref(db, `connection_requests/${requestId}`);
-            const snapshot = await get(reqRef);
-            const req = snapshot.val();
-            if (req.to === userId && req.status === 'pending') {
-                await set(reqRef, { ...req, status: 'rejected' });
-                alert('Connection request rejected.');
-            }
-        };
     </script>
-    <script src="../js/main.js"></script>
 </body>
 </html>

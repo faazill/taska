@@ -10,24 +10,123 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; }
-        .navbar { background: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); padding: 1rem 2rem; position: fixed; top: 0; width: 100%; z-index: 1000; }
-        .dashboard-content { padding: 5rem 2rem; margin-top: 60px; }
-        .dashboard-section h1 { font-size: 2.5rem; color: #2c3e50; margin-bottom: 1rem; }
-        .dashboard-section p { font-size: 1.2rem; color: #7f8c8d; margin-bottom: 2rem; }
-        .connections-section h2 { font-size: 1.8rem; color: #2c3e50; margin-bottom: 1.5rem; }
-        .connections-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-        .connection-card { background: #fff; border-radius: 15px; padding: 1.5rem; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .connection-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); }
-        .connection-card h3 { font-size: 1.5rem; color: #2c3e50; margin-bottom: 1rem; }
-        .connection-card p { font-size: 1rem; color: #34495e; margin: 0.5rem 0; }
-        .connection-card p strong { color: #2c3e50; }
-        .cta-button { display: inline-block; padding: 0.8rem 1.5rem; background: #3498db; color: #fff; text-decoration: none; border-radius: 8px; font-size: 1rem; margin-top: 1rem; transition: background 0.3s ease; }
-        .cta-button:hover { background: #2980b9; }
-        .action-btn { padding: 0.5rem 1rem; background: #e74c3c; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-top: 1rem; }
-        .action-btn:hover { background: #c0392b; }
-        .no-connections { font-size: 1.2rem; color: #7f8c8d; text-align: center; margin-top: 2rem; }
-        footer { background: rgba(255, 255, 255, 0.95); padding: 1rem; text-align: center; position: fixed; bottom: 0; width: 100%; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); }
+        body { 
+            background: #ffffff; 
+            min-height: 100vh; 
+            font-family: 'Poppins', sans-serif; 
+        }
+        .navbar { 
+            background: #ffffff; 
+            border-bottom: 1px solid #e0e0e0; 
+            padding: 1rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 1000; 
+        }
+        .nav-menu { 
+            display: flex; 
+            gap: 1.5rem; 
+            list-style: none; 
+        }
+        .nav-menu a { 
+            text-decoration: none; 
+            color: #2c3e50; 
+            font-weight: 400; 
+        }
+        .nav-menu a.active { 
+            font-weight: 600; 
+            color: #3498db; 
+        }
+        .dashboard-content { 
+            padding: 5rem 2rem; 
+        }
+        .dashboard-section h1 { 
+            font-size: 2rem; 
+            color: #2c3e50; 
+            margin-bottom: 1rem; 
+            text-align: center; 
+        }
+        .dashboard-section p { 
+            font-size: 1rem; 
+            color: #7f8c8d; 
+            margin-bottom: 2rem; 
+            text-align: center; 
+        }
+        .connections-section { 
+            margin-bottom: 2rem; 
+        }
+        .connections-section h2 { 
+            font-size: 1.5rem; 
+            color: #2c3e50; 
+            margin-bottom: 1rem; 
+        }
+        .connections-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 1rem; 
+        }
+        .connection-card { 
+            background: #f9f9f9; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 10px; 
+            padding: 1.5rem; 
+        }
+        .connection-card h3 { 
+            font-size: 1.3rem; 
+            color: #2c3e50; 
+            margin-bottom: 0.8rem; 
+        }
+        .connection-card p { 
+            font-size: 1rem; 
+            color: #34495e; 
+            margin: 0.5rem 0; 
+        }
+        .connection-card p strong { 
+            color: #2c3e50; 
+        }
+        .cta-button { 
+            display: inline-block; 
+            padding: 0.6rem 1.2rem; 
+            background: #3498db; 
+            color: #fff; 
+            text-decoration: none; 
+            border-radius: 5px; 
+            font-size: 0.9rem; 
+            margin-top: 0.8rem; 
+        }
+        .action-btn { 
+            padding: 0.6rem 1.2rem; 
+            background: #e74c3c; 
+            color: #fff; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            margin-top: 0.8rem; 
+            margin-left: 0.5rem; 
+        }
+        .no-connections { 
+            font-size: 1rem; 
+            color: #7f8c8d; 
+            text-align: center; 
+            margin-top: 1rem; 
+        }
+        footer { 
+            background: #ffffff; 
+            padding: 1rem; 
+            text-align: center; 
+            border-top: 1px solid #e0e0e0; 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+        }
+        footer a { 
+            color: #3498db; 
+            text-decoration: none; 
+        }
     </style>
 </head>
 <body>
@@ -55,6 +154,18 @@
                 <div class="connections-grid" id="connections-grid"></div>
                 <p class="no-connections" id="no-connections" style="display: none;">No connections yet.</p>
             </div>
+
+            <div class="connections-section">
+                <h2>Pending Sent Requests</h2>
+                <div class="connections-grid" id="sent-requests-grid"></div>
+                <p class="no-connections" id="no-sent-requests" style="display: none;">No sent requests.</p>
+            </div>
+
+            <div class="connections-section">
+                <h2>Pending Received Requests</h2>
+                <div class="connections-grid" id="received-requests-grid"></div>
+                <p class="no-connections" id="no-received-requests" style="display: none;">No received requests.</p>
+            </div>
         </section>
     </main>
 
@@ -64,7 +175,7 @@
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getDatabase, ref, onValue, get, remove } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+        import { getDatabase, ref, onValue, get, remove, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
@@ -86,6 +197,8 @@
             }, 1000);
         } else {
             loadConnections();
+            loadSentRequests();
+            loadReceivedRequests();
         }
 
         function loadConnections() {
@@ -116,6 +229,63 @@
             });
         }
 
+        function loadSentRequests() {
+            const sentRequestsGrid = document.getElementById('sent-requests-grid');
+            const noSentRequests = document.getElementById('no-sent-requests');
+            onValue(ref(db, 'connection_requests'), (snapshot) => {
+                sentRequestsGrid.innerHTML = '';
+                let hasRequests = false;
+                snapshot.forEach((childSnapshot) => {
+                    const req = childSnapshot.val();
+                    const requestId = childSnapshot.key;
+                    if (req.from === userId && req.status === 'pending') {
+                        hasRequests = true;
+                        get(ref(db, `professionalslist/${req.to}`)).then((snap) => {
+                            const pro = snap.val();
+                            sentRequestsGrid.innerHTML += `
+                                <div class="connection-card">
+                                    <h3>${pro.name}</h3>
+                                    <p><strong>Profession:</strong> ${pro.jobRole || 'Not set'}</p>
+                                    <p><strong>Company:</strong> ${pro.company || 'Not set'}</p>
+                                    <button class="action-btn" onclick="removeRequest('${requestId}')">Remove Request</button>
+                                </div>
+                            `;
+                        });
+                    }
+                });
+                noSentRequests.style.display = hasRequests ? 'none' : 'block';
+            });
+        }
+
+        function loadReceivedRequests() {
+            const receivedRequestsGrid = document.getElementById('received-requests-grid');
+            const noReceivedRequests = document.getElementById('no-received-requests');
+            onValue(ref(db, 'connection_requests'), (snapshot) => {
+                receivedRequestsGrid.innerHTML = '';
+                let hasRequests = false;
+                snapshot.forEach((childSnapshot) => {
+                    const req = childSnapshot.val();
+                    const requestId = childSnapshot.key;
+                    if (req.to === userId && req.status === 'pending') {
+                        hasRequests = true;
+                        get(ref(db, `professionalslist/${req.from}`)).then((snap) => {
+                            const pro = snap.val();
+                            receivedRequestsGrid.innerHTML += `
+                                <div class="connection-card">
+                                    <h3>${pro.name}</h3>
+                                    <p><strong>Profession:</strong> ${pro.jobRole || 'Not set'}</p>
+                                    <p><strong>Company:</strong> ${pro.company || 'Not set'}</p>
+                                    <button class="cta-button" onclick="acceptRequest('${requestId}')">Accept</button>
+                                    <button class="action-btn" onclick="removeRequest('${requestId}')">Decline</button>
+                                </div>
+                            `;
+                        });
+                    }
+                });
+                noReceivedRequests.style.display = hasRequests ? 'none' : 'block';
+            });
+        }
+
         window.disconnect = async (proId) => {
             if (confirm('Are you sure you want to disconnect from this professional?')) {
                 try {
@@ -129,7 +299,36 @@
                 }
             }
         };
+
+        window.removeRequest = async (requestId) => {
+            if (confirm('Are you sure you want to remove this request?')) {
+                try {
+                    await remove(ref(db, `connection_requests/${requestId}`));
+                    alert('Request removed successfully!');
+                } catch (error) {
+                    alert('Failed to remove request: ' + error.message);
+                }
+            }
+        };
+
+        window.acceptRequest = async (requestId) => {
+            const reqRef = ref(db, `connection_requests/${requestId}`);
+            const snapshot = await get(reqRef);
+            const req = snapshot.val();
+            if (req.to === userId && req.status === 'pending') {
+                const connData = { connectedAt: new Date().toISOString() };
+                try {
+                    await Promise.all([
+                        set(ref(db, `studentslist/${userId}/connections/${req.from}`), connData),
+                        set(ref(db, `professionalslist/${req.from}/connections/${userId}`), connData),
+                        set(reqRef, { ...req, status: 'accepted' })
+                    ]);
+                    alert('Connection accepted!');
+                } catch (error) {
+                    alert('Failed to accept connection: ' + error.message);
+                }
+            }
+        };
     </script>
-    <script src="../js/main.js"></script>
 </body>
 </html>

@@ -758,7 +758,7 @@ footer p.dark-mode {
 }
 
 .win-win-text p {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     color: var(--secondary-color); /* #666 */
     line-height: 1.8;
 }
