@@ -1,124 +1,121 @@
-/* css/about.css */
-.about-section {
-    background: #fff; /* Matches overview.html main areas */
+/* css/how-we-work.css */
+.how-we-work-section {
+    background: #fff;
     padding: 5rem 2rem;
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 90px auto 60px;
     text-align: center;
 }
 
-.about-section.dark-mode {
-    background: #1a1f2b; /* Matches overview.html dark mode */
+.how-we-work-section.dark-mode {
+    background: #1a1f2b;
 }
 
-.about-section h1 {
-    color: #333; /* Matches overview.html primary text */
+.how-we-work-section h1 {
+    color: #333;
     font-size: 2.8rem;
     margin-bottom: 1.5rem;
+    font-weight: 600;
 }
 
-.about-section h1.dark-mode {
-    color: #fff; /* Matches overview.html dark mode text */
+.how-we-work-section h1.dark-mode {
+    color: #fff;
 }
 
 .intro-text {
-    color: #666; /* Matches overview.html secondary text */
+    color: #666;
     font-size: 1.2rem;
     margin-bottom: 3rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .intro-text.dark-mode {
-    color: #ccc; /* Matches overview.html dark mode secondary text */
+    color: #ccc;
 }
 
-.team-grid {
-    display: flex;
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
-    justify-content: center;
-    flex-wrap: wrap;
+    justify-items: center;
+    text-align: left;
 }
 
-.team-card {
-    background: #fff; /* Matches overview.html sidebar/chat-area */
-    border: 1px solid #e0e0e0; /* Matches overview.html borders */
-    padding: 2rem;
-    border-radius: 20px;
+.grid-item {
+    padding: 1.5rem;
     width: 100%;
-    max-width: 300px;
-    text-align: center;
 }
 
-.team-card.dark-mode {
-    background: #2a3550; /* Matches overview.html dark mode headers */
-    border-color: #444; /* Matches overview.html dark mode borders */
-}
-
-.team-card h3 {
-    color: #333; /* Matches overview.html contact headers */
+.grid-item h3 {
+    color: #333;
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
+    font-weight: 400;
 }
 
-.team-card h3.dark-mode {
-    color: #fff; /* Matches overview.html dark mode text */
+.grid-item h3.dark-mode {
+    color: #fff;
 }
 
-.team-card p {
-    color: #666; /* Matches overview.html secondary text */
+.grid-item p {
+    color: #666;
     font-size: 1rem;
+    line-height: 1.5;
 }
 
-.team-card p.dark-mode {
-    color: #ccc; /* Matches overview.html dark mode secondary text */
+.grid-item p.dark-mode {
+    color: #ccc;
 }
 
-/* Navbar color tweaks to match overview.html */
+/* Navbar styles (consistent with about.css) */
 .navbar {
-    background: #f5f5f5; /* Matches overview.html chat-header */
+    background: #f5f5f5;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .navbar.dark-mode {
-    background: #2a3550; /* Matches overview.html dark mode headers */
+    background: #2a3550;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .nav-menu a {
-    color: #333; /* Matches overview.html text */
+    color: #333;
 }
 
 .nav-menu a:hover {
-    color: #666; /* Matches overview.html secondary text */
+    color: #666;
 }
 
 .nav-menu a.dark-mode {
-    color: #fff; /* Matches overview.html dark mode text */
+    color: #fff;
 }
 
 .nav-menu a.dark-mode:hover {
-    color: #ccc; /* Matches overview.html dark mode secondary text */
+    color: #ccc;
 }
 
 .logo {
-    color: #333; /* Matches overview.html text */
+    color: #333;
 }
 
 .logo.dark-mode {
-    color: #fff; /* Matches overview.html dark mode text */
+    color: #fff;
 }
 
 .hamburger {
-    color: #333; /* Matches overview.html text */
+    color: #333;
 }
 
 .hamburger.dark-mode {
-    color: #fff; /* Matches overview.html dark mode text */
+    color: #fff;
 }
 
 .dark-mode-toggle {
-    color: #333; /* Matches overview.html text */
+    color: #333;
 }
 
 .dark-mode-toggle.dark-mode {
-    color: #fff; /* Matches overview.html dark mode text */
+    color: #fff;
 }
