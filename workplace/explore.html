@@ -249,7 +249,16 @@
             background: #2ecc71; /* Green for Connection Sent */
         }
 
-        .connect-btn:hover:not(.sent) {
+        .connect-btn.approve {
+            background: #f1c40f; /* Yellow for Approve Request */
+        }
+
+        .connect-btn.connected {
+            background: #95a5a6; /* Grey for Connected */
+            cursor: default;
+        }
+
+        .connect-btn:hover:not(.sent):not(.approve):not(.connected) {
             background: #2980b9;
             transform: scale(1.05);
         }
@@ -257,6 +266,16 @@
         .connect-btn.sent:hover {
             background: #27ae60;
             transform: scale(1.05);
+        }
+
+        .connect-btn.approve:hover {
+            background: #e1b107;
+            transform: scale(1.05);
+        }
+
+        .connect-btn.connected:hover {
+            background: #95a5a6; /* No hover effect for connected */
+            transform: none;
         }
 
         .view-profile {
@@ -562,7 +581,7 @@
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getDatabase, ref, onValue, push, get, remove } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+        import { getDatabase, ref, onValue, push, get, remove, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
@@ -578,6 +597,7 @@
         const userId = localStorage.getItem('userId');
         let professionalsData = [];
         const sentRequests = new Map();
+        const receivedRequests = new Map();
         const connectedProfiles = new Set();
         const itemsPerPage = 9; // 3 cards per row, 3 rows per page
         let isInitialLoad = true;
@@ -597,18 +617,27 @@
         const overlay = document.getElementById('overlay');
         const loadingOverlay = document.getElementById('loadingOverlay');
 
+        // Audio for connection request sound (LinkedIn-like)
+        const connectSound = new Audio('../assets/ding.mp3'); // Placeholder; replace with a suitable sound
+
         async function checkConnectionStatus(professionalId) {
             const requestsRef = ref(db, 'connection_requests');
             const snapshot = await get(requestsRef);
             if (snapshot.exists()) {
                 snapshot.forEach((childSnapshot) => {
                     const request = childSnapshot.val();
-                    const isPendingOrAccepted = request.status === 'pending' || request.status === 'accepted';
-                    if ((request.from === userId && request.to === professionalId && isPendingOrAccepted) ||
-                        (request.to === userId && request.from === professionalId && isPendingOrAccepted)) {
-                        connectedProfiles.add(professionalId);
-                        if (request.status === 'pending' && request.from === userId) {
-                            sentRequests.set(professionalId, childSnapshot.key);
+                    const requestId = childSnapshot.key;
+                    if (request.from === userId && request.to === professionalId) {
+                        if (request.status === 'pending') {
+                            sentRequests.set(professionalId, requestId);
+                        } else if (request.status === 'accepted') {
+                            connectedProfiles.add(professionalId);
+                        }
+                    } else if (request.to === userId && request.from === professionalId) {
+                        if (request.status === 'pending') {
+                            receivedRequests.set(professionalId, requestId);
+                        } else if (request.status === 'accepted') {
+                            connectedProfiles.add(professionalId);
                         }
                     }
                 });
@@ -632,6 +661,7 @@
         window.applyFilters = async (page = 1) => {
             connectedProfiles.clear();
             sentRequests.clear();
+            receivedRequests.clear();
             for (const professional of professionalsData) {
                 await checkConnectionStatus(professional.id);
             }
@@ -644,7 +674,7 @@
                 const matchesSearch = professional.name.toLowerCase().includes(search);
                 const matchesCompany = company === 'all' || (professional.company && professional.company.toLowerCase() === company.toLowerCase());
                 const matchesProfession = profession === 'all' || (professional.position && professional.position.toLowerCase() === profession.toLowerCase());
-                const notConnected = !connectedProfiles.has(professional.id);
+                const notConnected = !connectedProfiles.has(professional.id); // Exclude connected users
                 return matchesSearch && matchesCompany && matchesProfession && notConnected;
             });
 
@@ -653,21 +683,34 @@
             const endIndex = startIndex + itemsPerPage;
             const paginatedProfessionals = filteredProfessionals.slice(startIndex, endIndex);
 
-            professionalsList.innerHTML = paginatedProfessionals.map(professional => `
-                <div class="professional-card">
-                    <div class="professional-info">
-                        <h3>${professional.name || 'Unnamed'}</h3>
-                        <p>${professional.name || 'Unnamed'} works as a <strong>${professional.jobRole || 'Not set'}</strong> at <strong>${professional.company || 'Not set'}</strong></p>
+            professionalsList.innerHTML = paginatedProfessionals.map(professional => {
+                const isSent = sentRequests.has(professional.id);
+                const isReceived = receivedRequests.has(professional.id);
+                let buttonClass = '';
+                let buttonText = 'Connect';
+                if (isSent) {
+                    buttonClass = 'sent';
+                    buttonText = 'Connection Sent';
+                } else if (isReceived) {
+                    buttonClass = 'approve';
+                    buttonText = 'Approve Request';
+                }
+                return `
+                    <div class="professional-card">
+                        <div class="professional-info">
+                            <h3>${professional.name || 'Unnamed'}</h3>
+                            <p>${professional.name || 'Unnamed'} works as a <strong>${professional.jobRole || 'Not set'}</strong> at <strong>${professional.company || 'Not set'}</strong></p>
+                        </div>
+                        <div class="professional-actions">
+                            <button class="connect-btn ${buttonClass}" 
+                                onclick="toggleConnectionRequest('${professional.id}', this)">
+                                ${buttonText}
+                            </button>
+                            <span class="view-profile" onclick="showProfile('${professional.id}')">View Profile</span>
+                        </div>
                     </div>
-                    <div class="professional-actions">
-                        <button class="connect-btn ${sentRequests.has(professional.id) ? 'sent' : ''}" 
-                            onclick="toggleConnectionRequest('${professional.id}', this)">
-                            ${sentRequests.has(professional.id) ? 'Connection Sent' : 'Connect'}
-                        </button>
-                        <span class="view-profile" onclick="showProfile('${professional.id}')">View Profile</span>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
 
             updatePagination(page, totalPages);
         };
@@ -691,7 +734,24 @@
                 button.classList.remove('sent');
                 button.textContent = 'Connect';
                 alert('Connection request removed!');
-                applyFilters(1);
+            } else if (receivedRequests.has(professionalId)) {
+                const requestId = receivedRequests.get(professionalId);
+                try {
+                    await Promise.all([
+                        set(ref(db, `studentslist/${userId}/connections/${professionalId}`), true),
+                        set(ref(db, `professionalslist/${professionalId}/connections/${userId}`), true),
+                        remove(ref(db, `connection_requests/${requestId}`))
+                    ]);
+                    receivedRequests.delete(professionalId);
+                    connectedProfiles.add(professionalId);
+                    button.classList.remove('approve');
+                    button.classList.add('connected');
+                    button.textContent = 'Connected';
+                    alert('Connection request approved!');
+                    connectSound.play(); // Play sound on approval
+                } catch (error) {
+                    alert('Failed to approve request: ' + error.message);
+                }
             } else {
                 const requestData = {
                     from: userId,
@@ -704,7 +764,7 @@
                 button.classList.add('sent');
                 button.textContent = 'Connection Sent';
                 alert('Connection request sent!');
-                applyFilters(1);
+                connectSound.play(); // Play sound on send
             }
         };
 
@@ -721,7 +781,7 @@
                             <div class="profile-detail"><strong>Company:</strong> ${profileData.company || 'Not set'}</div>
                             <div class="profile-detail"><strong>Position:</strong> ${profileData.jobRole || 'Not set'}</div>
                             <div class="profile-detail"><strong>Email:</strong> ${profileData.email || 'Not set'}</div>
-                            <div class="profile-detail"><Experience>Skills:</strong> ${profileData.experience || 'Not set'}</div>
+                            <div class="profile-detail"><strong>Experience:</strong> ${profileData.experience || 'Not set'}</div>
                             <div class="profile-detail"><strong>Bio:</strong> ${profileData.bio || 'Not set'}</div>
                         </div>
                     `;
@@ -759,6 +819,5 @@
 
         applyFilters(1);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91fa6b45188ebfe2',t:'MTc0MTg1NzI0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91fb5a8aac66ed86',t:'MTc0MTg2NzA0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

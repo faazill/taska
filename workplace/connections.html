@@ -76,10 +76,11 @@
         .tab-list li { 
             padding: 1.2rem 1.5rem; 
             cursor: pointer; 
-            font-size: 1.0 rem; 
+            font-size: 1.0rem; 
             color: #000000; 
             border-bottom: 1px solid #e0e0e0; 
             transition: all 0.3s ease; 
+            position: relative; /* Added for positioning badge */
         }
         .tab-list li:hover { 
             padding-left: 2rem; 
@@ -89,6 +90,30 @@
             font-weight: 600; 
             padding-left: 2rem; 
             border-left: 4px solid #000000; 
+        }
+        /* New Pending Requests Badge */
+        .pending-badge { 
+            position: absolute; 
+            right: 1rem; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            background: #e74c3c; 
+            color: #ffffff; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            padding: 0.2rem 0.5rem; 
+            border-radius: 12px; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+            display: none; /* Hidden by default */
+        }
+        .pending-badge.active { 
+            display: inline-block; /* Shown when active */
+            animation: pulse 1.5s infinite; 
+        }
+        @keyframes pulse {
+            0% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-50%) scale(1.1); }
+            100% { transform: translateY(-50%) scale(1); }
         }
 
         /* Main Content */
@@ -335,7 +360,7 @@
         <ul class="tab-list">
             <li class="active" data-tab="active-connections">Active Connections</li>
             <li data-tab="sent-requests">Sent Requests</li>
-            <li data-tab="received-requests">Received Requests</li>
+            <li data-tab="received-requests">Received Requests <span class="pending-badge" id="pending-count"></span></li>
         </ul>
     </div>
 
@@ -467,14 +492,17 @@
         function loadReceivedRequests() {
             const receivedRequestsGrid = document.getElementById('received-requests-grid');
             const noReceivedRequests = document.getElementById('no-received-requests');
+            const pendingCountBadge = document.getElementById('pending-count');
             onValue(ref(db, 'connection_requests'), (snapshot) => {
                 receivedRequestsGrid.innerHTML = '';
                 let hasRequests = false;
+                let pendingCount = 0;
                 snapshot.forEach((childSnapshot) => {
                     const req = childSnapshot.val();
                     const requestId = childSnapshot.key;
                     if (req.to === userId && req.status === 'pending') {
                         hasRequests = true;
+                        pendingCount++;
                         get(ref(db, `professionalslist/${req.from}`)).then((snap) => {
                             const pro = snap.val();
                             receivedRequestsGrid.innerHTML += `
@@ -493,6 +521,13 @@
                     }
                 });
                 noReceivedRequests.style.display = hasRequests ? 'none' : 'block';
+                // Update pending count badge
+                if (pendingCount > 0) {
+                    pendingCountBadge.textContent = pendingCount;
+                    pendingCountBadge.classList.add('active');
+                } else {
+                    pendingCountBadge.classList.remove('active');
+                }
             });
         }
 
@@ -621,5 +656,5 @@
             overlay.addEventListener('click', closeProfilePopup);
         });
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91fb50a2bd2e6744',t:'MTc0MTg2NjYzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
