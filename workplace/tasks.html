@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; }
-        .navbar { background: rgba(255, 255, 255, 0.95); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); padding: 1rem 2rem; position: fixed; top: 0; width: 100%; z-index: 1000; }
         .dashboard-content { padding: 5rem 2rem; margin-top: 60px; }
         .dashboard-section h1 { font-size: 2.5rem; color: #2c3e50; margin-bottom: 1rem; }
         .dashboard-section p { font-size: 1.2rem; color: #7f8c8d; margin-bottom: 2rem; }
@@ -33,10 +32,68 @@
         .form-group label { display: block; color: #2c3e50; margin-bottom: 0.5rem; }
         .form-group textarea { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 8px; }
         footer { background: rgba(255, 255, 255, 0.95); padding: 1rem; text-align: center; position: fixed; bottom: 0; width: 100%; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); }
+
+        /* Top Navbar from Connections */
+        .top-navbar { 
+            background: #ffffff; 
+            padding: 1rem 2rem; 
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 1000; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e0e0e0; 
+        }
+        .top-navbar .logo { 
+            font-size: 1.5rem; 
+            font-weight: 600; 
+            color: #000000; 
+        }
+        .top-navbar .nav-menu { 
+            display: flex; 
+            gap: 1.5rem; 
+            list-style: none; 
+        }
+        .top-navbar .nav-menu li a { 
+            color: #000000; 
+            text-decoration: none; 
+            font-size: 1rem; 
+        }
+        .top-navbar .nav-menu li a.active { 
+            font-weight: 600; 
+            color: #0000ff; 
+        }
+        .top-navbar .hamburger { 
+            display: none; 
+            font-size: 1.5rem; 
+            cursor: pointer; 
+            color: #000000; 
+        }
+        @media (max-width: 768px) {
+            .top-navbar .nav-menu {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: #ffffff;
+                flex-direction: column;
+                padding: 1rem;
+                border-top: 1px solid #e0e0e0;
+            }
+            .top-navbar .nav-menu.active {
+                display: flex;
+            }
+            .top-navbar .hamburger {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar">
+    <nav class="top-navbar">
         <div class="logo">Taska Elite</div>
         <ul class="nav-menu">
             <li><a href="overview.html">Overview</a></li>
@@ -172,7 +229,16 @@
                 alert('Please provide a reason for rejection.');
             }
         }
+
+        // Hamburger menu logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.querySelector('.top-navbar .hamburger');
+            const navMenu = document.querySelector('.top-navbar .nav-menu');
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+        });
     </script>
     <script src="../js/main.js"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91fa85c00c877cc4',t:'MTc0MTg1ODMyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
