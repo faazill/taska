@@ -10,9 +10,54 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body { background: #FFFFFF; min-height: 100vh; color: #000000; }
-        .navbar { background: #FFFFFF; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); padding: 1rem 2rem; position: fixed; top: 0; width: 100%; z-index: 1000; }
-        .dashboard-content { padding: 5rem 2rem; margin-top: 60px; }
+        body { 
+            background: #FFFFFF; 
+            min-height: 100vh; 
+            color: #000000; 
+            font-family: 'Poppins', sans-serif; 
+            margin: 0; 
+            padding-top: 60px; 
+        }
+        /* Top Navbar */
+        .top-navbar { 
+            background: #ffffff; 
+            padding: 1rem 2rem; 
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 1000; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e0e0e0; 
+        }
+        .top-navbar .logo { 
+            font-size: 1.5rem; 
+            font-weight: 600; 
+            color: #000000; 
+        }
+        .top-navbar .nav-menu { 
+            display: flex; 
+            gap: 1.5rem; 
+            list-style: none; 
+        }
+        .top-navbar .nav-menu li a { 
+            color: #000000; 
+            text-decoration: none; 
+            font-size: 1rem; 
+        }
+        .top-navbar .nav-menu li a.active { 
+            font-weight: 600; 
+            color: #0000ff; 
+        }
+        .top-navbar .hamburger { 
+            display: none; 
+            font-size: 1.5rem; 
+            cursor: pointer; 
+            color: #000000; 
+        }
+        /* Remaining Tasks Styles */
+        .dashboard-content { padding: 1.5rem 2rem; margin-top: 0; }
         .dashboard-section h1 { font-size: 2.5rem; color: #000000; margin-bottom: 1rem; }
         .dashboard-section p { font-size: 1.2rem; color: #000000; margin-bottom: 2rem; }
         .tasks-section h2, .new-task-section h2 { font-size: 1.8rem; color: #000000; margin-bottom: 1.5rem; }
@@ -39,17 +84,35 @@
         .custom-input[readonly] { background: #F0F0F0; }
         .payment-info { font-size: 0.9rem; color: #000000; margin-top: 0.5rem; }
         footer { background: #FFFFFF; padding: 1rem; text-align: center; position: fixed; bottom: 0; width: 100%; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); }
+        /* Responsive Navbar Styles */
+        @media (max-width: 768px) {
+            .top-navbar .nav-menu {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: #ffffff;
+                flex-direction: column;
+                padding: 1rem;
+                border-top: 1px solid #e0e0e0;
+            }
+            .top-navbar .nav-menu.active {
+                display: flex;
+            }
+            .top-navbar .hamburger {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar">
+    <nav class="top-navbar">
         <div class="logo">Taska Elite</div>
         <ul class="nav-menu">
             <li><a href="overview.html">Overview</a></li>
-
             <li><a href="connections.html">Connections</a></li>
             <li><a href="explore.html">Explore</a></li>
-
             <li><a href="tasks.html" class="active">Tasks</a></li>
             <li><a href="profile.html">Profile</a></li>
             <li><a href="../index.html">Logout</a></li>
@@ -306,6 +369,16 @@
             if (event.target === popup) closeTaskPopup();
         };
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.querySelector('.top-navbar .hamburger');
+            const navMenu = document.querySelector('.top-navbar .nav-menu');
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+        });
+    </script>
     <script src="../js/main.js"></script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91f9cce29bc5b0b2',t:'MTc0MTg1MDc1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
