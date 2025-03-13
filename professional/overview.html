@@ -247,6 +247,16 @@
         }
     </style>
 </head>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const hamburger = document.querySelector('.top-navbar .hamburger');
+        const navMenu = document.querySelector('.top-navbar .nav-menu');
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+    });
+</script>
+
 <body>
     <nav class="top-navbar">
         <div class="logo">Taska Elite</div>
