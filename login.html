@@ -17,13 +17,22 @@
             top: 20%;
             left: 50%;
             transform: translateX(-50%);
-            background: #000;
+            background: #1a1a1a; /* Dark, cool background */
             color: #fff;
-            padding: 1rem 2rem;
-            border-radius: 5px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            padding: 1.5rem 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 255, 128, 0.5); /* Neon green glow */
             z-index: 1000;
-            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            display: none;
+        }
+        .auth-popup.active {
+            display: block;
+            opacity: 1;
         }
     </style>
 </head>
@@ -79,6 +88,8 @@
                     </div>
                 </div>
             </div>
+            <!-- Error popup -->
+            <div id="auth-error-popup" class="auth-popup"></div>
         </section>
     </main>
 
@@ -86,6 +97,7 @@
         <p>© 2025 Taska. All rights reserved.</p>
     </footer>
 
+    <!-- Scripts -->
     <script type="module">
         import { showForm, login, signup, signOut } from './js/auth.js';
         // Expose functions to global scope for onclick handlers
@@ -94,7 +106,7 @@
         window.signup = signup;
         window.signOut = signOut;
 
-        // Add event listeners to buttons as a fallback
+        // Fallback event listeners for select buttons
         document.querySelectorAll('.select-button').forEach(button => {
             button.addEventListener('click', (e) => {
                 const role = e.target.closest('.role-card').getAttribute('onclick').match(/'([^']+)'/)[1];

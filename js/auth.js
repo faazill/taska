@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword, setPersiste
 import { ref, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
 // Show form based on role selection
-window.showForm = function(userType) {
+export function showForm(userType) {
     const roleSelection = document.getElementById('role-selection');
     const profForm = document.getElementById('professional-form');
     const studForm = document.getElementById('student-form');
@@ -17,21 +17,25 @@ window.showForm = function(userType) {
         studForm.style.display = 'block';
         profForm.style.display = 'none';
     }
-};
+}
 
-// Popup message function
+// Popup message function using existing auth-popup
 function showPopup(message) {
-    const popup = document.createElement('div');
-    popup.className = 'auth-popup';
-    popup.innerHTML = `<p>${message}</p>`;
-    document.body.appendChild(popup);
+    const popup = document.getElementById('auth-error-popup') || document.createElement('div');
+    if (!popup.id) {
+        popup.id = 'auth-error-popup';
+        popup.className = 'auth-popup';
+        document.body.appendChild(popup);
+    }
+    popup.textContent = message;
+    popup.classList.add('active');
     setTimeout(() => {
-        popup.remove();
+        popup.classList.remove('active');
     }, 3000); // Remove after 3 seconds
 }
 
 // Login function
-window.login = function(userType) {
+export function login(userType) {
     const email = document.getElementById(userType === 'professional' ? 'prof-email' : 'stud-email').value;
     const password = document.getElementById(userType === 'professional' ? 'prof-password' : 'stud-password').value;
 
@@ -49,17 +53,18 @@ window.login = function(userType) {
             window.location.href = userType === 'professional' ? 'professional/overview.html' : 'workplace/overview.html';
         })
         .catch((error) => {
-            console.error("Login error:", error.code, error.message);
-            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                showPopup("No account found. Sign up first.");
+            console.debug("Login error:", error.code, error.message); // Silent logging for debugging
+            // Handle all relevant auth errors with custom popup
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                showPopup("No account found! Sign up first to join Taska Elite.");
             } else {
-                alert(`Login failed: ${error.message}`);
+                showPopup("Something went wrong. Try again!");
             }
         });
-};
+}
 
 // Signup function
-window.signup = function(userType) {
+export function signup(userType) {
     const email = document.getElementById(userType === 'professional' ? 'prof-email' : 'stud-email').value;
     const password = document.getElementById(userType === 'professional' ? 'prof-password' : 'stud-password').value;
 
@@ -72,7 +77,7 @@ window.signup = function(userType) {
             console.log("Stored userId in localStorage:", user.uid); // Debug
             console.log("Stored userRole in localStorage:", userType); // Debug
 
-            // Store initial data in Realtime Database under professionalslist or studentslist with UID
+            // Store initial data in Realtime Database
             const list = userType === 'professional' ? 'professionalslist' : 'studentslist';
             const userRef = ref(database, `${list}/${user.uid}`);
             const initialData = {
@@ -96,18 +101,18 @@ window.signup = function(userType) {
                     window.location.href = userType === 'professional' ? 'professional/update-profile.html' : 'workplace/update-profile.html';
                 })
                 .catch((error) => {
-                    console.error("Error storing initial data:", error);
-                    alert("Signup succeeded, but failed to store data: " + error.message);
+                    console.debug("Error storing initial data:", error);
+                    showPopup("Signup succeeded, but failed to store data. Try again!");
                 });
         })
         .catch((error) => {
-            console.error("Signup error:", error.code, error.message);
-            alert(`Signup failed: ${error.message}`);
+            console.debug("Signup error:", error.code, error.message);
+            showPopup("Signup failed. Try again!");
         });
-};
+}
 
 // Logout function
-window.signOut = function() {
+export function signOut() {
     auth.signOut()
         .then(() => {
             console.log("User signed out, clearing localStorage");
@@ -116,9 +121,10 @@ window.signOut = function() {
             window.location.href = 'login.html';
         })
         .catch((error) => {
-            alert(`Logout failed: ${error.message}`);
+            console.debug("Logout error:", error);
+            showPopup("Logout failed. Try again!");
         });
-};
+}
 
 // Check auth state and sync persistent value
 auth.onAuthStateChanged((user) => {
@@ -139,11 +145,11 @@ auth.onAuthStateChanged((user) => {
 });
 
 // Function to get the user ID
-window.getUserId = function() {
+export function getUserId() {
     return localStorage.getItem('userId');
-};
+}
 
 // Function to get the user role
-window.getUserRole = function() {
+export function getUserRole() {
     return localStorage.getItem('userRole');
-};
+}
