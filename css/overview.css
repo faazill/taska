@@ -1,7 +1,7 @@
 /* css/overview.css */
 .chat-interface {
     display: flex;
-    height: 100%; /* Takes full height of parent (dashboard-content) */
+    height: 800px; /* Takes full height of parent (dashboard-content) */
     width: 95vw; /* 95% of viewport width */
     margin: 0 auto; /* Center the section */
     padding: 0; /* Remove padding to eliminate white space */
