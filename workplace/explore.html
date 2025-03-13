@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taska Elite - Explore IIT Talent</title>
+    <title>Taska Elite - Explore Professional Talent</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/dashboard.css">
@@ -20,7 +20,41 @@
             padding-bottom: 60px;
         }
 
-        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-menu a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            color: #0000ff;
+        }
+
         .hamburger {
             display: none;
         }
@@ -113,101 +147,190 @@
             transform: translateY(1px);
         }
 
-        .professionals-list {
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .student-card {
-            display: flex;
-            align-items: center;
-            background: #f9f9f9;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 1rem;
-            transition: background 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .student-card:hover {
-            background: #f5f5f5;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .student-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: #666;
-            color: #fff;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-right: 1rem;
-            flex-shrink: 0;
-            text-transform: uppercase;
-        }
-
-        .student-info {
-            flex: 1;
-        }
-
-        .student-info h3 {
-            font-size: 1.2rem;
-            color: #2c3e50;
-            margin: 0 0 0.25rem 0;
-        }
-
-        .student-info p {
-            font-size: 0.9rem;
-            color: #666;
-            margin: 0.2rem 0;
-            display: flex;
             align-items: center;
-            gap: 0.5rem;
+            z-index: 1001;
         }
 
-        .student-info i {
-            color: #666;
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #3498db;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: relative;
+        }
+
+        .loader::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 5px solid #2ecc71;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Updated Professional Card Styles */
+        .professionals-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .professional-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .professional-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .professional-info h3 {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .professional-info p {
             font-size: 1rem;
+            color: #666;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .professional-info p strong {
+            color: #2c3e50;
+        }
+
+        .professional-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
         }
 
         .connect-btn {
-            padding: 0.5rem 1rem;
-            background: #555;
+            padding: 0.6rem 1.2rem;
+            background: #3498db; /* Blue for Connect */
             color: #fff;
             border: none;
-            border-radius: 6px;
+            border-radius: 25px;
             cursor: pointer;
             font-weight: 500;
-            transition: background 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .connect-btn:hover:not(.sent) {
-            background: #444;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
 
         .connect-btn.sent {
-            background: #2ecc71;
-            cursor: default;
+            background: #2ecc71; /* Green for Connection Sent */
+        }
+
+        .connect-btn:hover:not(.sent) {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .connect-btn.sent:hover {
+            background: #27ae60;
+            transform: scale(1.05);
         }
 
         .view-profile {
-            color: #555;
+            color: #3498db;
             cursor: pointer;
-            text-decoration: underline;
-            margin-left: 1rem;
-            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
         }
 
         .view-profile:hover {
-            color: #333;
+            color: #2980b9;
         }
 
-        /* Popup Styles */
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .pagination-btn {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            color: #2c3e50;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+        }
+
+        .pagination-btn:hover {
+            background: #3498db;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .pagination-btn:disabled {
+            background: #f0f0f0;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pagination-number {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c3e50;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+        }
+
+        .pagination-number.active {
+            background: #3498db;
+            color: #fff;
+            border-color: #3498db;
+        }
+
+        .pagination-number:hover:not(.active) {
+            background: #ecf0f1;
+            transform: scale(1.1);
+        }
+
+        /* Updated Profile Popup Styles */
         .overlay {
             display: none;
             position: fixed;
@@ -228,45 +351,61 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) scale(0.95);
             background: #fff;
             padding: 2rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             width: 90%;
-            max-width: 400px;
+            max-width: 450px;
             z-index: 1000;
+            transition: transform 0.3s ease;
         }
 
         .profile-popup.active {
             display: block;
+            transform: translate(-50%, -50%) scale(1);
         }
 
         .profile-popup h2 {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: #2c3e50;
-            margin: 0 0 1rem 0;
+            margin: 0 0 1.5rem 0;
+            text-align: center;
         }
 
-        .profile-popup p {
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .profile-detail {
+            background: #f9f9f9;
+            padding: 0.75rem;
+            border-radius: 8px;
             font-size: 1rem;
             color: #666;
-            margin: 0.5rem 0;
+        }
+
+        .profile-detail strong {
+            color: #2c3e50;
+            font-weight: 500;
         }
 
         .profile-popup .close-btn {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 0.5rem;
+            right: 0.5rem;
             background: none;
             border: none;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             cursor: pointer;
-            color: #666;
+            color: #999;
         }
 
         .profile-popup .close-btn:hover {
-            color: #333;
+            color: #666;
         }
 
         footer {
@@ -300,19 +439,16 @@
             <li><a href="explore.html" class="active">Explore</a></li>
             <li><a href="tasks.html">Tasks</a></li>
             <li><a href="profile.html">Profile</a></li>
-            
             <li><a href="../index.html">Logout</a></li>
         </ul>
         <div class="hamburger">☰</div>
     </nav>
 
     <main class="dashboard-content">
-        <br>
-        <br>
-        <br>
+        <br><br><br>
         <section class="dashboard-section">
-            <h1>Explore IIT Talent</h1>
-            <p>Connect with top IIT prodigies to collaborate and share knowledge.</p>
+            <h1>Explore Professional Talent</h1>
+            <p>Connect with industry professionals to gain insights and opportunities.</p>
 
             <div class="filter-options">
                 <div class="filter-group">
@@ -320,29 +456,35 @@
                     <input type="text" id="search-input" class="custom-input" placeholder="e.g., Priya">
                 </div>
                 <div class="filter-group">
-                    <label for="college">College</label>
-                    <select id="college" class="custom-dropdown">
-                        <option value="all">All Colleges</option>
-                        <option value="iit bombay">IIT Bombay</option>
-                        <option value="iit delhi">IIT Delhi</option>
-                        <option value="iit madras">IIT Madras</option>
-                        <option value="iit kanpur">IIT Kanpur</option>
+                    <label for="company">Company</label>
+                    <select id="company" class="custom-dropdown">
+                        <option value="all">All Companies</option>
+                        <option value="google">Google</option>
+                        <option value="microsoft">Microsoft</option>
+                        <option value="amazon">Amazon</option>
+                        <option value="tcs">TCS</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label for="type">Type</label>
-                    <select id="type" class="custom-dropdown">
-                        <option value="all">All Types</option>
-                        <option value="fresher">Fresher</option>
-                        <option value="sophomore">Sophomore</option>
+                    <label for="profession">Profession</label>
+                    <select id="profession" class="custom-dropdown">
+                        <option value="all">All Professions</option>
+                        <option value="software engineer">Software Engineer</option>
+                        <option value="data scientist">Data Scientist</option>
+                        <option value="product manager">Product Manager</option>
+                        <option value="consultant">Consultant</option>
                     </select>
                 </div>
                 <div class="filter-group">
-                    <button class="apply-filter-btn" onclick="applyFilters()">Apply Filters</button>
+                    <button class="apply-filter-btn" onclick="applyFilters(1)">Search</button>
                 </div>
             </div>
 
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loader"></div>
+            </div>
             <div class="professionals-list" id="professionals-list"></div>
+            <div class="pagination" id="pagination"></div>
         </section>
     </main>
 
@@ -359,7 +501,7 @@
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getDatabase, ref, onValue, push, get } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+        import { getDatabase, ref, onValue, push, get, remove } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
@@ -374,7 +516,10 @@
         const db = getDatabase(app);
         const userId = localStorage.getItem('userId');
         let professionalsData = [];
-        const sentRequests = new Set();
+        const sentRequests = new Map();
+        const connectedProfiles = new Set();
+        const itemsPerPage = 9; // 3 cards per row, 3 rows per page
+        let isInitialLoad = true;
 
         if (!userId) {
             setTimeout(() => {
@@ -384,19 +529,26 @@
         }
 
         const professionalsList = document.getElementById('professionals-list');
+        const pagination = document.getElementById('pagination');
         const professionalsRef = ref(db, 'professionalslist');
         const profilePopup = document.getElementById('profilePopup');
         const profileContent = document.getElementById('profileContent');
         const overlay = document.getElementById('overlay');
+        const loadingOverlay = document.getElementById('loadingOverlay');
 
-        async function checkConnectionStatus(studentId) {
+        async function checkConnectionStatus(professionalId) {
             const requestsRef = ref(db, 'connection_requests');
             const snapshot = await get(requestsRef);
             if (snapshot.exists()) {
                 snapshot.forEach((childSnapshot) => {
                     const request = childSnapshot.val();
-                    if (request.from === userId && request.to === studentId && request.status === 'pending') {
-                        sentRequests.add(studentId);
+                    const isPendingOrAccepted = request.status === 'pending' || request.status === 'accepted';
+                    if ((request.from === userId && request.to === professionalId && isPendingOrAccepted) ||
+                        (request.to === userId && request.from === professionalId && isPendingOrAccepted)) {
+                        connectedProfiles.add(professionalId);
+                        if (request.status === 'pending' && request.from === userId) {
+                            sentRequests.set(professionalId, childSnapshot.key);
+                        }
                     }
                 });
             }
@@ -405,103 +557,135 @@
         onValue(professionalsRef, (snapshot) => {
             professionalsData = [];
             snapshot.forEach((childSnapshot) => {
-                const student = childSnapshot.val();
-                student.id = childSnapshot.key;
-                professionalsData.push(student);
+                const professional = childSnapshot.val();
+                professional.id = childSnapshot.key;
+                professionalsData.push(professional);
             });
-            applyFilters();
+            applyFilters(1);
+            if (isInitialLoad) {
+                loadingOverlay.style.display = 'none';
+                isInitialLoad = false;
+            }
         });
 
-        window.applyFilters = async () => {
-            const search = document.getElementById('search-input').value.toLowerCase();
-            const college = document.getElementById('college').value;
-            const type = document.getElementById('type').value;
-
-            for (const student of professionalsData) {
-                await checkConnectionStatus(student.id);
+        window.applyFilters = async (page = 1) => {
+            connectedProfiles.clear();
+            sentRequests.clear();
+            for (const professional of professionalsData) {
+                await checkConnectionStatus(professional.id);
             }
 
-            const filteredprofessionals = professionalsData.filter(student => {
-                const matchesSearch = student.name.toLowerCase().includes(search);
-                const matchesCollege = college === 'all' || (student.college && student.college.toLowerCase() === college.toLowerCase());
-                const matchesType = type === 'all' || (student.type && student.type.toLowerCase() === type.toLowerCase());
-                return matchesSearch && matchesCollege && matchesType;
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const company = document.getElementById('company').value;
+            const profession = document.getElementById('profession').value;
+
+            const filteredProfessionals = professionalsData.filter(professional => {
+                const matchesSearch = professional.name.toLowerCase().includes(search);
+                const matchesCompany = company === 'all' || (professional.company && professional.company.toLowerCase() === company.toLowerCase());
+                const matchesProfession = profession === 'all' || (professional.position && professional.position.toLowerCase() === profession.toLowerCase());
+                const notConnected = !connectedProfiles.has(professional.id);
+                return matchesSearch && matchesCompany && matchesProfession && notConnected;
             });
 
-            professionalsList.innerHTML = filteredprofessionals.map(student => `
-                <div class="student-card">
-                    <div class="student-avatar">${student.name.charAt(0)}</div>
-                    <div class="student-info">
-                        <h3>${student.name}</h3>
-                        <p><i class="fas fa-university"></i> ${student.college || 'Not set'}</p>
-                        <p><i class="fas fa-user-graduate"></i> ${student.type || 'Not set'}</p>
+            const totalPages = Math.ceil(filteredProfessionals.length / itemsPerPage);
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedProfessionals = filteredProfessionals.slice(startIndex, endIndex);
+
+            professionalsList.innerHTML = paginatedProfessionals.map(professional => `
+                <div class="professional-card">
+                    <div class="professional-info">
+                        <h3>${professional.name || 'Unnamed'}</h3>
+                        <p>${professional.name || 'Unnamed'} works as a <strong>${professional.jobRole || 'Not set'}</strong> at <strong>${professional.company || 'Not set'}</strong></p>
                     </div>
-                    <button class="connect-btn ${sentRequests.has(student.id) ? 'sent' : ''}" 
-                        onclick="sendConnectionRequest('${student.id}', this)"
-                        ${sentRequests.has(student.id) ? 'disabled' : ''}>
-                        ${sentRequests.has(student.id) ? 'Connection Sent' : 'Connect'}
-                    </button>
-                    <span class="view-profile" onclick="showProfile('${student.id}')">View Profile</span>
+                    <div class="professional-actions">
+                        <button class="connect-btn ${sentRequests.has(professional.id) ? 'sent' : ''}" 
+                            onclick="toggleConnectionRequest('${professional.id}', this)">
+                            ${sentRequests.has(professional.id) ? 'Connection Sent' : 'Connect'}
+                        </button>
+                        <span class="view-profile" onclick="showProfile('${professional.id}')">View Profile</span>
+                    </div>
                 </div>
             `).join('');
+
+            updatePagination(page, totalPages);
         };
 
-        window.sendConnectionRequest = async (studentId, button) => {
-            if (sentRequests.has(studentId)) return;
+        function updatePagination(currentPage, totalPages) {
+            pagination.innerHTML = `
+                <button class="pagination-btn" onclick="applyFilters(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>
+                ${Array.from({ length: totalPages }, (_, i) => `
+                    <span class="pagination-number ${currentPage === i + 1 ? 'active' : ''}" 
+                        onclick="applyFilters(${i + 1})">${i + 1}</span>
+                `).join('')}
+                <button class="pagination-btn" onclick="applyFilters(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>
+            `;
+        }
 
-            const requestData = {
-                from: userId,
-                to: studentId,
-                status: 'pending',
-                timestamp: new Date().toISOString()
-            };
-
-            const newRequestRef = await push(ref(db, 'connection_requests'), requestData);
-            sentRequests.add(studentId);
-            
-            button.classList.add('sent');
-            button.textContent = 'Connection Sent';
-            button.disabled = true;
-            
-            alert('Connection request sent!');
+        window.toggleConnectionRequest = async (professionalId, button) => {
+            if (sentRequests.has(professionalId)) {
+                const requestId = sentRequests.get(professionalId);
+                await remove(ref(db, `connection_requests/${requestId}`));
+                sentRequests.delete(professionalId);
+                button.classList.remove('sent');
+                button.textContent = 'Connect';
+                alert('Connection request removed!');
+                applyFilters(1);
+            } else {
+                const requestData = {
+                    from: userId,
+                    to: professionalId,
+                    status: 'pending',
+                    timestamp: new Date().toISOString()
+                };
+                const newRequestRef = await push(ref(db, 'connection_requests'), requestData);
+                sentRequests.set(professionalId, newRequestRef.key);
+                button.classList.add('sent');
+                button.textContent = 'Connection Sent';
+                alert('Connection request sent!');
+                applyFilters(1);
+            }
         };
 
         window.showProfile = async (targetUserId) => {
-            const professionalsRef = ref(db, `professionalslist/${targetUserId}`);
-            const studentsRef = ref(db, `studentslist/${targetUserId}`);
-
-            let profileData = null;
-            let userType = '';
-
-            const professionalsnapshot = await get(professionalsRef);
-            if (professionalsnapshot.exists()) {
-                profileData = professionalsnapshot.val();
-                userType = 'Student';
-            } else {
-                const professionalSnapshot = await get(professionalsRef);
-                if (professionalSnapshot.exists()) {
-                    profileData = professionalSnapshot.val();
-                    userType = 'Professional';
+            try {
+                const professionalRef = ref(db, `professionalslist/${targetUserId}`);
+                const snapshot = await get(professionalRef);
+                
+                if (snapshot.exists()) {
+                    const profileData = snapshot.val();
+                    profileContent.innerHTML = `
+                        <h2>${profileData.name || 'Unnamed'}</h2>
+                        <div class="profile-details">
+                            <div class="profile-detail"><strong>Company:</strong> ${profileData.company || 'Not set'}</div>
+                            <div class="profile-detail"><strong>Position:</strong> ${profileData.jobRole || 'Not set'}</div>
+                            <div class="profile-detail"><strong>Email:</strong> ${profileData.email || 'Not set'}</div>
+                            <div class="profile-detail"><Experience>Skills:</strong> ${profileData.experience || 'Not set'}</div>
+                            <div class="profile-detail"><strong>Bio:</strong> ${profileData.bio || 'Not set'}</div>
+                        </div>
+                    `;
+                    profilePopup.classList.add('active');
+                    overlay.classList.add('active');
+                } else {
+                    profileContent.innerHTML = `
+                        <h2>Profile Not Found</h2>
+                        <div class="profile-details">
+                            <div class="profile-detail">No data available for this professional.</div>
+                        </div>
+                    `;
+                    profilePopup.classList.add('active');
+                    overlay.classList.add('active');
                 }
-            }
-
-            if (profileData) {
+            } catch (error) {
+                console.error('Error fetching profile:', error);
                 profileContent.innerHTML = `
-                    <h2>${profileData.name || 'Name not set'}</h2>
-                    <p><strong>Type:</strong> ${userType}</p>
-                    <p><strong>ID:</strong> ${targetUserId}</p>
-                    ${userType === 'Student' ? `
-                        <p><strong>College:</strong> ${profileData.college || 'Not set'}</p>
-                        <p><strong>Student Type:</strong> ${profileData.type || 'Not set'}</p>
-                    ` : `
-                        <p><strong>Company:</strong> ${profileData.company || 'Not set'}</p>
-                        <p><strong>Position:</strong> ${profileData.position || 'Not set'}</p>
-                    `}
+                    <h2>Error</h2>
+                    <div class="profile-details">
+                        <div class="profile-detail">Failed to load profile: ${error.message}</div>
+                    </div>
                 `;
                 profilePopup.classList.add('active');
                 overlay.classList.add('active');
-            } else {
-                alert('Profile not found in professionals or professionals list.');
             }
         };
 
@@ -510,10 +694,10 @@
             overlay.classList.remove('active');
         };
 
-        // Close popup when clicking overlay
         overlay.addEventListener('click', closeProfilePopup);
 
-        applyFilters();
+        applyFilters(1);
     </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91fa6b45188ebfe2',t:'MTc0MTg1NzI0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

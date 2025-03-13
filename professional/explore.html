@@ -147,101 +147,190 @@
             transform: translateY(1px);
         }
 
-        .students-list {
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #3498db;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: relative;
+        }
+
+        .loader::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 5px solid #2ecc71;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Updated Student Card Styles */
+        .students-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .student-card {
-            display: flex;
-            align-items: center;
-            background: #f9f9f9;
+            background: #fff;
             border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 1rem;
-            transition: background 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .student-card:hover {
-            background: #f5f5f5;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .student-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: #666;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-right: 1rem;
-            flex-shrink: 0;
-            text-transform: uppercase;
-        }
-
-        .student-info {
-            flex: 1;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .student-info h3 {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             color: #2c3e50;
-            margin: 0 0 0.25rem 0;
+            margin: 0 0 0.5rem 0;
         }
 
         .student-info p {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #666;
-            margin: 0.2rem 0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            margin: 0;
+            line-height: 1.5;
         }
 
-        .student-info i {
-            color: #666;
-            font-size: 1rem;
+        .student-info p strong {
+            color: #2c3e50;
+        }
+
+        .student-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
         }
 
         .connect-btn {
-            padding: 0.5rem 1rem;
-            background: #555;
+            padding: 0.6rem 1.2rem;
+            background: #3498db; /* Blue for Connect */
             color: #fff;
             border: none;
-            border-radius: 6px;
+            border-radius: 25px;
             cursor: pointer;
             font-weight: 500;
-            transition: background 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .connect-btn:hover:not(.sent) {
-            background: #444;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
 
         .connect-btn.sent {
-            background: #2ecc71;
-            cursor: default;
+            background: #2ecc71; /* Green for Connection Sent */
+        }
+
+        .connect-btn:hover:not(.sent) {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .connect-btn.sent:hover {
+            background: #27ae60;
+            transform: scale(1.05);
         }
 
         .view-profile {
-            color: #555;
+            color: #3498db;
             cursor: pointer;
-            text-decoration: underline;
-            margin-left: 1rem;
-            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
         }
 
         .view-profile:hover {
-            color: #333;
+            color: #2980b9;
         }
 
-        /* Popup Styles */
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .pagination-btn {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            color: #2c3e50;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+        }
+
+        .pagination-btn:hover {
+            background: #3498db;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .pagination-btn:disabled {
+            background: #f0f0f0;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pagination-number {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c3e50;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+        }
+
+        .pagination-number.active {
+            background: #3498db;
+            color: #fff;
+            border-color: #3498db;
+        }
+
+        .pagination-number:hover:not(.active) {
+            background: #ecf0f1;
+            transform: scale(1.1);
+        }
+
+        /* Updated Profile Popup Styles */
         .overlay {
             display: none;
             position: fixed;
@@ -262,45 +351,61 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) scale(0.95);
             background: #fff;
             padding: 2rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             width: 90%;
-            max-width: 400px;
+            max-width: 450px;
             z-index: 1000;
+            transition: transform 0.3s ease;
         }
 
         .profile-popup.active {
             display: block;
+            transform: translate(-50%, -50%) scale(1);
         }
 
         .profile-popup h2 {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: #2c3e50;
-            margin: 0 0 1rem 0;
+            margin: 0 0 1.5rem 0;
+            text-align: center;
         }
 
-        .profile-popup p {
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .profile-detail {
+            background: #f9f9f9;
+            padding: 0.75rem;
+            border-radius: 8px;
             font-size: 1rem;
             color: #666;
-            margin: 0.5rem 0;
+        }
+
+        .profile-detail strong {
+            color: #2c3e50;
+            font-weight: 500;
         }
 
         .profile-popup .close-btn {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 0.5rem;
+            right: 0.5rem;
             background: none;
             border: none;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             cursor: pointer;
-            color: #666;
+            color: #999;
         }
 
         .profile-popup .close-btn:hover {
-            color: #333;
+            color: #666;
         }
 
         footer {
@@ -334,7 +439,6 @@
             <li><a href="explore.html" class="active">Explore</a></li>
             <li><a href="tasks.html">Tasks</a></li>
             <li><a href="profile.html">Profile</a></li>
-            
             <li><a href="../index.html">Logout</a></li>
         </ul>
         <div class="hamburger">☰</div>
@@ -342,9 +446,7 @@
 
     <main class="dashboard-content">
         <section class="dashboard-section">
-            <br>
-            <br>
-            <br>
+            <br><br><br>
             <h1>Explore IIT Talent</h1>
             <p>Connect with top IIT prodigies to collaborate and share knowledge.</p>
 
@@ -372,11 +474,15 @@
                     </select>
                 </div>
                 <div class="filter-group">
-                    <button class="apply-filter-btn" onclick="applyFilters()">Apply Filters</button>
+                    <button class="apply-filter-btn" onclick="applyFilters(1)">Search</button> <!-- Changed label to "Search" -->
                 </div>
             </div>
 
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loader"></div>
+            </div>
             <div class="students-list" id="students-list"></div>
+            <div class="pagination" id="pagination"></div>
         </section>
     </main>
 
@@ -393,7 +499,7 @@
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getDatabase, ref, onValue, push, get } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+        import { getDatabase, ref, onValue, push, get, remove } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
@@ -408,7 +514,10 @@
         const db = getDatabase(app);
         const userId = localStorage.getItem('userId');
         let studentsData = [];
-        const sentRequests = new Set();
+        const sentRequests = new Map();
+        const connectedProfiles = new Set(); // Track connected profiles
+        const itemsPerPage = 9; // 3 cards per row, 3 rows per page
+        let isInitialLoad = true; // Flag for initial load
 
         if (!userId) {
             setTimeout(() => {
@@ -418,10 +527,12 @@
         }
 
         const studentsList = document.getElementById('students-list');
+        const pagination = document.getElementById('pagination');
         const studentsRef = ref(db, 'studentslist');
         const profilePopup = document.getElementById('profilePopup');
         const profileContent = document.getElementById('profileContent');
         const overlay = document.getElementById('overlay');
+        const loadingOverlay = document.getElementById('loadingOverlay');
 
         async function checkConnectionStatus(studentId) {
             const requestsRef = ref(db, 'connection_requests');
@@ -429,8 +540,13 @@
             if (snapshot.exists()) {
                 snapshot.forEach((childSnapshot) => {
                     const request = childSnapshot.val();
-                    if (request.from === userId && request.to === studentId && request.status === 'pending') {
-                        sentRequests.add(studentId);
+                    const isPendingOrAccepted = request.status === 'pending' || request.status === 'accepted';
+                    if ((request.from === userId && request.to === studentId && isPendingOrAccepted) ||
+                        (request.to === userId && request.from === studentId && isPendingOrAccepted)) {
+                        connectedProfiles.add(studentId); // Add to connected profiles
+                        if (request.status === 'pending' && request.from === userId) {
+                            sentRequests.set(studentId, childSnapshot.key); // Track pending sent requests
+                        }
                     }
                 });
             }
@@ -443,99 +559,133 @@
                 student.id = childSnapshot.key;
                 studentsData.push(student);
             });
-            applyFilters();
+            applyFilters(1); // Load first page initially
+            if (isInitialLoad) {
+                loadingOverlay.style.display = 'none'; // Hide loader only after initial load
+                isInitialLoad = false; // Set flag to false after first load
+            }
         });
 
-        window.applyFilters = async () => {
-            const search = document.getElementById('search-input').value.toLowerCase();
-            const college = document.getElementById('college').value;
-            const type = document.getElementById('type').value;
-
+        window.applyFilters = async (page = 1) => {
+            connectedProfiles.clear(); // Clear previous connections
+            sentRequests.clear(); // Clear previous sent requests
             for (const student of studentsData) {
                 await checkConnectionStatus(student.id);
             }
+
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const college = document.getElementById('college').value;
+            const type = document.getElementById('type').value;
 
             const filteredStudents = studentsData.filter(student => {
                 const matchesSearch = student.name.toLowerCase().includes(search);
                 const matchesCollege = college === 'all' || (student.college && student.college.toLowerCase() === college.toLowerCase());
                 const matchesType = type === 'all' || (student.type && student.type.toLowerCase() === type.toLowerCase());
-                return matchesSearch && matchesCollege && matchesType;
+                const notConnected = !connectedProfiles.has(student.id); // Exclude connected profiles
+                return matchesSearch && matchesCollege && matchesType && notConnected;
             });
 
-            studentsList.innerHTML = filteredStudents.map(student => `
+            const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedStudents = filteredStudents.slice(startIndex, endIndex);
+
+            studentsList.innerHTML = paginatedStudents.map(student => `
                 <div class="student-card">
-                    <div class="student-avatar">${student.name.charAt(0)}</div>
                     <div class="student-info">
-                        <h3>${student.name}</h3>
-                        <p><i class="fas fa-university"></i> ${student.college || 'Not set'}</p>
-                        <p><i class="fas fa-user-graduate"></i> ${student.type || 'Not set'}</p>
+                        <h3>${student.name || 'Unnamed'}</h3>
+                        <p>${student.name || 'Unnamed'} from <strong>${student.college || 'Not set'}</strong> pursuing a degree in <strong>${student.branch || 'Not set'}</strong></p>
                     </div>
-                    <button class="connect-btn ${sentRequests.has(student.id) ? 'sent' : ''}" 
-                        onclick="sendConnectionRequest('${student.id}', this)"
-                        ${sentRequests.has(student.id) ? 'disabled' : ''}>
-                        ${sentRequests.has(student.id) ? 'Connection Sent' : 'Connect'}
-                    </button>
-                    <span class="view-profile" onclick="showProfile('${student.id}')">View Profile</span>
+                    <div class="student-actions">
+                        <button class="connect-btn ${sentRequests.has(student.id) ? 'sent' : ''}" 
+                            onclick="toggleConnectionRequest('${student.id}', this)">
+                            ${sentRequests.has(student.id) ? 'Connection Sent' : 'Connect'}
+                        </button>
+                        <span class="view-profile" onclick="showProfile('${student.id}')">View Profile</span>
+                    </div>
                 </div>
             `).join('');
+
+            updatePagination(page, totalPages);
         };
 
-        window.sendConnectionRequest = async (studentId, button) => {
-            if (sentRequests.has(studentId)) return;
+        function updatePagination(currentPage, totalPages) {
+            pagination.innerHTML = `
+                <button class="pagination-btn" onclick="applyFilters(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>
+                ${Array.from({ length: totalPages }, (_, i) => `
+                    <span class="pagination-number ${currentPage === i + 1 ? 'active' : ''}" 
+                        onclick="applyFilters(${i + 1})">${i + 1}</span>
+                `).join('')}
+                <button class="pagination-btn" onclick="applyFilters(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>
+            `;
+        }
 
-            const requestData = {
-                from: userId,
-                to: studentId,
-                status: 'pending',
-                timestamp: new Date().toISOString()
-            };
-
-            const newRequestRef = await push(ref(db, 'connection_requests'), requestData);
-            sentRequests.add(studentId);
-            
-            button.classList.add('sent');
-            button.textContent = 'Connection Sent';
-            button.disabled = true;
-            
-            alert('Connection request sent!');
+        window.toggleConnectionRequest = async (studentId, button) => {
+            if (sentRequests.has(studentId)) {
+                const requestId = sentRequests.get(studentId);
+                await remove(ref(db, `connection_requests/${requestId}`));
+                sentRequests.delete(studentId);
+                button.classList.remove('sent');
+                button.textContent = 'Connect';
+                alert('Connection request removed!');
+                applyFilters(1); // Refresh list to reflect change
+            } else {
+                const requestData = {
+                    from: userId,
+                    to: studentId,
+                    status: 'pending',
+                    timestamp: new Date().toISOString()
+                };
+                const newRequestRef = await push(ref(db, 'connection_requests'), requestData);
+                sentRequests.set(studentId, newRequestRef.key);
+                button.classList.add('sent');
+                button.textContent = 'Connection Sent';
+                alert('Connection request sent!');
+                applyFilters(1); // Refresh list to reflect change
+            }
         };
 
         window.showProfile = async (targetUserId) => {
-            const studentsRef = ref(db, `studentslist/${targetUserId}`);
-            const professionalsRef = ref(db, `professionalslist/${targetUserId}`);
-
-            let profileData = null;
-            let userType = '';
-
-            const studentSnapshot = await get(studentsRef);
-            if (studentSnapshot.exists()) {
-                profileData = studentSnapshot.val();
-                userType = 'Student';
-            } else {
-                const professionalSnapshot = await get(professionalsRef);
-                if (professionalSnapshot.exists()) {
-                    profileData = professionalSnapshot.val();
-                    userType = 'Professional';
+            try {
+                const studentRef = ref(db, `studentslist/${targetUserId}`);
+                const snapshot = await get(studentRef);
+                
+                if (snapshot.exists()) {
+                    const profileData = snapshot.val();
+                    profileContent.innerHTML = `
+                        <h2>${profileData.name || 'Unnamed'}</h2>
+                        <div class="profile-details">
+                            <div class="profile-detail"><strong>College:</strong> ${profileData.college || 'Not set'}</div>
+                            <div class="profile-detail"><strong>Email:</strong> ${profileData.email || 'Not set'}</div>
+                            <div class="profile-detail"><strong>Hobby:</strong> ${profileData.hobby || 'Not set'}</div>
+                            <div class="profile-detail"><strong>Skills:</strong> ${profileData.skills || 'Not set'}</div>
+                            <div class="profile-detail"><strong>Branch:</strong> ${profileData.branch || 'Not set'}</div>
+                            <div class="profile-detail"><strong>Bio:</strong> ${profileData.bio || 'Not set'}</div>
+                            <div class="profile-detail"><strong>Type:</strong> ${profileData.type || 'Not set'}</div>
+                        </div>
+                    `;
+                    profilePopup.classList.add('active');
+                    overlay.classList.add('active');
+                } else {
+                    profileContent.innerHTML = `
+                        <h2>Profile Not Found</h2>
+                        <div class="profile-details">
+                            <div class="profile-detail">No data available for this user.</div>
+                        </div>
+                    `;
+                    profilePopup.classList.add('active');
+                    overlay.classList.add('active');
                 }
-            }
-
-            if (profileData) {
+            } catch (error) {
+                console.error('Error fetching profile:', error);
                 profileContent.innerHTML = `
-                    <h2>${profileData.name || 'Name not set'}</h2>
-                    <p><strong>Type:</strong> ${userType}</p>
-                    <p><strong>ID:</strong> ${targetUserId}</p>
-                    ${userType === 'Student' ? `
-                        <p><strong>College:</strong> ${profileData.college || 'Not set'}</p>
-                        <p><strong>Student Type:</strong> ${profileData.type || 'Not set'}</p>
-                    ` : `
-                        <p><strong>Company:</strong> ${profileData.company || 'Not set'}</p>
-                        <p><strong>Position:</strong> ${profileData.position || 'Not set'}</p>
-                    `}
+                    <h2>Error</h2>
+                    <div class="profile-details">
+                        <div class="profile-detail">Failed to load profile: ${error.message}</div>
+                    </div>
                 `;
                 profilePopup.classList.add('active');
                 overlay.classList.add('active');
-            } else {
-                alert('Profile not found in students or professionals list.');
             }
         };
 
@@ -544,10 +694,10 @@
             overlay.classList.remove('active');
         };
 
-        // Close popup when clicking overlay
         overlay.addEventListener('click', closeProfilePopup);
 
-        applyFilters();
+        applyFilters(1); // Initial call with page 1
     </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91fa4de2eb33afc5',t:'MTc0MTg1NjA0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
