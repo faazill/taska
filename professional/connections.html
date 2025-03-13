@@ -14,104 +14,196 @@
             background: #ffffff; 
             min-height: 100vh; 
             font-family: 'Poppins', sans-serif; 
+            margin: 0;
+            padding-top: 60px;
         }
-        .navbar { 
+        /* Top Navbar */
+        .top-navbar { 
             background: #ffffff; 
-            border-bottom: 1px solid #e0e0e0; 
-            padding: 1rem; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
+            padding: 1rem 2rem; 
             position: fixed; 
             top: 0; 
             width: 100%; 
             z-index: 1000; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #e0e0e0; 
         }
-        .nav-menu { 
+        .top-navbar .logo { 
+            font-size: 1.5rem; 
+            font-weight: 600; 
+            color: #000000; 
+        }
+        .top-navbar .nav-menu { 
             display: flex; 
             gap: 1.5rem; 
             list-style: none; 
         }
-        .nav-menu a { 
+        .top-navbar .nav-menu li a { 
+            color: #000000; 
             text-decoration: none; 
-            color: #2c3e50; 
-            font-weight: 400; 
+            font-size: 1rem; 
         }
-        .nav-menu a.active { 
+        .top-navbar .nav-menu li a.active { 
             font-weight: 600; 
-            color: #3498db; 
+            color: #0000ff; 
         }
+        .top-navbar .hamburger { 
+            display: none; 
+            font-size: 1.5rem; 
+            cursor: pointer; 
+            color: #000000; 
+        }
+
+        /* Left Sidebar Navbar */
+        .sidebar { 
+            position: fixed; 
+            left: 0; 
+            top: 60px; 
+            width: 220px; 
+            height: calc(100% - 60px); 
+            background: #ffffff; 
+            border-right: 1px solid #e0e0e0; 
+            padding: 2rem 0; 
+            z-index: 999; 
+        }
+        .tab-list { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+        }
+        .tab-list li { 
+            padding: 1.2rem 1.5rem; 
+            cursor: pointer; 
+            font-size: 1.0 rem; 
+            color: #000000; 
+            border-bottom: 1px solid #e0e0e0; 
+            transition: all 0.3s ease; 
+        }
+        .tab-list li:hover { 
+            padding-left: 2rem; 
+            background: #f8f8f8; 
+        }
+        .tab-list li.active { 
+            font-weight: 600; 
+            padding-left: 2rem; 
+            border-left: 4px solid #000000; 
+        }
+
+        /* Main Content */
         .dashboard-content { 
-            padding: 5rem 2rem; 
+            margin-left: 220px; 
+            padding: 2rem; 
+            min-height: calc(100vh - 120px); 
+        }
+        .tab-content { 
+            flex: 1; 
+        }
+        .tab-pane { 
+            display: none; 
+            opacity: 0; 
+            transition: opacity 0.3s ease; 
+        }
+        .tab-pane.active { 
+            display: block; 
+            opacity: 1; 
+            animation: slideIn 0.5s ease; 
         }
         .dashboard-section h1 { 
             font-size: 2rem; 
-            color: #2c3e50; 
+            color: #000000; 
             margin-bottom: 1rem; 
-            text-align: center; 
+            text-align: left; 
         }
         .dashboard-section p { 
             font-size: 1rem; 
-            color: #7f8c8d; 
+            color: #666666; 
             margin-bottom: 2rem; 
-            text-align: center; 
-        }
-        .connections-section { 
-            margin-bottom: 2rem; 
-        }
-        .connections-section h2 { 
-            font-size: 1.5rem; 
-            color: #2c3e50; 
-            margin-bottom: 1rem; 
+            text-align: left; 
         }
         .connections-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            display: flex; 
+            flex-direction: column; 
             gap: 1rem; 
         }
         .connection-card { 
-            background: #f9f9f9; 
+            background: #ffffff; 
             border: 1px solid #e0e0e0; 
             border-radius: 10px; 
             padding: 1.5rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 1rem; 
+            width: 100%; 
         }
-        .connection-card h3 { 
-            font-size: 1.3rem; 
-            color: #2c3e50; 
-            margin-bottom: 0.8rem; 
+        .profile-pic { 
+            width: 50px; 
+            height: 50px; 
+            border-radius: 50%; 
+            background: #e0e0e0; 
+            color: #000000; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.5rem; 
+            font-weight: 600; 
+            flex-shrink: 0; 
+            text-transform: uppercase; 
         }
-        .connection-card p { 
+        .connection-info { 
+            flex: 1; 
+        }
+        .connection-info h3 { 
+            font-size: 1.2rem; 
+            color: #000000; 
+            margin: 0 0 0.5rem 0; 
+        }
+        .connection-info p { 
             font-size: 1rem; 
-            color: #34495e; 
-            margin: 0.5rem 0; 
+            color: #000000; 
+            margin: 0; 
         }
-        .connection-card p strong { 
-            color: #2c3e50; 
+        .connection-info p strong { 
+            color: #000000; 
         }
         .cta-button { 
             display: inline-block; 
             padding: 0.6rem 1.2rem; 
-            background: #3498db; 
-            color: #fff; 
+            background: #ffffff; 
+            color: #0000ff; 
             text-decoration: none; 
+            border: 1px solid #0000ff; 
             border-radius: 5px; 
             font-size: 0.9rem; 
             margin-top: 0.8rem; 
+            cursor: pointer; 
         }
         .action-btn { 
             padding: 0.6rem 1.2rem; 
-            background: #e74c3c; 
-            color: #fff; 
-            border: none; 
+            background: #ffffff; 
+            color: #e74c3c; 
+            border: 1px solid #e74c3c; 
             border-radius: 5px; 
             cursor: pointer; 
             margin-top: 0.8rem; 
             margin-left: 0.5rem; 
         }
+        .view-profile { 
+            padding: 0.6rem 1.2rem; 
+            background: #ffffff; 
+            color: #555555; 
+            border: 1px solid #555555; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            margin-top: 0.8rem; 
+            margin-left: 0.5rem; 
+            text-decoration: none; 
+        }
         .no-connections { 
             font-size: 1rem; 
-            color: #7f8c8d; 
-            text-align: center; 
+            color: #666666; 
+            text-align: left; 
             margin-top: 1rem; 
         }
         footer { 
@@ -124,13 +216,109 @@
             width: 100%; 
         }
         footer a { 
-            color: #3498db; 
+            color: #0000ff; 
             text-decoration: none; 
+        }
+
+        /* Profile Popup */
+        .overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.3); 
+            z-index: 999; 
+        }
+        .overlay.active { 
+            display: block; 
+        }
+        .profile-popup { 
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            background: #ffffff; 
+            padding: 2rem; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px; 
+            width: 90%; 
+            max-width: 400px; 
+            z-index: 1000; 
+        }
+        .profile-popup.active { 
+            display: block; 
+        }
+        .profile-popup h2 { 
+            font-size: 1.5rem; 
+            color: #000000; 
+            margin: 0 0 1rem 0; 
+        }
+        .profile-popup p { 
+            font-size: 1rem; 
+            color: #666666; 
+            margin: 0.5rem 0; 
+        }
+        .profile-popup .close-btn { 
+            position: absolute; 
+            top: 1rem; 
+            right: 1rem; 
+            background: none; 
+            border: none; 
+            font-size: 1.2rem; 
+            cursor: pointer; 
+            color: #666666; 
+        }
+        .profile-popup .close-btn:hover { 
+            color: #000000; 
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .top-navbar .nav-menu {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: #ffffff;
+                flex-direction: column;
+                padding: 1rem;
+                border-top: 1px solid #e0e0e0;
+            }
+            .top-navbar .nav-menu.active {
+                display: flex;
+            }
+            .top-navbar .hamburger {
+                display: block;
+            }
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                top: 0;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+            .dashboard-content {
+                margin-left: 0;
+            }
+            .tab-list li {
+                border-right: 1px solid #e0e0e0;
+            }
+        }
+
+        /* Animation */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
+    <nav class="top-navbar">
         <div class="logo">Taska Elite</div>
         <ul class="nav-menu">
             <li><a href="overview.html">Overview</a></li>
@@ -141,41 +329,54 @@
             <li><a href="../index.html">Logout</a></li>
         </ul>
         <div class="hamburger">☰</div>
-        <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
     </nav>
 
+    <div class="sidebar">
+        <ul class="tab-list">
+            <li class="active" data-tab="active-connections">Active Connections</li>
+            <li data-tab="sent-requests">Sent Requests</li>
+            <li data-tab="received-requests">Received Requests</li>
+        </ul>
+    </div>
+
     <main class="dashboard-content">
-        <section class="dashboard-section">
-            <h1>Your Connections</h1>
-            <p>Manage your connections with IIT prodigies.</p>
+        <div class="tab-content">
+            <section class="dashboard-section">
+                <h1>Your Connections</h1>
+                <p>Manage your connections with IIT prodigies.</p>
 
-            <div class="connections-section">
-                <h2>Active Connections</h2>
-                <div class="connections-grid" id="connections-grid"></div>
-                <p class="no-connections" id="no-connections" style="display: none;">No connections yet.</p>
-            </div>
+                <div class="tab-pane active" id="active-connections">
+                    <div class="connections-grid" id="connections-grid"></div>
+                    <p class="no-connections" id="no-connections" style="display: none;">No active connections yet.</p>
+                </div>
 
-            <div class="connections-section">
-                <h2>Pending Sent Requests</h2>
-                <div class="connections-grid" id="sent-requests-grid"></div>
-                <p class="no-connections" id="no-sent-requests" style="display: none;">No sent requests.</p>
-            </div>
+                <div class="tab-pane" id="sent-requests">
+                    <div class="connections-grid" id="sent-requests-grid"></div>
+                    <p class="no-connections" id="no-sent-requests" style="display: none;">No sent requests.</p>
+                </div>
 
-            <div class="connections-section">
-                <h2>Pending Received Requests</h2>
-                <div class="connections-grid" id="received-requests-grid"></div>
-                <p class="no-connections" id="no-received-requests" style="display: none;">No received requests.</p>
-            </div>
-        </section>
+                <div class="tab-pane" id="received-requests">
+                    <div class="connections-grid" id="received-requests-grid"></div>
+                    <p class="no-connections" id="no-received-requests" style="display: none;">No received requests.</p>
+                </div>
+            </section>
+        </div>
     </main>
 
     <footer>
         <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
     </footer>
 
+    <!-- Profile Popup -->
+    <div class="overlay" id="overlay"></div>
+    <div class="profile-popup" id="profilePopup">
+        <button class="close-btn" onclick="closeProfilePopup()">×</button>
+        <div id="profileContent"></div>
+    </div>
+
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getDatabase, ref, onValue, get, remove } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+        import { getDatabase, ref, onValue, get, remove, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
@@ -214,11 +415,14 @@
                             const student = snap.val();
                             connectionsGrid.innerHTML += `
                                 <div class="connection-card">
-                                    <h3>${student.name}</h3>
-                                    <p><strong>College:</strong> ${student.college || 'Not set'}</p>
-                                    <p><strong>Degree:</strong> ${student.degree || 'Not set'}</p>
-                                    <a href="overview.html" class="cta-button">Chat</a>
-                                    <button class="action-btn" onclick="disconnect('${studentId}')">Disconnect</button>
+                                    <div class="profile-pic">${student.name.charAt(0)}</div>
+                                    <div class="connection-info">
+                                        <h3>${student.name}</h3>
+                                        <p>${student.name} is a <strong>${student.type || 'Not set'}</strong> pursuing <strong>${student.degree || 'Not set'}</strong> at <strong>${student.college || 'Not set'}</strong>. Skilled in ${student.skills || 'various areas'}.</p>
+                                        <a href="overview.html" class="cta-button">Chat</a>
+                                        <button class="action-btn" onclick="disconnect('${studentId}')">Disconnect</button>
+                                        <button class="view-profile" onclick="showProfile('${studentId}')">View Profile</button>
+                                    </div>
                                 </div>
                             `;
                         });
@@ -244,10 +448,13 @@
                             const student = snap.val();
                             sentRequestsGrid.innerHTML += `
                                 <div class="connection-card">
-                                    <h3>${student.name}</h3>
-                                    <p><strong>College:</strong> ${student.college || 'Not set'}</p>
-                                    <p><strong>Degree:</strong> ${student.degree || 'Not set'}</p>
-                                    <button class="action-btn" onclick="removeRequest('${requestId}')">Remove Request</button>
+                                    <div class="profile-pic">${student.name.charAt(0)}</div>
+                                    <div class="connection-info">
+                                        <h3>${student.name}</h3>
+                                        <p>${student.name} is a <strong>${student.type || 'Not set'}</strong> pursuing <strong>${student.degree || 'Not set'}</strong> at <strong>${student.college || 'Not set'}</strong>. Skilled in ${student.skills || 'various areas'}.</p>
+                                        <button class="action-btn" onclick="removeRequest('${requestId}')">Remove Request</button>
+                                        <button class="view-profile" onclick="showProfile('${req.to}')">View Profile</button>
+                                    </div>
                                 </div>
                             `;
                         });
@@ -272,10 +479,14 @@
                             const student = snap.val();
                             receivedRequestsGrid.innerHTML += `
                                 <div class="connection-card">
-                                    <h3>${student.name}</h3>
-                                    <p><strong>College:</strong> ${student.college || 'Not set'}</p>
-                                    <p><strong>Degree:</strong> ${student.degree || 'Not set'}</p>
-                                    <button class="action-btn" onclick="removeRequest('${requestId}')">Decline</button>
+                                    <div class="profile-pic">${student.name.charAt(0)}</div>
+                                    <div class="connection-info">
+                                        <h3>${student.name}</h3>
+                                        <p>${student.name} is a <strong>${student.type || 'Not set'}</strong> pursuing <strong>${student.degree || 'Not set'}</strong> at <strong>${student.college || 'Not set'}</strong>. Skilled in ${student.skills || 'various areas'}.</p>
+                                        <button class="cta-button" onclick="acceptRequest('${requestId}', '${req.from}')">Accept Request</button>
+                                        <button class="action-btn" onclick="removeRequest('${requestId}')">Decline</button>
+                                        <button class="view-profile" onclick="showProfile('${req.from}')">View Profile</button>
+                                    </div>
                                 </div>
                             `;
                         });
@@ -309,6 +520,101 @@
                 }
             }
         };
+
+        window.acceptRequest = async (requestId, studentId) => {
+            if (confirm('Are you sure you want to accept this request?')) {
+                try {
+                    await Promise.all([
+                        set(ref(db, `professionalslist/${userId}/connections/${studentId}`), true),
+                        set(ref(db, `studentslist/${studentId}/connections/${userId}`), true),
+                        remove(ref(db, `connection_requests/${requestId}`))
+                    ]);
+                    alert('Request accepted successfully!');
+                } catch (error) {
+                    alert('Failed to accept request: ' + error.message);
+                }
+            }
+        };
+
+        window.showProfile = async (targetUserId) => {
+            const studentsRef = ref(db, `studentslist/${targetUserId}`);
+            const professionalsRef = ref(db, `professionalslist/${targetUserId}`);
+            const profilePopup = document.getElementById('profilePopup');
+            const profileContent = document.getElementById('profileContent');
+            const overlay = document.getElementById('overlay');
+
+            let profileData = null;
+            let userType = '';
+
+            const studentSnapshot = await get(studentsRef);
+            if (studentSnapshot.exists()) {
+                profileData = studentSnapshot.val();
+                userType = 'Student';
+            } else {
+                const professionalSnapshot = await get(professionalsRef);
+                if (professionalSnapshot.exists()) {
+                    profileData = professionalSnapshot.val();
+                    userType = 'Professional';
+                }
+            }
+
+            if (profileData) {
+                profileContent.innerHTML = `
+                    <h2>${profileData.name || 'Name not set'}</h2>
+                    <p><strong>Type:</strong> ${userType}</p>
+                    <p><strong>ID:</strong> ${targetUserId}</p>
+                    ${userType === 'Student' ? `
+                        <p><strong>College:</strong> ${profileData.college || 'Not set'}</p>
+                        <p><strong>Student Type:</strong> ${profileData.type || 'Not set'}</p>
+                        <p><strong>Degree:</strong> ${profileData.degree || 'Not set'}</p>
+                        <p><strong>Skills:</strong> ${profileData.skills || 'Not set'}</p>
+                        <p><strong>Hobbies:</strong> ${profileData.hobbies || 'Not set'}</p>
+                    ` : `
+                        <p><strong>Company:</strong> ${profileData.company || 'Not set'}</p>
+                        <p><strong>Position:</strong> ${profileData.position || 'Not set'}</p>
+                        <p><strong>Skills:</strong> ${profileData.skills || 'Not set'}</p>
+                        <p><strong>Hobbies:</strong> ${profileData.hobbies || 'Not set'}</p>
+                    `}
+                `;
+                profilePopup.classList.add('active');
+                overlay.classList.add('active');
+            } else {
+                alert('Profile not found in students or professionals list.');
+            }
+        };
+
+        window.closeProfilePopup = () => {
+            const profilePopup = document.getElementById('profilePopup');
+            const overlay = document.getElementById('overlay');
+            profilePopup.classList.remove('active');
+            overlay.classList.remove('active');
+        };
+
+        // Tab switching and hamburger logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.tab-list li');
+            const panes = document.querySelectorAll('.tab-pane');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    panes.forEach(p => p.classList.remove('active'));
+
+                    tab.classList.add('active');
+                    const targetPane = document.getElementById(tab.getAttribute('data-tab'));
+                    targetPane.classList.add('active');
+                });
+            });
+
+            const hamburger = document.querySelector('.top-navbar .hamburger');
+            const navMenu = document.querySelector('.top-navbar .nav-menu');
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+
+            const overlay = document.getElementById('overlay');
+            overlay.addEventListener('click', closeProfilePopup);
+        });
     </script>
 </body>
 </html>
