@@ -439,7 +439,7 @@
                                             <div class="profile-pic">${personal.name ? personal.name.charAt(0) : '?'}</div>
                                             <div class="connection-info">
                                                 <h3>${personal.name || 'Unknown'}</h3>
-                                                <p>${personal.name || 'Unknown'} is pursuing <strong>${education.degree || 'Not set'}</strong> at <strong>${education.college || 'Not set'}</strong> (Year: <strong>${education.year || 'Not set'}</strong>). Skilled in ${student.skills || 'various areas'}.</p>
+                                                <p>${personal.name || 'Unknown'} is pursuing <strong>${education.degree || 'Not set'}</strong> at <strong>${education.college || 'Not set'}<strong> </strong>${education.year || 'Not set'} </strong> Year <strong></strong> Skilled in ${student.skills || 'various areas'}.</p>
                                                 <a href="overview.html" class="cta-button">Chat</a>
                                                 <button class="action-btn" onclick="disconnect('${studentId}')">Disconnect</button>
                                                 <button class="view-profile" onclick="showProfile('${studentId}')">View Profile</button>
@@ -494,7 +494,7 @@
                                             <div class="profile-pic">${personal.name ? personal.name.charAt(0) : '?'}</div>
                                             <div class="connection-info">
                                                 <h3>${personal.name || 'Unknown'}</h3>
-                                                <p>${personal.name || 'Unknown'} is pursuing <strong>${education.degree || 'Not set'}</strong> at <strong>${education.college || 'Not set'}</strong> (Year: <strong>${education.year || 'Not set'}</strong>). Skilled in ${student.skills || 'various areas'}.</p>
+                                                <p>${personal.name || 'Unknown'} is pursuing <strong>${education.degree || 'Not set'}</strong> at <strong>${education.college || 'Not set'}</strong> <strong>${education.year || 'Not set'}</strong></strong> Year <strong> Skilled in ${student.skills || 'various areas'}.</p>
                                                 <button class="action-btn" onclick="removeRequest('${requestId}')">Remove Request</button>
                                                 <button class="view-profile" onclick="showProfile('${req.to}')">View Profile</button>
                                             </div>
@@ -549,7 +549,7 @@
                                             <div class="profile-pic">${personal.name ? personal.name.charAt(0) : '?'}</div>
                                             <div class="connection-info">
                                                 <h3>${personal.name || 'Unknown'}</h3>
-                                                <p>${personal.name || 'Unknown'} is pursuing <strong>${education.degree || 'Not set'}</strong> at <strong>${education.college || 'Not set'}</strong> (Year: <strong>${education.year || 'Not set'}</strong>). Skilled in ${student.skills || 'various areas'}.</p>
+                                                <p>${personal.name || 'Unknown'} is pursuing <strong>${education.degree || 'Not set'}</strong> at <strong>${education.college || 'Not set'}</strong> <strong>${education.year || 'Not set'}</strong></strong> Year <strong> Skilled in ${student.skills || 'various areas'}.</p>
                                                 <button class="cta-button" onclick="acceptRequest('${requestId}', '${req.from}')">Accept Request</button>
                                                 <button class="action-btn" onclick="removeRequest('${requestId}')">Decline</button>
                                                 <button class="view-profile" onclick="showProfile('${req.from}')">View Profile</button>
@@ -584,18 +584,20 @@
         }
     
         window.disconnect = async (studentId) => {
-            if (confirm('Are you sure you want to disconnect from this student?')) {
-                try {
-                    await Promise.all([
-                        remove(ref(db, `professionalslist/${userId}/connections/${studentId}`)),
-                        remove(ref(db, `studentslist/${studentId}/connections/${userId}`))
-                    ]);
-                    alert('Disconnected successfully!');
-                } catch (error) {
-                    alert('Failed to disconnect: ' + error.message);
-                }
-            }
-        };
+    if (confirm('Are you sure you want to disconnect from this student?')) {
+        try {
+            await Promise.all([
+                remove(ref(db, `professionalslist/${userId}/connections/${studentId}`)),
+                remove(ref(db, `studentslist/${studentId}/connections/${userId}`))
+            ]);
+            alert('Disconnected successfully!');
+            // Manually refresh the connections list
+            await loadConnections();
+        } catch (error) {
+            alert('Failed to disconnect: ' + error.message);
+        }
+    }
+};
     
         window.removeRequest = async (requestId) => {
             if (confirm('Are you sure you want to remove this request?')) {

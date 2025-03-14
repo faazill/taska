@@ -462,7 +462,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
         import { getDatabase, ref, onValue, push, get, remove, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
-
+    
         const firebaseConfig = {
             apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
             authDomain: "taska-45011.firebaseapp.com",
@@ -480,80 +480,105 @@
         const receivedRequests = new Map();
         const connectedProfiles = new Set();
         const itemsPerPage = 9;
-        let isInitialLoad = true;
-
+        let currentPage = 1;
+        let currentQuery = '';
+    
         if (!userId) {
             setTimeout(() => {
                 alert("Please log in or sign up first.");
                 window.location.href = '../login.html';
             }, 1000);
         }
-
+    
         const studentsList = document.getElementById('students-list');
         const pagination = document.getElementById('pagination');
         const studentsRef = ref(db, 'studentslist');
+        const requestsRef = ref(db, 'connection_requests');
         const profilePopup = document.getElementById('profilePopup');
         const profileContent = document.getElementById('profileContent');
         const overlay = document.getElementById('overlay');
         const loadingOverlay = document.getElementById('loadingOverlay');
         const connectSound = new Audio('../assets/ding.mp3');
-
-        onValue(studentsRef, (snapshot) => {
-            studentsData = [];
-            snapshot.forEach((childSnapshot) => {
-                const student = childSnapshot.val();
-                student.id = childSnapshot.key;
-                if (student.personal && student.education) {
-                    studentsData.push(student);
-                }
-            });
-            if (isInitialLoad) {
-                loadingOverlay.style.display = 'none';
-                isInitialLoad = false;
-            }
-        });
-
-        async function checkConnectionStatus(studentId) {
-            const requestsRef = ref(db, 'connection_requests');
-            const snapshot = await get(requestsRef);
-            if (snapshot.exists()) {
-                snapshot.forEach((childSnapshot) => {
+    
+        async function checkConnectionStatus() {
+            connectedProfiles.clear();
+            sentRequests.clear();
+            receivedRequests.clear();
+    
+            const requestsSnapshot = await get(requestsRef);
+            if (requestsSnapshot.exists()) {
+                requestsSnapshot.forEach((childSnapshot) => {
                     const request = childSnapshot.val();
                     const requestId = childSnapshot.key;
-                    if (request.from === userId && request.to === studentId) {
+                    if (request.from === userId) {
                         if (request.status === 'pending') {
-                            sentRequests.set(studentId, requestId);
+                            sentRequests.set(request.to, requestId);
                         } else if (request.status === 'accepted') {
-                            connectedProfiles.add(studentId);
+                            connectedProfiles.add(request.to);
                         }
-                    } else if (request.to === userId && request.from === studentId) {
+                    } else if (request.to === userId) {
                         if (request.status === 'pending') {
-                            receivedRequests.set(studentId, requestId);
+                            receivedRequests.set(request.from, requestId);
                         } else if (request.status === 'accepted') {
-                            connectedProfiles.add(studentId);
+                            connectedProfiles.add(request.from);
                         }
                     }
                 });
             }
         }
-
-        window.aiSearch = async (page = 1) => {
-            loadingOverlay.style.display = 'flex';
-            connectedProfiles.clear();
-            sentRequests.clear();
-            receivedRequests.clear();
-            for (const student of studentsData) {
-                await checkConnectionStatus(student.id);
+    
+        function aiFilterStudents(query) {
+            // Filter out connected profiles and the current user
+            const availableStudents = studentsData.filter(student => 
+                !connectedProfiles.has(student.id) && student.id !== userId
+            );
+    
+            if (!query) {
+                return availableStudents;
             }
-
-            const query = document.getElementById('ai-search-input').value.toLowerCase().trim();
+    
+            const keywords = query.split(/\s+/).map(k => k.toLowerCase());
+            const collegeMatch = keywords.find(k => k.includes('iit') || k === 'college') ? keywords.join(' ').match(/iit\s+\w+/)?.[0] : null;
+            const degreeMatch = keywords.includes('b.tech') || keywords.includes('btech') ? 'B.Tech' : null;
+            const branchMatch = keywords.find(k => /mechanics|cs|cse|ee|ece|civil|mech/.test(k)) || null;
+            const skillMatch = keywords.find(k => /python|java|cpp|c\+\+|js|javascript|ml|ai/.test(k)) || null;
+    
+            const studentsWithMatches = availableStudents.map(student => {
+                let matches = 0;
+                const name = student.personal.name?.toLowerCase() || '';
+                const college = student.education.college?.toLowerCase() || '';
+                const degree = student.education.degree?.toLowerCase() || '';
+                const branch = student.education.branch?.toLowerCase() || '';
+                const skills = student.skills?.toLowerCase() || '';
+    
+                if (collegeMatch && college.includes(collegeMatch)) matches++;
+                if (degreeMatch && degree === degreeMatch.toLowerCase()) matches++;
+                if (branchMatch && branch.includes(branchMatch)) matches++;
+                if (skillMatch && skills.includes(skillMatch)) matches++;
+                if (keywords.some(k => name.includes(k))) matches++;
+    
+                return { student, matches };
+            });
+    
+            return studentsWithMatches
+                .filter(item => item.matches > 0)
+                .sort((a, b) => b.matches - a.matches)
+                .map(item => item.student);
+        }
+    
+        window.aiSearch = async (page = 1, query = '') => {
+            currentPage = page;
+            currentQuery = query;
+            loadingOverlay.style.display = 'flex';
+    
+            await checkConnectionStatus();
             const filteredStudents = aiFilterStudents(query);
-
+    
             const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
             const startIndex = (page - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
             const paginatedStudents = filteredStudents.slice(startIndex, endIndex);
-
+    
             studentsList.innerHTML = paginatedStudents.map(student => {
                 const isSent = sentRequests.has(student.id);
                 const isReceived = receivedRequests.has(student.id);
@@ -565,9 +590,6 @@
                 } else if (isReceived) {
                     buttonClass = 'approve';
                     buttonText = 'Approve Request';
-                } else if (connectedProfiles.has(student.id)) {
-                    buttonClass = 'connected';
-                    buttonText = 'Connected';
                 }
                 return `
                     <div class="student-card">
@@ -585,57 +607,27 @@
                     </div>
                 `;
             }).join('');
-
+    
             updatePagination(page, totalPages);
             loadingOverlay.style.display = 'none';
         };
-
-        function aiFilterStudents(query) {
-            if (!query) return studentsData.filter(student => !connectedProfiles.has(student.id));
-
-            const keywords = query.split(/\s+/).map(k => k.toLowerCase());
-            const collegeMatch = keywords.find(k => k.includes('iit') || k === 'college') ? keywords.join(' ').match(/iit\s+\w+/)?.[0] : null;
-            const degreeMatch = keywords.includes('b.tech') || keywords.includes('btech') ? 'B.Tech' : null;
-            const branchMatch = keywords.find(k => /mechanics|cs|cse|ee|ece|civil|mech/.test(k)) || null;
-            const skillMatch = keywords.find(k => /python|java|cpp|c\+\+|js|javascript|ml|ai/.test(k)) || null;
-
-            const studentsWithMatches = studentsData.map(student => {
-                const notConnected = !connectedProfiles.has(student.id);
-                if (!notConnected) return { student, matches: -1 };
-
-                let matches = 0;
-                const name = student.personal.name?.toLowerCase() || '';
-                const college = student.education.college?.toLowerCase() || '';
-                const degree = student.education.degree?.toLowerCase() || '';
-                const branch = student.education.branch?.toLowerCase() || '';
-                const skills = student.skills?.toLowerCase() || '';
-
-                if (collegeMatch && college.includes(collegeMatch)) matches++;
-                if (degreeMatch && degree === degreeMatch.toLowerCase()) matches++;
-                if (branchMatch && branch.includes(branchMatch)) matches++;
-                if (skillMatch && skills.includes(skillMatch)) matches++;
-                if (keywords.some(k => name.includes(k))) matches++;
-
-                return { student, matches };
-            });
-
-            return studentsWithMatches
-                .filter(item => item.matches > 0)
-                .sort((a, b) => b.matches - a.matches)
-                .map(item => item.student);
-        }
-
+    
         function updatePagination(currentPage, totalPages) {
             pagination.innerHTML = `
-                <button class="pagination-btn" onclick="aiSearch(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>
+                <button class="pagination-btn" onclick="aiSearch(${currentPage - 1}, '${currentQuery}')" ${currentPage === 1 ? 'disabled' : ''}>‹</button>
                 ${Array.from({ length: totalPages }, (_, i) => `
                     <span class="pagination-number ${currentPage === i + 1 ? 'active' : ''}" 
-                          onclick="aiSearch(${i + 1})">${i + 1}</span>
+                          onclick="aiSearch(${i + 1}, '${currentQuery}')">${i + 1}</span>
                 `).join('')}
-                <button class="pagination-btn" onclick="aiSearch(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>
+                <button class="pagination-btn" onclick="aiSearch(${currentPage + 1}, '${currentQuery}')" ${currentPage === totalPages ? 'disabled' : ''}>›</button>
             `;
         }
-
+    
+        window.performSearch = () => {
+            const query = document.getElementById('ai-search-input').value.toLowerCase().trim();
+            aiSearch(1, query);
+        };
+    
         window.toggleConnectionRequest = async (studentId, button) => {
             if (sentRequests.has(studentId)) {
                 const requestId = sentRequests.get(studentId);
@@ -644,6 +636,7 @@
                 button.classList.remove('sent');
                 button.textContent = 'Connect';
                 alert('Connection request removed!');
+                aiSearch(currentPage, currentQuery);
             } else if (receivedRequests.has(studentId)) {
                 const requestId = receivedRequests.get(studentId);
                 try {
@@ -654,15 +647,14 @@
                     ]);
                     receivedRequests.delete(studentId);
                     connectedProfiles.add(studentId);
-                    button.classList.remove('approve');
-                    button.classList.add('connected');
-                    button.textContent = 'Connected';
+                    button.parentElement.parentElement.remove();
                     alert('Connection request approved!');
                     connectSound.play();
+                    aiSearch(currentPage, currentQuery);
                 } catch (error) {
                     alert('Failed to approve request: ' + error.message);
                 }
-            } else if (!connectedProfiles.has(studentId)) {
+            } else {
                 const requestData = {
                     from: userId,
                     to: studentId,
@@ -675,9 +667,10 @@
                 button.textContent = 'Connection Sent';
                 alert('Connection request sent!');
                 connectSound.play();
+                aiSearch(currentPage, currentQuery);
             }
         };
-
+    
         window.showProfile = async (targetUserId) => {
             try {
                 const studentRef = ref(db, `studentslist/${targetUserId}`);
@@ -752,16 +745,33 @@
                 overlay.classList.add('active');
             }
         };
-
+    
         window.closeProfilePopup = () => {
             profilePopup.classList.remove('active');
             overlay.classList.remove('active');
         };
-
+    
+        // Real-time listeners
+        onValue(studentsRef, (snapshot) => {
+            studentsData = [];
+            snapshot.forEach((childSnapshot) => {
+                const student = childSnapshot.val();
+                student.id = childSnapshot.key;
+                if (student.personal && student.education) {
+                    studentsData.push(student);
+                }
+            });
+            aiSearch(currentPage, currentQuery);
+        });
+    
+        onValue(requestsRef, () => {
+            aiSearch(currentPage, currentQuery);
+        });
+    
         overlay.addEventListener('click', closeProfilePopup);
-
+    
         // Initial load
-        aiSearch(1);
+        aiSearch(1, '');
     </script>
 </body>
 </html>
