@@ -18,8 +18,6 @@
             color: #6B7280; 
             padding-bottom: 60px; 
         }
-
-        /* Navbar styles remain unchanged from the first page */
         .navbar {
             background: rgba(255, 255, 255, 0.95);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -50,30 +48,7 @@
         .nav-menu a:hover, .nav-menu a.active {
             color: #0000ff;
         }
-        .hamburger {
-            display: none;
-        }
-        @media (max-width: 768px) {
-            .navbar .nav-menu {
-                display: none;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                right: 0;
-                background: #ffffff;
-                flex-direction: column;
-                padding: 1rem;
-                border-top: 1px solid #e0e0e0;
-            }
-            .navbar .nav-menu.active {
-                display: flex;
-            }
-            .navbar .hamburger {
-                display: block;
-            }
-        }
-
-        /* Remaining styles from the second page */
+        .hamburger { display: none; }
         .dashboard-content { 
             padding: 3rem 2rem; 
             max-width: 1200px; 
@@ -104,7 +79,7 @@
             display: flex; 
             align-items: center; 
             gap: 1rem; 
-            background: #E0E7FF; 
+            background: #ffffff; 
             padding: 0.5rem 1rem; 
             border-radius: 12px; 
             border: 1px solid #D1D5DB; 
@@ -303,7 +278,9 @@
             border-radius: 15px; 
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
             width: 90%; 
-            max-width: 450px; 
+            max-width: 1200px; 
+            max-height: 80vh; 
+            overflow-y: auto; 
             z-index: 1000; 
             transition: transform 0.3s ease; 
         }
@@ -311,27 +288,67 @@
             display: block; 
             transform: translate(-50%, -50%) scale(1); 
         }
-        .profile-popup h2 { 
-            font-size: 1.8rem; 
+        .profile-content { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 1.5rem; 
+        }
+        .profile-section { 
+            background: #FFFFFF; 
+            border-radius: 12px; 
+            padding: 1.5rem; 
+            border: 1px solid #E5E7EB; 
+            transition: box-shadow 0.3s ease; 
+        }
+        .profile-section:hover { 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); 
+        }
+        .profile-section h2 { 
+            font-size: 1.5rem; 
             color: #374151; 
-            margin: 0 0 1.5rem 0; 
-            text-align: center; 
+            margin-bottom: 1rem; 
+            font-weight: 600; 
         }
-        .profile-details { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 0.75rem; 
-        }
-        .profile-detail { 
-            background: #E0E7FF; 
-            padding: 0.75rem; 
-            border-radius: 8px; 
+        .profile-section p { 
             font-size: 1rem; 
             color: #6B7280; 
+            margin-bottom: 0.8rem; 
+            display: flex; 
+            gap: 0.5rem; 
         }
-        .profile-detail strong { 
+        .profile-section p strong { 
             color: #374151; 
-            font-weight: 500; 
+            font-weight: 600; 
+            min-width: 120px; 
+        }
+        .profile-section ul { 
+            list-style: none; 
+            padding: 0; 
+        }
+        .profile-section ul li { 
+            font-size: 0.95rem; 
+            color: #6B7280; 
+            margin-bottom: 0.5rem; 
+        }
+        .profile-section a { 
+            color: #374151; 
+            text-decoration: underline; 
+            transition: opacity 0.3s ease; 
+        }
+        .profile-section a:hover { opacity: 0.7; }
+        .profile-name { 
+            font-size: 2rem; 
+            color: #374151; 
+            font-weight: 600; 
+            grid-column: 1 / 3; 
+            text-align: center; 
+            margin-bottom: 1rem; 
+        }
+        .bottom-section { 
+            grid-column: 1 / 3; 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 1.5rem; 
         }
         .profile-popup .close-btn { 
             position: absolute; 
@@ -342,6 +359,7 @@
             font-size: 1.5rem; 
             cursor: pointer; 
             color: #6B7280; 
+            transition: color 0.3s ease; 
         }
         .profile-popup .close-btn:hover { color: #374151; }
         footer { 
@@ -362,9 +380,27 @@
         footer a:hover { opacity: 0.7; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @media (max-width: 768px) {
+            .navbar .nav-menu {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: #ffffff;
+                flex-direction: column;
+                padding: 1rem;
+                border-top: 1px solid #e0e0e0;
+            }
+            .navbar .nav-menu.active { display: flex; }
+            .navbar .hamburger { display: block; }
             .students-list { grid-template-columns: 1fr; }
             .search-box { flex-direction: column; align-items: stretch; }
             .search-btn { margin-top: 1rem; }
+            .profile-content { grid-template-columns: 1fr; }
+            .profile-name { grid-column: 1 / 2; }
+            .bottom-section { grid-template-columns: 1fr; }
+            .profile-section p { flex-direction: column; }
+            .profile-section p strong { min-width: auto; }
         }
     </style>
 </head>
@@ -393,11 +429,9 @@
 
     <main class="dashboard-content">
         <section class="dashboard-section">
-            <br>
-            <br>
+            <br><br>
             <h1>Explore IIT Talent</h1>
             <p>Find and connect with top IIT prodigies using AI-powered search.</p>
-
             <div class="search-container">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
@@ -406,7 +440,6 @@
                     <button class="search-btn" onclick="aiSearch(1)">Search</button>
                 </div>
             </div>
-
             <div class="loading-overlay" id="loadingOverlay">
                 <div class="loader"></div>
             </div>
@@ -423,7 +456,7 @@
     <div class="overlay" id="overlay"></div>
     <div class="profile-popup" id="profilePopup">
         <button class="close-btn" onclick="closeProfilePopup()">×</button>
-        <div id="profileContent"></div>
+        <div class="profile-content" id="profileContent"></div>
     </div>
 
     <script type="module">
@@ -463,14 +496,14 @@
         const profileContent = document.getElementById('profileContent');
         const overlay = document.getElementById('overlay');
         const loadingOverlay = document.getElementById('loadingOverlay');
-        const connectSound = new Audio('../assets/ding.mp3'); // Placeholder; replace with actual sound
+        const connectSound = new Audio('../assets/ding.mp3');
 
         onValue(studentsRef, (snapshot) => {
             studentsData = [];
             snapshot.forEach((childSnapshot) => {
                 const student = childSnapshot.val();
                 student.id = childSnapshot.key;
-                if (student.personal && student.education) { // Ensure new structure
+                if (student.personal && student.education) {
                     studentsData.push(student);
                 }
             });
@@ -566,9 +599,9 @@
             const branchMatch = keywords.find(k => /mechanics|cs|cse|ee|ece|civil|mech/.test(k)) || null;
             const skillMatch = keywords.find(k => /python|java|cpp|c\+\+|js|javascript|ml|ai/.test(k)) || null;
 
-            return studentsData.filter(student => {
+            const studentsWithMatches = studentsData.map(student => {
                 const notConnected = !connectedProfiles.has(student.id);
-                if (!notConnected) return false;
+                if (!notConnected) return { student, matches: -1 };
 
                 let matches = 0;
                 const name = student.personal.name?.toLowerCase() || '';
@@ -583,8 +616,13 @@
                 if (skillMatch && skills.includes(skillMatch)) matches++;
                 if (keywords.some(k => name.includes(k))) matches++;
 
-                return matches > 0;
+                return { student, matches };
             });
+
+            return studentsWithMatches
+                .filter(item => item.matches > 0)
+                .sort((a, b) => b.matches - a.matches)
+                .map(item => item.student);
         }
 
         function updatePagination(currentPage, totalPages) {
@@ -647,14 +685,58 @@
                 if (snapshot.exists()) {
                     const profileData = snapshot.val();
                     profileContent.innerHTML = `
-                        <h2>${profileData.personal.name || 'Unnamed'}</h2>
-                        <div class="profile-details">
-                            <div class="profile-detail"><strong>College:</strong> ${profileData.education.college || 'Not set'}</div>
-                            <div class="profile-detail"><strong>Email:</strong> ${profileData.personal.email || 'Not set'}</div>
-                            <div class="profile-detail"><strong>Skills:</strong> ${profileData.skills || 'Not set'}</div>
-                            <div class="profile-detail"><strong>Branch:</strong> ${profileData.education.branch || 'Not set'}</div>
-                            <div class="profile-detail"><strong>Degree:</strong> ${profileData.education.degree || 'Not set'}</div>
-                            <div class="profile-detail"><strong>Year:</strong> ${profileData.education.year || 'Not set'}</div>
+                        <h2 class="profile-name">${profileData.personal.name || 'Unnamed'}</h2>
+                        <div class="profile-section">
+                            <h2>Personal Details</h2>
+                            <p><strong>Email:</strong> ${profileData.personal.email || 'Not set'}</p>
+                            <p><strong>Gender:</strong> ${profileData.personal.gender || 'Not set'}</p>
+                            <p><strong>Location:</strong> ${profileData.personal.location || 'Not set'}</p>
+                            <p><strong>LinkedIn:</strong> <a href="${profileData.personal.linkedin || '#'}" target="_blank">${profileData.personal.linkedin || 'Not set'}</a></p>
+                        </div>
+                        <div class="profile-section">
+                            <h2>Profiles</h2>
+                            <p><strong>GitHub:</strong> ${profileData.profiles?.github?.username ? `${profileData.profiles.github.username} (Repos: ${profileData.profiles.github.details?.repos || 0})` : 'Not set'}</p>
+                            <p><strong>Codeforces:</strong> ${profileData.profiles?.codeforces?.username ? `${profileData.profiles.codeforces.username} (Rating: ${profileData.profiles.codeforces.details?.rating || 'N/A'})` : 'Not set'}</p>
+                            <p><strong>LeetCode:</strong> ${profileData.profiles?.leetcode?.username ? `${profileData.profiles.leetcode.username} (Solved: ${profileData.profiles.leetcode.details?.totalSolved || 0})` : 'Not set'}</p>
+                        </div>
+                        <div class="profile-section">
+                            <h2>Educational Details</h2>
+                            <p><strong>College:</strong> ${profileData.education.college || 'Not set'}</p>
+                            <p><strong>Degree:</strong> ${profileData.education.degree || 'Not set'}</p>
+                            <p><strong>Branch:</strong> ${profileData.education.branch || 'Not set'}</p>
+                            <p><strong>Year:</strong> ${profileData.education.year || 'Not set'}</p>
+                        </div>
+                        <div class="profile-section">
+                            <h2>Skills & Experience</h2>
+                            <p><strong>Skills:</strong> ${profileData.skills || 'Not set'}</p>
+                            <p><strong>Experience:</strong> ${profileData.experience || 'Not set'}</p>
+                        </div>
+                        <div class="bottom-section">
+                            <div class="profile-section">
+                                <h2>Availability</h2>
+                                <p><strong>Hours/Week:</strong> ${profileData.availability?.hours || 'Not set'}</p>
+                                <p><strong>Work Time:</strong> ${profileData.availability?.worktime || 'Not set'}</p>
+                                <p><strong>Remote:</strong> ${profileData.availability?.remote || 'Not set'}</p>
+                                <p><strong>Duration:</strong> ${profileData.availability?.duration || 'Not set'}</p>
+                            </div>
+                            <div class="profile-section">
+                                <h2>Portfolio</h2>
+                                <ul>${
+                                    profileData.portfolio && profileData.portfolio.length > 0 
+                                    ? profileData.portfolio.map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`).join('')
+                                    : '<li>Not set</li>'
+                                }</ul>
+                            </div>
+                            <div class="profile-section">
+                                <h2>Preferences</h2>
+                                <p><strong>Roles:</strong> ${profileData.preferences?.roles || 'Not set'}</p>
+                                <p><strong>Why:</strong> ${profileData.preferences?.why || 'Not set'}</p>
+                            </div>
+                            <div class="profile-section">
+                                <h2>Soft Skills</h2>
+                                <p><strong>Communication:</strong> ${profileData.softSkills?.communication || 'Not set'}</p>
+                                <p><strong>Deadlines:</strong> ${profileData.softSkills?.deadlines || 'Not set'}</p>
+                            </div>
                         </div>
                     `;
                     profilePopup.classList.add('active');
@@ -681,5 +763,5 @@
         // Initial load
         aiSearch(1);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91fb5a8aac66ed86',t:'MTc0MTg2NzA0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9200bf858f0bbcdf',t:'MTc0MTkyMzYxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
