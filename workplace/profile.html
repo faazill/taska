@@ -4,190 +4,208 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taska Elite - Your Profile</title>
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/global.css">
-    <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="../css/overview.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { 
-            background: #ffffff; 
+            background: #F9FAFB; 
             min-height: 100vh; 
-            overflow-x: hidden; 
-            font-family: 'Poppins', sans-serif; 
+            color: #6B7280; 
+            overflow-x: hidden;
         }
         .navbar { 
-            background: #ffffff; 
-            border-bottom: 1px solid #e0e0e0; 
-            padding: 1rem; 
+            background: #FFFFFF; 
+            padding: 1.5rem 2rem; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
         }
+        .navbar .logo { 
+            font-size: 2rem; 
+            font-weight: 600; 
+            color: #374151; 
+            transition: transform 0.3s ease; 
+        }
+        .navbar .logo:hover { transform: scale(1.05); }
         .nav-menu { 
             display: flex; 
-            gap: 1.5rem; 
+            gap: 2rem; 
             list-style: none; 
         }
         .nav-menu a { 
             text-decoration: none; 
-            color: #2c3e50; 
+            color: #6B7280; 
             font-weight: 400; 
+            position: relative; 
+            transition: all 0.3s ease; 
         }
-        .nav-menu a.active { 
-            font-weight: 600; 
-            color: #0000ff; 
+        .nav-menu a::after { 
+            content: ''; 
+            position: absolute; 
+            width: 0; 
+            height: 2px; 
+            bottom: -5px; 
+            left: 0; 
+            background: #374151; 
+            transition: width 0.3s ease; 
         }
+        .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+        .nav-menu a:hover, .nav-menu a.active { color: #374151; font-weight: 600; }
+        .hamburger { display: none; font-size: 1.5rem; cursor: pointer; color: #374151; }
         .dashboard-content { 
-            padding: 2rem; 
-            display: grid; 
-            place-items: center; 
+            padding: 3rem 2rem; 
+            animation: fadeIn 0.5s ease-in; 
         }
         .profile-container { 
-            background: #ffffff; 
-            border: 1px solid #e0e0e0; 
-            border-radius: 10px; 
+            background: #FFFFFF; 
             width: 100%; 
-            max-width: 700px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 2rem; 
             padding: 2rem; 
-            display: grid; 
-            gap: 1.5rem; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); 
         }
-        .profile-header { 
-            text-align: center; 
-        }
-        .profile-header h1 { 
-            font-size: 2rem; 
-            color: #2c3e50; 
-            margin: 0; 
-            text-transform: uppercase; 
-        }
-        .profile-avatar { 
-            width: 120px; 
-            height: 120px; 
-            border-radius: 50%; 
-            border: 3px solid #3498db; 
-            margin: 0 auto 1rem; 
-            background: #3498db; 
-            color: #ffffff; 
-            display: grid; 
-            place-items: center; 
-            font-size: 3rem; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-        }
-        .details-grid { 
-            background: #f9f9f9; 
-            border: 1px solid #e0e0e0; 
-            border-radius: 10px; 
+        .details-section { 
+            background: #E0E7FF; 
+            border-radius: 12px; 
             padding: 1.5rem; 
-            display: grid; 
-            gap: 0.8rem; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
         }
-        .details-grid h2 { 
+        .details-section:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1); 
+        }
+        .details-section h2 { 
             font-size: 1.5rem; 
-            color: #2c3e50; 
-            margin-bottom: 0.5rem; 
+            font-weight: 600; 
+            margin-bottom: 1rem; 
+            color: #374151; 
+        }
+        .personal-details { grid-column: 1 / 2; grid-row: 1 / 2; }
+        .profile-name { 
+            font-size: 2.5rem; 
+            font-weight: 600; 
+            color: #374151; 
+            margin-bottom: 1rem; 
+            animation: slideIn 0.5s ease; 
         }
         .details-grid p { 
-            margin: 0; 
             font-size: 1rem; 
-            color: #34495e; 
-            display: grid; 
-            grid-template-columns: 150px 1fr; 
+            color: #6B7280; 
+            display: flex; 
+            gap: 0.5rem; 
+            margin-bottom: 0.8rem; 
         }
         .details-grid strong { 
-            color: #2c3e50; 
+            color: #374151; 
             font-weight: 600; 
+            min-width: 120px; 
+        }
+        .details-grid ul { 
+            list-style: none; 
+            padding-left: 0; 
+        }
+        .details-grid ul li { 
+            font-size: 0.95rem; 
+            color: #6B7280; 
+            margin-bottom: 0.5rem; 
+        }
+        .details-grid a { 
+            color: #374151; 
+            text-decoration: underline; 
+            transition: opacity 0.3s ease; 
+        }
+        .details-grid a:hover { opacity: 0.7; }
+        .profiles { grid-column: 2 / 3; grid-row: 1 / 2; }
+        .educational-details { grid-column: 1 / 2; grid-row: 2 / 3; }
+        .skills-experience { grid-column: 2 / 3; grid-row: 2 / 3; }
+        .bottom-section { 
+            grid-column: 1 / 3; 
+            grid-row: 3 / 4; 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 1.5rem; 
         }
         .profile-actions { 
+            grid-column: 1 / 3; 
             text-align: center; 
+            margin-top: 2rem; 
         }
         .edit-btn { 
             display: inline-block; 
-            padding: 0.8rem 2rem; 
-            background: #3498db; 
-            color: #ffffff; 
+            padding: 0.8rem 2.5rem; 
+            background: #374151; 
+            color: #FFFFFF; 
             text-decoration: none; 
-            border-radius: 10px; 
+            border-radius: 8px; 
             font-size: 1rem; 
+            font-weight: 600; 
+            transition: all 0.3s ease; 
+        }
+        .edit-btn:hover { 
+            background: #4B5563; 
+            transform: scale(1.05); 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
         }
         footer { 
-            background: #ffffff; 
+            background: #FFFFFF; 
             padding: 1rem; 
             text-align: center; 
-            border-top: 1px solid #e0e0e0; 
-            position: fixed; 
-            bottom: 0; 
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); 
             width: 100%; 
+            color: #6B7280; 
         }
         footer a { 
-            color: #3498db; 
-            text-decoration: none; 
+            color: #374151; 
+            text-decoration: underline; 
+            transition: opacity 0.3s ease; 
         }
-        /* Responsive Styles */
+        footer a:hover { opacity: 0.7; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
         @media (max-width: 768px) {
-            .navbar .nav-menu {
-                display: none;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                right: 0;
-                background: #ffffff;
-                flex-direction: column;
-                padding: 1rem;
-                border-top: 1px solid #e0e0e0;
-            }
-            .navbar .nav-menu.active {
-                display: flex;
-            }
-            .navbar .hamburger {
-                display: block;
-            }
-            .contact { display: block; }
-            .contact-avatar { display: none; }
-            .chat-area.active { 
-                position: fixed; 
+            .navbar { padding: 1rem; }
+            .nav-menu { display: none; }
+            .nav-menu.active { 
+                display: flex; 
+                flex-direction: column; 
+                position: absolute; 
                 top: 60px; 
                 left: 0; 
-                width: 100%; 
-                height: calc(100% - 60px); 
-                z-index: 999; 
-                border-radius: 0; 
+                right: 0; 
+                background: #FFFFFF; 
+                padding: 1rem; 
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); 
             }
-            .chat-header .back-btn { display: block; }
-            .chat-messages { max-height: calc(100vh - 200px); }
-        }
-        @media (min-width: 769px) {
-            .chat-interface { flex-direction: row; gap: 2rem; padding: 1.8rem; }
-            .sidebar { flex: 1; max-width: 320px; }
-            .chat-area { flex: 2; }
-            .contact { display: flex; align-items: center; }
-            .contact-avatar { 
-                display: flex; 
-                width: 40px; 
-                height: 40px; 
-                border-radius: 50%; 
-                background: #e5e5e5; 
-                color: #333333; 
-                align-items: center; 
-                justify-content: center; 
-                font-size: 1.2rem; 
-                margin-right: 1rem; 
+            .hamburger { display: block; }
+            .profile-container { 
+                grid-template-columns: 1fr; 
+                padding: 1.5rem; 
             }
+            .personal-details, .profiles, .educational-details, .skills-experience { grid-column: 1 / 2; }
+            .personal-details { grid-row: 1 / 2; }
+            .profiles { grid-row: 2 / 3; }
+            .educational-details { grid-row: 3 / 4; }
+            .skills-experience { grid-row: 4 / 5; }
+            .bottom-section { 
+                grid-column: 1 / 2; 
+                grid-row: 5 / 6; 
+                grid-template-columns: 1fr; 
+            }
+            .profile-actions { grid-column: 1 / 2; }
+            .details-grid p { flex-direction: column; }
+            .details-grid strong { min-width: auto; }
         }
     </style>
 </head>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const hamburger = document.querySelector('.navbar .hamburger');
-        const navMenu = document.querySelector('.navbar .nav-menu');
-        hamburger.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
-    });
-</script>
 <body>
     <nav class="navbar">
         <div class="logo">Taska Elite</div>
@@ -204,32 +222,78 @@
 
     <main class="dashboard-content">
         <div class="profile-container">
-            <div class="profile-header">
-                <h1>Your Profile</h1>
-                <div class="profile-avatar" id="profile-avatar"></div>
-            </div>
-
-            <div class="details-grid">
+            <div class="details-section personal-details">
                 <h2>Personal Details</h2>
-                <p><strong>Name:</strong> <span id="name">Loading...</span></p>
-                <p><strong>Email:</strong> <span id="email">Loading...</span></p>
-                <p><strong>Location:</strong> <span id="location">Loading...</span></p>
-                <p><strong>Hobbies:</strong> <span id="hobbies">Loading...</span></p>
-                <p><strong>Bio:</strong> <span id="bio">Loading...</span></p>
+                <div class="profile-name" id="profile-name">Loading...</div>
+                <div class="details-grid">
+                    <p><strong>Email:</strong> <span id="email">Loading...</span></p>
+                    <p><strong>WhatsApp:</strong> <span id="whatsapp">Loading...</span></p>
+                    <p><strong>Gender:</strong> <span id="gender">Loading...</span></p>
+                    <p><strong>Location:</strong> <span id="location">Loading...</span></p>
+                    <p><strong>LinkedIn:</strong> <a href="#" id="linkedin" target="_blank">Loading...</a></p>
+                </div>
             </div>
 
-            <div class="details-grid">
+            <div class="details-section profiles">
+                <h2>Profiles</h2>
+                <div class="details-grid">
+                    <p><strong>GitHub:</strong> <span id="github">Loading...</span></p>
+                    <p><strong>Codeforces:</strong> <span id="codeforces">Loading...</span></p>
+                    <p><strong>LeetCode:</strong> <span id="leetcode">Loading...</span></p>
+                </div>
+            </div>
+
+            <div class="details-section educational-details">
                 <h2>Educational Details</h2>
-                <p><strong>College:</strong> <span id="college">Loading...</span></p>
-                <p><strong>Degree:</strong> <span id="degree">Loading...</span></p>
-                <p><strong>Area of Study:</strong> <span id="areaOfStudy">Loading...</span></p>
-                <p><strong>Student Type:</strong> <span id="type">Loading...</span></p>
+                <div class="details-grid">
+                    <p><strong>College:</strong> <span id="college">Loading...</span></p>
+                    <p><strong>Degree:</strong> <span id="degree">Loading...</span></p>
+                    <p><strong>Branch:</strong> <span id="branch">Loading...</span></p>
+                    <p><strong>Year:</strong> <span id="year">Loading...</span></p>
+                </div>
             </div>
 
-            <div class="details-grid">
-                <h2>Career Interests</h2>
-                <p><strong>Skills:</strong> <span id="skills">Loading...</span></p>
-                <p><strong>Interested Profession:</strong> <span id="tarprofession">Loading...</span></p>
+            <div class="details-section skills-experience">
+                <h2>Skills & Experience</h2>
+                <div class="details-grid">
+                    <p><strong>Skills:</strong> <span id="skills">Loading...</span></p>
+                    <p><strong>Experience:</strong> <span id="experience">Loading...</span></p>
+                </div>
+            </div>
+
+            <div class="bottom-section">
+                <div class="details-section">
+                    <h2>Availability</h2>
+                    <div class="details-grid">
+                        <p><strong>Hours/Week:</strong> <span id="hours">Loading...</span></p>
+                        <p><strong>Work Time:</strong> <span id="worktime">Loading...</span></p>
+                        <p><strong>Remote:</strong> <span id="remote">Loading...</span></p>
+                        <p><strong>Duration:</strong> <span id="duration">Loading...</span></p>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <h2>Portfolio</h2>
+                    <div class="details-grid">
+                        <ul id="portfolio"></ul>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <h2>Preferences</h2>
+                    <div class="details-grid">
+                        <p><strong>Roles:</strong> <span id="roles">Loading...</span></p>
+                        <p><strong>Why:</strong> <span id="why">Loading...</span></p>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <h2>Soft Skills</h2>
+                    <div class="details-grid">
+                        <p><strong>Communication:</strong> <span id="communication">Loading...</span></p>
+                        <p><strong>Deadlines:</strong> <span id="deadlines">Loading...</span></p>
+                    </div>
+                </div>
             </div>
 
             <div class="profile-actions">
@@ -239,7 +303,7 @@
     </main>
 
     <footer>
-        <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
+        <p>© 2025 Taska Elite. All rights reserved. | <a href="#">Privacy Policy</a></p>
     </footer>
 
     <script type="module">
@@ -269,25 +333,70 @@
             loadProfileData();
         }
 
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+        });
+
         async function loadProfileData() {
             try {
                 const userRef = ref(db, `studentslist/${userId}`);
                 const snapshot = await get(userRef);
                 if (snapshot.exists()) {
                     const data = snapshot.val();
-                    const name = data.name || 'Not set';
-                    document.getElementById('name').textContent = name;
-                    document.getElementById('email').textContent = data.email || 'Not set';
-                    document.getElementById('location').textContent = data.location || 'Not set';
-                    document.getElementById('hobbies').textContent = data.hobbies || 'Not set';
-                    document.getElementById('bio').textContent = data.bio || 'Not set';
-                    document.getElementById('college').textContent = data.college || 'Not set';
-                    document.getElementById('degree').textContent = data.degree || 'Not set';
-                    document.getElementById('areaOfStudy').textContent = data.areaOfStudy || 'Not set';
-                    document.getElementById('type').textContent = data.type || 'Not set';
+
+                    // Personal Details
+                    const name = data.personal?.name || 'Not set';
+                    document.getElementById('profile-name').textContent = name;
+                    document.getElementById('email').textContent = data.personal?.email || 'Not set';
+                    document.getElementById('whatsapp').textContent = data.personal?.whatsapp || 'Not set';
+                    document.getElementById('gender').textContent = data.personal?.gender || 'Not set';
+                    document.getElementById('location').textContent = data.personal?.location || 'Not set';
+                    const linkedin = data.personal?.linkedin || 'Not set';
+                    document.getElementById('linkedin').textContent = linkedin;
+                    document.getElementById('linkedin').href = linkedin.startsWith('http') ? linkedin : '#';
+
+                    // Educational Details
+                    document.getElementById('college').textContent = data.education?.college || 'Not set';
+                    document.getElementById('degree').textContent = data.education?.degree || 'Not set';
+                    document.getElementById('branch').textContent = data.education?.branch || 'Not set';
+                    document.getElementById('year').textContent = data.education?.year || 'Not set';
+
+                    // Skills & Experience
                     document.getElementById('skills').textContent = data.skills || 'Not set';
-                    document.getElementById('tarprofession').textContent = data.tarprofession || 'Not set';
-                    document.getElementById('profile-avatar').textContent = name.charAt(0);
+                    document.getElementById('experience').textContent = data.experience || 'Not set';
+
+                    // Profiles
+                    const github = data.profiles?.github;
+                    document.getElementById('github').textContent = github?.username ? `${github.username} (Repos: ${github.details?.repos || 0})` : 'Not set';
+                    const codeforces = data.profiles?.codeforces;
+                    document.getElementById('codeforces').textContent = codeforces?.username ? `${codeforces.username} (Rating: ${codeforces.details?.rating || 'N/A'})` : 'Not set';
+                    const leetcode = data.profiles?.leetcode;
+                    document.getElementById('leetcode').textContent = leetcode?.username ? `${leetcode.username} (Solved: ${leetcode.details?.totalSolved || 0})` : 'Not set';
+
+                    // Availability
+                    document.getElementById('hours').textContent = data.availability?.hours || 'Not set';
+                    document.getElementById('worktime').textContent = data.availability?.worktime || 'Not set';
+                    document.getElementById('remote').textContent = data.availability?.remote || 'Not set';
+                    document.getElementById('duration').textContent = data.availability?.duration || 'Not set';
+
+                    // Portfolio
+                    const portfolioList = document.getElementById('portfolio');
+                    const portfolio = data.portfolio || [];
+                    portfolioList.innerHTML = portfolio.length > 0 
+                        ? portfolio.map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`).join('')
+                        : '<li>Not set</li>';
+
+                    // Preferences
+                    document.getElementById('roles').textContent = data.preferences?.roles || 'Not set';
+                    document.getElementById('why').textContent = data.preferences?.why || 'Not set';
+
+                    // Soft Skills
+                    document.getElementById('communication').textContent = data.softSkills?.communication || 'Not set';
+                    document.getElementById('deadlines').textContent = data.softSkills?.deadlines || 'Not set';
                 } else {
                     alert("No profile data found. Please update your profile.");
                 }

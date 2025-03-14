@@ -11,15 +11,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            background: #fff;
-            color: #333;
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            padding-bottom: 60px;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { 
+            background: #F9FAFB; 
+            min-height: 100vh; 
+            color: #6B7280; 
+            padding-bottom: 60px; 
         }
 
+        /* Navbar styles remain unchanged from the first page */
         .navbar {
             background: rgba(255, 255, 255, 0.95);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -29,13 +29,11 @@
             justify-content: space-between;
             align-items: center;
         }
-
         .logo {
             font-size: 1.5rem;
             font-weight: 600;
             color: #2c3e50;
         }
-
         .nav-menu {
             display: flex;
             gap: 1.5rem;
@@ -43,411 +41,18 @@
             margin: 0;
             padding: 0;
         }
-
         .nav-menu a {
             color: #2c3e50;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
         }
-
         .nav-menu a:hover, .nav-menu a.active {
             color: #0000ff;
         }
-
         .hamburger {
             display: none;
         }
-
-        .dark-mode-toggle {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-
-        .dashboard-content {
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .dashboard-section h1 {
-            font-size: 2rem;
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
-        }
-
-        .dashboard-section p {
-            font-size: 1rem;
-            color: #666;
-            margin-bottom: 2rem;
-        }
-
-        .filter-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-            background: #fafafa;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            border: 1px solid #eee;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .filter-group label {
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
-        }
-
-        .custom-input, .custom-dropdown {
-            width: 100%;
-            padding: 0.85rem;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            background: #fff;
-            color: #333;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .custom-input:focus, .custom-dropdown:focus {
-            outline: none;
-            border-color: #888;
-            box-shadow: 0 0 5px rgba(136, 136, 136, 0.2);
-        }
-
-        .apply-filter-btn {
-            padding: 0.85rem 2rem;
-            background: #555;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 1rem;
-            transition: background 0.3s ease, transform 0.1s ease;
-            align-self: flex-end;
-        }
-
-        .apply-filter-btn:hover {
-            background: #444;
-            transform: translateY(-1px);
-        }
-
-        .apply-filter-btn:active {
-            transform: translateY(1px);
-        }
-
-        /* Loading Animation */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1001;
-        }
-
-        .loader {
-            width: 60px;
-            height: 60px;
-            border: 5px solid #3498db;
-            border-top: 5px solid transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            position: relative;
-        }
-
-        .loader::before {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            right: 10px;
-            bottom: 10px;
-            border: 5px solid #2ecc71;
-            border-top: 5px solid transparent;
-            border-radius: 50%;
-            animation: spin 1.5s linear infinite reverse;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Updated Student Card Styles */
-        .students-list {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .student-card {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .student-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .student-info h3 {
-            font-size: 1.4rem;
-            color: #2c3e50;
-            margin: 0 0 0.5rem 0;
-        }
-
-        .student-info p {
-            font-size: 1rem;
-            color: #666;
-            margin: 0;
-            line-height: 1.5;
-        }
-
-        .student-info p strong {
-            color: #2c3e50;
-        }
-
-        .student-actions {
-            margin-top: 1rem;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .connect-btn {
-            padding: 0.6rem 1.2rem;
-            background: #3498db; /* Blue for Connect */
-            color: #fff;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        .connect-btn.sent {
-            background: #2ecc71; /* Green for Connection Sent */
-        }
-
-        .connect-btn.approve {
-            background: #f1c40f; /* Yellow for Approve Request */
-        }
-
-        .connect-btn.connected {
-            background: #95a5a6; /* Grey for Connected */
-            cursor: default;
-        }
-
-        .connect-btn:hover:not(.sent):not(.approve):not(.connected) {
-            background: #2980b9;
-            transform: scale(1.05);
-        }
-
-        .connect-btn.sent:hover {
-            background: #27ae60;
-            transform: scale(1.05);
-        }
-
-        .connect-btn.approve:hover {
-            background: #e1b107;
-            transform: scale(1.05);
-        }
-
-        .connect-btn.connected:hover {
-            background: #95a5a6; /* No hover effect for connected */
-            transform: none;
-        }
-
-        .view-profile {
-            color: #3498db;
-            cursor: pointer;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .view-profile:hover {
-            color: #2980b9;
-        }
-
-        /* Pagination Styles */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .pagination-btn {
-            width: 40px;
-            height: 40px;
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 50%;
-            color: #2c3e50;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
-        }
-
-        .pagination-btn:hover {
-            background: #3498db;
-            color: #fff;
-            transform: scale(1.1);
-        }
-
-        .pagination-btn:disabled {
-            background: #f0f0f0;
-            color: #999;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .pagination-number {
-            width: 40px;
-            height: 40px;
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #2c3e50;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
-        }
-
-        .pagination-number.active {
-            background: #3498db;
-            color: #fff;
-            border-color: #3498db;
-        }
-
-        .pagination-number:hover:not(.active) {
-            background: #ecf0f1;
-            transform: scale(1.1);
-        }
-
-        /* Updated Profile Popup Styles */
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 999;
-        }
-
-        .overlay.active {
-            display: block;
-        }
-
-        .profile-popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.95);
-            background: #fff;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            width: 90%;
-            max-width: 450px;
-            z-index: 1000;
-            transition: transform 0.3s ease;
-        }
-
-        .profile-popup.active {
-            display: block;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .profile-popup h2 {
-            font-size: 1.8rem;
-            color: #2c3e50;
-            margin: 0 0 1.5rem 0;
-            text-align: center;
-        }
-
-        .profile-details {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .profile-detail {
-            background: #f9f9f9;
-            padding: 0.75rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            color: #666;
-        }
-
-        .profile-detail strong {
-            color: #2c3e50;
-            font-weight: 500;
-        }
-
-        .profile-popup .close-btn {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #999;
-        }
-
-        .profile-popup .close-btn:hover {
-            color: #666;
-        }
-
-        footer {
-            background: #fff;
-            padding: 1rem;
-            text-align: center;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            color: #333;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-            border-top: 1px solid #e0e0e0;
-        }
-
-        footer a {
-            color: #666;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            color: #444;
-        }
-        /* Responsive Styles */
         @media (max-width: 768px) {
             .navbar .nav-menu {
                 display: none;
@@ -466,37 +71,300 @@
             .navbar .hamburger {
                 display: block;
             }
-            .contact { display: block; }
-            .contact-avatar { display: none; }
-            .chat-area.active { 
-                position: fixed; 
-                top: 60px; 
-                left: 0; 
-                width: 100%; 
-                height: calc(100% - 60px); 
-                z-index: 999; 
-                border-radius: 0; 
-            }
-            .chat-header .back-btn { display: block; }
-            .chat-messages { max-height: calc(100vh - 200px); }
         }
-        @media (min-width: 769px) {
-            .chat-interface { flex-direction: row; gap: 2rem; padding: 1.8rem; }
-            .sidebar { flex: 1; max-width: 320px; }
-            .chat-area { flex: 2; }
-            .contact { display: flex; align-items: center; }
-            .contact-avatar { 
-                display: flex; 
-                width: 40px; 
-                height: 40px; 
-                border-radius: 50%; 
-                background: #e5e5e5; 
-                color: #333333; 
-                align-items: center; 
-                justify-content: center; 
-                font-size: 1.2rem; 
-                margin-right: 1rem; 
-            }
+
+        /* Remaining styles from the second page */
+        .dashboard-content { 
+            padding: 3rem 2rem; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            animation: fadeIn 0.5s ease-in; 
+        }
+        .dashboard-section h1 { 
+            font-size: 2.5rem; 
+            font-weight: 600; 
+            color: #374151; 
+            margin-bottom: 0.5rem; 
+        }
+        .dashboard-section p { 
+            font-size: 1.1rem; 
+            color: #6B7280; 
+            margin-bottom: 2rem; 
+        }
+        .search-container { 
+            background: #FFFFFF; 
+            padding: 2rem; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); 
+            margin-bottom: 2rem; 
+            transition: transform 0.3s ease; 
+        }
+        .search-container:hover { transform: translateY(-5px); }
+        .search-box { 
+            display: flex; 
+            align-items: center; 
+            gap: 1rem; 
+            background: #E0E7FF; 
+            padding: 0.5rem 1rem; 
+            border-radius: 12px; 
+            border: 1px solid #D1D5DB; 
+            transition: all 0.3s ease; 
+        }
+        .search-box:focus-within { 
+            border-color: #4B5563; 
+            box-shadow: 0 0 0 3px rgba(75, 85, 99, 0.2); 
+        }
+        .search-box i { 
+            color: #374151; 
+            font-size: 1.2rem; 
+        }
+        .search-input { 
+            flex: 1; 
+            border: none; 
+            background: transparent; 
+            padding: 1rem; 
+            font-size: 1.1rem; 
+            color: #374151; 
+            outline: none; 
+        }
+        .search-btn { 
+            padding: 0.8rem 2rem; 
+            background: #374151; 
+            color: #FFFFFF; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            transition: all 0.3s ease; 
+        }
+        .search-btn:hover { 
+            background: #4B5563; 
+            transform: scale(1.05); 
+        }
+        .loading-overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(249, 250, 251, 0.9); 
+            display: none; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 1001; 
+        }
+        .loader { 
+            width: 60px; 
+            height: 60px; 
+            border: 5px solid #374151; 
+            border-top: 5px solid transparent; 
+            border-radius: 50%; 
+            animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        .students-list { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 1.5rem; 
+            margin-bottom: 2rem; 
+        }
+        .student-card { 
+            background: #FFFFFF; 
+            border-radius: 12px; 
+            padding: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
+        .student-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); 
+        }
+        .student-info h3 { 
+            font-size: 1.5rem; 
+            color: #374151; 
+            margin-bottom: 0.5rem; 
+        }
+        .student-info p { 
+            font-size: 1rem; 
+            color: #6B7280; 
+            line-height: 1.5; 
+        }
+        .student-info p strong { 
+            color: #374151; 
+        }
+        .student-actions { 
+            margin-top: 1rem; 
+            display: flex; 
+            gap: 1rem; 
+            align-items: center; 
+        }
+        .connect-btn { 
+            padding: 0.6rem 1.5rem; 
+            background: #374151; 
+            color: #FFFFFF; 
+            border: none; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            font-weight: 500; 
+            transition: all 0.3s ease; 
+        }
+        .connect-btn.sent { background: #2ECC71; }
+        .connect-btn.approve { background: #F1C40F; }
+        .connect-btn.connected { background: #6B7280; cursor: default; }
+        .connect-btn:hover:not(.sent):not(.approve):not(.connected) { 
+            background: #4B5563; 
+            transform: scale(1.05); 
+        }
+        .connect-btn.sent:hover { background: #27AE60; transform: scale(1.05); }
+        .connect-btn.approve:hover { background: #E1B107; transform: scale(1.05); }
+        .view-profile { 
+            color: #374151; 
+            cursor: pointer; 
+            font-weight: 500; 
+            text-decoration: underline; 
+            transition: opacity 0.3s ease; 
+        }
+        .view-profile:hover { opacity: 0.7; }
+        .pagination { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 1rem; 
+            margin-top: 2rem; 
+        }
+        .pagination-btn { 
+            width: 40px; 
+            height: 40px; 
+            background: #FFFFFF; 
+            border: 1px solid #D1D5DB; 
+            border-radius: 50%; 
+            color: #374151; 
+            font-size: 1.2rem; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+        }
+        .pagination-btn:hover { 
+            background: #374151; 
+            color: #FFFFFF; 
+            transform: scale(1.1); 
+        }
+        .pagination-btn:disabled { 
+            background: #E5E7EB; 
+            color: #6B7280; 
+            cursor: not-allowed; 
+            transform: none; 
+        }
+        .pagination-number { 
+            width: 40px; 
+            height: 40px; 
+            background: #FFFFFF; 
+            border: 1px solid #D1D5DB; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: #374151; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+        }
+        .pagination-number.active { 
+            background: #374151; 
+            color: #FFFFFF; 
+            border-color: #374151; 
+        }
+        .pagination-number:hover:not(.active) { 
+            background: #E0E7FF; 
+            transform: scale(1.1); 
+        }
+        .overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.3); 
+            z-index: 999; 
+        }
+        .overlay.active { display: block; }
+        .profile-popup { 
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%) scale(0.95); 
+            background: #FFFFFF; 
+            padding: 2rem; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
+            width: 90%; 
+            max-width: 450px; 
+            z-index: 1000; 
+            transition: transform 0.3s ease; 
+        }
+        .profile-popup.active { 
+            display: block; 
+            transform: translate(-50%, -50%) scale(1); 
+        }
+        .profile-popup h2 { 
+            font-size: 1.8rem; 
+            color: #374151; 
+            margin: 0 0 1.5rem 0; 
+            text-align: center; 
+        }
+        .profile-details { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 0.75rem; 
+        }
+        .profile-detail { 
+            background: #E0E7FF; 
+            padding: 0.75rem; 
+            border-radius: 8px; 
+            font-size: 1rem; 
+            color: #6B7280; 
+        }
+        .profile-detail strong { 
+            color: #374151; 
+            font-weight: 500; 
+        }
+        .profile-popup .close-btn { 
+            position: absolute; 
+            top: 0.5rem; 
+            right: 0.5rem; 
+            background: none; 
+            border: none; 
+            font-size: 1.5rem; 
+            cursor: pointer; 
+            color: #6B7280; 
+        }
+        .profile-popup .close-btn:hover { color: #374151; }
+        footer { 
+            background: #FFFFFF; 
+            padding: 1rem; 
+            text-align: center; 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            color: #6B7280; 
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); 
+        }
+        footer a { 
+            color: #374151; 
+            text-decoration: underline; 
+            transition: opacity 0.3s ease; 
+        }
+        footer a:hover { opacity: 0.7; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @media (max-width: 768px) {
+            .students-list { grid-template-columns: 1fr; }
+            .search-box { flex-direction: column; align-items: stretch; }
+            .search-btn { margin-top: 1rem; }
         }
     </style>
 </head>
@@ -525,35 +393,17 @@
 
     <main class="dashboard-content">
         <section class="dashboard-section">
-            <br><br><br>
+            <br>
+            <br>
             <h1>Explore IIT Talent</h1>
-            <p>Connect with top IIT prodigies to collaborate and share knowledge.</p>
+            <p>Find and connect with top IIT prodigies using AI-powered search.</p>
 
-            <div class="filter-options">
-                <div class="filter-group">
-                    <label for="search-input">Search by Name</label>
-                    <input type="text" id="search-input" class="custom-input" placeholder="e.g., Priya">
-                </div>
-                <div class="filter-group">
-                    <label for="college">College</label>
-                    <select id="college" class="custom-dropdown">
-                        <option value="all">All Colleges</option>
-                        <option value="iit bombay">IIT Bombay</option>
-                        <option value="iit delhi">IIT Delhi</option>
-                        <option value="iit madras">IIT Madras</option>
-                        <option value="iit kanpur">IIT Kanpur</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="type">Type</label>
-                    <select id="type" class="custom-dropdown">
-                        <option value="all">All Types</option>
-                        <option value="fresher">Fresher</option>
-                        <option value="sophomore">Sophomore</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <button class="apply-filter-btn" onclick="applyFilters(1)">Search</button>
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="search-input" id="ai-search-input" 
+                           placeholder="e.g., IIT Delhi B.Tech Applied Mechanics student with Python skill">
+                    <button class="search-btn" onclick="aiSearch(1)">Search</button>
                 </div>
             </div>
 
@@ -566,7 +416,7 @@
     </main>
 
     <footer>
-        <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
+        <p>© 2025 Taska Elite. All rights reserved. | <a href="#">Privacy Policy</a></p>
     </footer>
 
     <!-- Profile Popup -->
@@ -596,7 +446,7 @@
         const sentRequests = new Map();
         const receivedRequests = new Map();
         const connectedProfiles = new Set();
-        const itemsPerPage = 9; // 3 cards per row, 3 rows per page
+        const itemsPerPage = 9;
         let isInitialLoad = true;
 
         if (!userId) {
@@ -613,9 +463,22 @@
         const profileContent = document.getElementById('profileContent');
         const overlay = document.getElementById('overlay');
         const loadingOverlay = document.getElementById('loadingOverlay');
+        const connectSound = new Audio('../assets/ding.mp3'); // Placeholder; replace with actual sound
 
-        // Audio for connection request sound (LinkedIn-like)
-        const connectSound = new Audio('../assets/ding.mp3'); // Placeholder; replace with a suitable sound
+        onValue(studentsRef, (snapshot) => {
+            studentsData = [];
+            snapshot.forEach((childSnapshot) => {
+                const student = childSnapshot.val();
+                student.id = childSnapshot.key;
+                if (student.personal && student.education) { // Ensure new structure
+                    studentsData.push(student);
+                }
+            });
+            if (isInitialLoad) {
+                loadingOverlay.style.display = 'none';
+                isInitialLoad = false;
+            }
+        });
 
         async function checkConnectionStatus(studentId) {
             const requestsRef = ref(db, 'connection_requests');
@@ -641,21 +504,8 @@
             }
         }
 
-        onValue(studentsRef, (snapshot) => {
-            studentsData = [];
-            snapshot.forEach((childSnapshot) => {
-                const student = childSnapshot.val();
-                student.id = childSnapshot.key;
-                studentsData.push(student);
-            });
-            applyFilters(1);
-            if (isInitialLoad) {
-                loadingOverlay.style.display = 'none';
-                isInitialLoad = false;
-            }
-        });
-
-        window.applyFilters = async (page = 1) => {
+        window.aiSearch = async (page = 1) => {
+            loadingOverlay.style.display = 'flex';
             connectedProfiles.clear();
             sentRequests.clear();
             receivedRequests.clear();
@@ -663,17 +513,8 @@
                 await checkConnectionStatus(student.id);
             }
 
-            const search = document.getElementById('search-input').value.toLowerCase();
-            const college = document.getElementById('college').value;
-            const type = document.getElementById('type').value;
-
-            const filteredStudents = studentsData.filter(student => {
-                const matchesSearch = student.name.toLowerCase().includes(search);
-                const matchesCollege = college === 'all' || (student.college && student.college.toLowerCase() === college.toLowerCase());
-                const matchesType = type === 'all' || (student.type && student.type.toLowerCase() === type.toLowerCase());
-                const notConnected = !connectedProfiles.has(student.id); // Exclude connected users
-                return matchesSearch && matchesCollege && matchesType && notConnected;
-            });
+            const query = document.getElementById('ai-search-input').value.toLowerCase().trim();
+            const filteredStudents = aiFilterStudents(query);
 
             const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
             const startIndex = (page - 1) * itemsPerPage;
@@ -691,16 +532,19 @@
                 } else if (isReceived) {
                     buttonClass = 'approve';
                     buttonText = 'Approve Request';
+                } else if (connectedProfiles.has(student.id)) {
+                    buttonClass = 'connected';
+                    buttonText = 'Connected';
                 }
                 return `
                     <div class="student-card">
                         <div class="student-info">
-                            <h3>${student.name || 'Unnamed'}</h3>
-                            <p>${student.name || 'Unnamed'} from <strong>${student.college || 'Not set'}</strong> pursuing a degree in <strong>${student.branch || 'Not set'}</strong></p>
+                            <h3>${student.personal.name || 'Unnamed'}</h3>
+                            <p>${student.personal.name || 'Unnamed'} from <strong>${student.education.college || 'Not set'}</strong> pursuing a degree in <strong>${student.education.branch || 'Not set'}</strong></p>
                         </div>
                         <div class="student-actions">
                             <button class="connect-btn ${buttonClass}" 
-                                onclick="toggleConnectionRequest('${student.id}', this)">
+                                    onclick="toggleConnectionRequest('${student.id}', this)">
                                 ${buttonText}
                             </button>
                             <span class="view-profile" onclick="showProfile('${student.id}')">View Profile</span>
@@ -710,16 +554,47 @@
             }).join('');
 
             updatePagination(page, totalPages);
+            loadingOverlay.style.display = 'none';
         };
+
+        function aiFilterStudents(query) {
+            if (!query) return studentsData.filter(student => !connectedProfiles.has(student.id));
+
+            const keywords = query.split(/\s+/).map(k => k.toLowerCase());
+            const collegeMatch = keywords.find(k => k.includes('iit') || k === 'college') ? keywords.join(' ').match(/iit\s+\w+/)?.[0] : null;
+            const degreeMatch = keywords.includes('b.tech') || keywords.includes('btech') ? 'B.Tech' : null;
+            const branchMatch = keywords.find(k => /mechanics|cs|cse|ee|ece|civil|mech/.test(k)) || null;
+            const skillMatch = keywords.find(k => /python|java|cpp|c\+\+|js|javascript|ml|ai/.test(k)) || null;
+
+            return studentsData.filter(student => {
+                const notConnected = !connectedProfiles.has(student.id);
+                if (!notConnected) return false;
+
+                let matches = 0;
+                const name = student.personal.name?.toLowerCase() || '';
+                const college = student.education.college?.toLowerCase() || '';
+                const degree = student.education.degree?.toLowerCase() || '';
+                const branch = student.education.branch?.toLowerCase() || '';
+                const skills = student.skills?.toLowerCase() || '';
+
+                if (collegeMatch && college.includes(collegeMatch)) matches++;
+                if (degreeMatch && degree === degreeMatch.toLowerCase()) matches++;
+                if (branchMatch && branch.includes(branchMatch)) matches++;
+                if (skillMatch && skills.includes(skillMatch)) matches++;
+                if (keywords.some(k => name.includes(k))) matches++;
+
+                return matches > 0;
+            });
+        }
 
         function updatePagination(currentPage, totalPages) {
             pagination.innerHTML = `
-                <button class="pagination-btn" onclick="applyFilters(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>
+                <button class="pagination-btn" onclick="aiSearch(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>
                 ${Array.from({ length: totalPages }, (_, i) => `
                     <span class="pagination-number ${currentPage === i + 1 ? 'active' : ''}" 
-                        onclick="applyFilters(${i + 1})">${i + 1}</span>
+                          onclick="aiSearch(${i + 1})">${i + 1}</span>
                 `).join('')}
-                <button class="pagination-btn" onclick="applyFilters(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>
+                <button class="pagination-btn" onclick="aiSearch(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>
             `;
         }
 
@@ -745,11 +620,11 @@
                     button.classList.add('connected');
                     button.textContent = 'Connected';
                     alert('Connection request approved!');
-                    connectSound.play(); // Play sound on approval
+                    connectSound.play();
                 } catch (error) {
                     alert('Failed to approve request: ' + error.message);
                 }
-            } else {
+            } else if (!connectedProfiles.has(studentId)) {
                 const requestData = {
                     from: userId,
                     to: studentId,
@@ -761,7 +636,7 @@
                 button.classList.add('sent');
                 button.textContent = 'Connection Sent';
                 alert('Connection request sent!');
-                connectSound.play(); // Play sound on send
+                connectSound.play();
             }
         };
 
@@ -769,41 +644,28 @@
             try {
                 const studentRef = ref(db, `studentslist/${targetUserId}`);
                 const snapshot = await get(studentRef);
-                
                 if (snapshot.exists()) {
                     const profileData = snapshot.val();
                     profileContent.innerHTML = `
-                        <h2>${profileData.name || 'Unnamed'}</h2>
+                        <h2>${profileData.personal.name || 'Unnamed'}</h2>
                         <div class="profile-details">
-                            <div class="profile-detail"><strong>College:</strong> ${profileData.college || 'Not set'}</div>
-                            <div class="profile-detail"><strong>Email:</strong> ${profileData.email || 'Not set'}</div>
-                            <div class="profile-detail"><strong>Hobby:</strong> ${profileData.hobby || 'Not set'}</div>
+                            <div class="profile-detail"><strong>College:</strong> ${profileData.education.college || 'Not set'}</div>
+                            <div class="profile-detail"><strong>Email:</strong> ${profileData.personal.email || 'Not set'}</div>
                             <div class="profile-detail"><strong>Skills:</strong> ${profileData.skills || 'Not set'}</div>
-                            <div class="profile-detail"><strong>Branch:</strong> ${profileData.branch || 'Not set'}</div>
-                            <div class="profile-detail"><strong>Bio:</strong> ${profileData.bio || 'Not set'}</div>
-                            <div class="profile-detail"><strong>Type:</strong> ${profileData.type || 'Not set'}</div>
+                            <div class="profile-detail"><strong>Branch:</strong> ${profileData.education.branch || 'Not set'}</div>
+                            <div class="profile-detail"><strong>Degree:</strong> ${profileData.education.degree || 'Not set'}</div>
+                            <div class="profile-detail"><strong>Year:</strong> ${profileData.education.year || 'Not set'}</div>
                         </div>
                     `;
                     profilePopup.classList.add('active');
                     overlay.classList.add('active');
                 } else {
-                    profileContent.innerHTML = `
-                        <h2>Profile Not Found</h2>
-                        <div class="profile-details">
-                            <div class="profile-detail">No data available for this user.</div>
-                        </div>
-                    `;
+                    profileContent.innerHTML = '<h2>Profile Not Found</h2><p>No data available.</p>';
                     profilePopup.classList.add('active');
                     overlay.classList.add('active');
                 }
             } catch (error) {
-                console.error('Error fetching profile:', error);
-                profileContent.innerHTML = `
-                    <h2>Error</h2>
-                    <div class="profile-details">
-                        <div class="profile-detail">Failed to load profile: ${error.message}</div>
-                    </div>
-                `;
+                profileContent.innerHTML = `<h2>Error</h2><p>Failed to load profile: ${error.message}</p>`;
                 profilePopup.classList.add('active');
                 overlay.classList.add('active');
             }
@@ -816,7 +678,8 @@
 
         overlay.addEventListener('click', closeProfilePopup);
 
-        applyFilters(1);
+        // Initial load
+        aiSearch(1);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91fb5a8aac66ed86',t:'MTc0MTg2NzA0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91fb5a8aac66ed86',t:'MTc0MTg2NzA0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9200bf858f0bbcdf',t:'MTc0MTkyMzYxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

@@ -79,7 +79,7 @@ export function signup(userType) {
 
             // Store initial data in Realtime Database
             const list = userType === 'professional' ? 'professionalslist' : 'studentslist';
-            const userRef = ref(database, `${list}/${user.uid}`);
+            const userRef = ref(database, `${list}/${user.uid}/personal`);
             const initialData = {
                 email: user.email,
                 name: '',
