@@ -77,23 +77,26 @@ export function signup(userType) {
             console.log("Stored userId in localStorage:", user.uid); // Debug
             console.log("Stored userRole in localStorage:", userType); // Debug
 
-            // Store initial data in Realtime Database
-            const list = userType === 'professional' ? 'professionalslist' : 'studentslist';
-            const userRef = ref(database, `${list}/${user.uid}/personal`);
-            const initialData = {
-                email: user.email,
-                name: '',
-                location: '',
-                profession: '',
-                company: '',
-                experience: '',
-                skills: '',
-                education: '',
-                bio: '',
-                hobbies: '',
-                coins: 500, // Default for professionals; adjust for students if needed
-                isHiring: true // Default for professionals
-            };
+            // Determine list name
+                const list = userType === 'professional' ? 'professionalslist' : 'studentslist';
+
+                // Determine path based on userType
+                const path = userType === 'professional' 
+                    ? `${list}/${user.uid}` 
+                    : `${list}/${user.uid}/personal`;
+
+                const userRef = ref(database, path);
+
+                // Set initial data accordingly
+                const initialData = userType === 'professional'
+                    ? {
+                        email: user.email,
+                        coins: 500,         // Default for professionals
+                        isHiring: true      // Default for professionals
+                    }
+                    : {
+                        email: user.email   // Default field for students in 'personal'
+                    };
 
             set(userRef, initialData)
                 .then(() => {
