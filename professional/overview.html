@@ -388,11 +388,11 @@
                         const studentId = childSnapshot.key;
                         get(ref(db, `studentslist/${studentId}`)).then((snap) => {
                             const student = snap.val();
-                            const initial = student.name.charAt(0).toUpperCase();
+                            const initial = student.personal.name.charAt(0).toUpperCase();
                             contactList.innerHTML += `
-                                <div class="contact" onclick="loadChat('${userId}_${studentId}', '${student.name}')">
+                                <div class="contact" onclick="loadChat('${userId}_${studentId}', '${student.personal.name}')">
                                     <div class="contact-avatar">${initial}</div>
-                                    <p>${student.name}</p>
+                                    <p>${student.personal.name}</p>
                                 </div>
                             `;
                         });
@@ -472,7 +472,7 @@
                     const fileRef = storageRef(storage, `files/${fileId}`);
                     await uploadBytes(fileRef, file);
                     const fileData = {
-                        name: file.name,
+                        name: file.personal.name,
                         type: file.type,
                         uploadedBy: userId,
                         timestamp: new Date().toISOString()
@@ -483,7 +483,7 @@
                         content: fileId,
                         timestamp: new Date().toISOString(),
                         type: 'file',
-                        fileName: file.name
+                        fileName: file.personal.name
                     };
                     await push(ref(db, `chats/${selectedConnectionId}/messages`), messageData);
                 }
@@ -500,7 +500,7 @@
                 const url = await getDownloadURL(storageFileRef);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = fileData.name;
+                link.download = fileData.personal.name;
                 link.click();
             } else {
                 alert('File not found.');

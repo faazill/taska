@@ -239,9 +239,9 @@
                                 const pro = snap.val();
                                 tasksGrid.innerHTML += `
                                     <div class="task-card">
-                                        <h3>${task.name}</h3>
+                                        <h3>${task.title}</h3>
                                         <p><strong>Deadline:</strong> ${new Date(task.deadline).toLocaleDateString()}</p>
-                                        <p><strong>Coins:</strong> ${task.payment}</p>
+                                        <p><strong>Description:</strong> ${task.description}</p>
                                         <p><strong>Assigned by:</strong> ${pro.name}</p>
                                         <button class="action-btn" onclick="openRejectPopup('${taskId}', '${pro.email || 'unknown@example.com'}')">Reject Task</button>
                                     </div>
