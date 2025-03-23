@@ -3,80 +3,398 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Hire top IIT students for freelance projects and tasks.our elite IIT talent fuses human creativity with cutting-edge AI to supercharge your projects">
-    <title>Taska | Hire Elite talent from Top IITs</title>
-    <!-- PNG favicon -->
+    <meta name="description" content="Hire elite talent from top colleges like IITs, NITs, and IIITs for freelance projects and tasks. Our exceptional students fuse human creativity with cutting-edge AI to supercharge your projects">
+    <title>Taska | Hire Elite Talent from Top Colleges</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/index.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          "name": "TaskaElite",
-          "url": "https://www.taskaelite.com",
-          "logo": "https://www.taskaelite.com/assets/logo.png",
-          "sameAs": [
-            "https://www.linkedin.com/company/taskaelite", 
-            "https://www.instagram.com/taskaelite"
-          ]
-        }
-        </script>
     <style>
-        /* Inline CSS adjustments to ensure button is clickable */
-        .hero {
-            position: relative;
-            overflow: hidden;
-            height: 100vh;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
-        .hero-video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 1;
+        body {
+            background: #ffffff;
+            color: #1f2937;
+            line-height: 1.8;
         }
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3); /* Adjusted opacity for visibility */
-            z-index: 2;
-            pointer-events: none; /* Ensure overlay doesn't block clicks */
-        }
-        .hero-content {
-            position: relative;
-            z-index: 3;
-            text-align: center;
-            padding: 2rem;
-            color: #fff;
-            height: 100%;
+        .navbar {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
+            padding: 1.5rem 6%;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #60a5fa;
+            letter-spacing: -0.5px;
+        }
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            gap: 2.5rem;
+        }
+        .nav-menu li a {
+            text-decoration: none;
+            color: #4b5563;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .nav-menu li a:hover {
+            color: #60a5fa;
+        }
+        .hamburger {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #4b5563;
+        }
+        .hero {
+            background: #ffffff;
+            color: #1f2937;
+            text-align: center;
+            padding: 6rem 6%;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+        .hero p {
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #6b7280;
+        }
+        .cta-buttons {
+            display: flex;
+            gap: 1.8rem;
+            justify-content: center;
         }
         .cta-button {
-            padding: 1rem 2rem;
-            background: #3498db;
-            color: #fff;
-            border: none;
-            border-radius: 45px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            z-index: 4; /* Ensure button is above overlay */
-            pointer-events: auto; /* Explicitly enable pointer events */
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
-        .cta-button:hover {
-            background: #2980b9;
+        .cta-button.explore {
+            background: #60a5fa;
+            color: #ffffff;
+            border: none;
+        }
+        .cta-button.join {
+            background: transparent;
+            color: #60a5fa;
+            border: 2px solid #60a5fa;
+        }
+        .cta-button.explore:hover {
+            background: #3b82f6;
+        }
+        .cta-button.join:hover {
+            background: #60a5fa;
+            color: #ffffff;
+        }
+        .exclusive {
+            background: #ffffff;
+            padding: 4rem 6%;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto 4rem;
+            border: 2px solid #60a5fa;
+            border-radius: 15px;
+        }
+        .exclusive::before {
+            content: 'Exclusive Partner Service';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #60a5fa;
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            letter-spacing: 1px;
+        }
+        .exclusive h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #60a5fa;
+        }
+        .exclusive p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: #6b7280;
+        }
+        .exclusive .cta-button {
+            background: #60a5fa;
+            color: #ffffff;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .exclusive .cta-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease;
+        }
+        .exclusive .cta-button:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+        .exclusive .cta-button:hover {
+            background: #3b82f6;
+        }
+        .section {
+            padding: 4rem 6%;
+            text-align: center;
+        }
+        .section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #60a5fa;
+        }
+        .college-logos {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        .college-item img {
+            max-width: 120px;
+            height: auto;
+            filter: grayscale(70%);
+            transition: all 0.3s ease;
+        }
+        .college-item img:hover {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+        .human-ai-collab .collab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .collab-card {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid #e5e7eb;
+        }
+        .collab-card h3 {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            color: #60a5fa;
+        }
+        .icon-wrapper {
+            font-size: 2.2rem;
+            color: #60a5fa;
+        }
+        .how-it-works .timeline {
+            max-width: 1000px;
+            margin: 2rem auto;
+            position: relative;
+        }
+        .how-it-works .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #60a5fa;
+            transform: translateX(-50%);
+        }
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        .timeline-content {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            width: 45%;
+            text-align: left;
+        }
+        .timeline-content h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+        }
+        .timeline-content p {
+            font-size: 1rem;
+            color: #6b7280;
+        }
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            background: #60a5fa;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+        .why-taska {
+            background: #f9fafb;
+            padding: 4rem 6%;
+        }
+        .why-taska h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        .why-taska h2::after {
+            content: '';
+            width: 60px;
+            height: 3px;
+            background: #60a5fa;
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .why-taska .content-grid {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .why-taska .content-card {
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 15px;
+            border: 1px solid #e5e7eb;
+            width: 45%;
+            text-align: left;
+            position: relative;
+        }
+        .why-taska .content-card::before {
+            content: '';
+            width: 8px;
+            height: 100%;
+            background: #60a5fa;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 15px 0 0 15px;
+        }
+        .why-taska .content-card h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        .why-taska .content-card p {
+            font-size: 1.1rem;
+            color: #4b5563;
+        }
+        footer {
+            background: #ffffff;
+            color: #6b7280;
+            text-align: center;
+            padding: 2rem 6%;
+            border-top: 1px solid #e5e7eb;
+        }
+        .footer-links {
+            margin-top: 0.5rem;
+        }
+        .footer-links a {
+            color: #6b7280;
+            margin: 0 1rem;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: #60a5fa;
+        }
+        @media (max-width: 768px) {
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .hero p {
+                font-size: 1.1rem;
+            }
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .exclusive {
+                margin: 0 6% 4rem;
+            }
+            .how-it-works .timeline::before {
+                left: 20px;
+            }
+            .timeline-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .timeline-item:nth-child(even) {
+                flex-direction: column;
+            }
+            .timeline-content {
+                width: 100%;
+                margin-left: 40px;
+            }
+            .timeline-icon {
+                left: 0;
+                transform: none;
+            }
+            .why-taska .content-grid {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            .why-taska .content-card {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -84,314 +402,121 @@
     <nav class="navbar">
         <div class="logo">Taska Elite</div>
         <ul class="nav-menu">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            
+            
             <li><a href="login.html">Login</a></li>
         </ul>
-        <div class="hamburger">☰</div>
+        
     </nav>
 
     <main>
         <section class="hero">
-            <video autoplay muted loop playsinline class="hero-video" loading="lazy">
-                <source src="videos/campus-background.mp4.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <h1 class="animated-heading">
-                    <span>Hire IIT Prodigies to Elevate Your vision</span>
-                </h1>
-                <p>Partner with IIT’s brightest minds to streamline your projects and boost your success.</p>
-                <button class="cta-button" onclick="handleGetStarted()" aria-label="Get started">Get Started</button>
+            <h1>Hire Elite Talent to Elevate Your Vision</h1>
+            <p>Partner with top college students from institutions like IITs, NITs, and IIITs to streamline your projects and boost your success.</p>
+            <div class="cta-buttons">
+                <button class="cta-button explore" onclick="window.location.href='login.html'">Explore Talent</button>
+                <a href="login.html" class="cta-button join">Join as a Student</a>
             </div>
         </section>
 
-        
-
-        <section class="win-win-section">
-            <div class="win-win-container">
-                <div class="win-win-image">
-                    <img src="assets/pic1.png" alt="Professional pondering repetitive tasks" loading="lazy">
-                </div>
-                <div class="win-win-text">
-                    <p>Stuck doing repetitive tasks that don’t really need your level of expertise? 
-                       What if you handed them off to a prodigy eager to gain real-world experience? 
-                       You save time, they learn — it’s a win-win!</p>
-                </div>
-            </div>
+        <section class="exclusive">
+            <h2>Exclusive: Personalized Mentors</h2>
+            <p>Discover a premium service by our trusted partner: Hire elite students from IITs, NITs, and IIITs as personalized mentors for high school and higher secondary students. Unlock tailored guidance in academics, projects, and career planning from the nation’s top talent.</p>
+            <a href="contact.html" class="cta-button">Contact Us</a>
         </section>
 
-        <section class="partner-colleges">
-            <h2>Elite talents from Top colleges</h2>
+        <section class="section partner-colleges">
+            <h2>Elite Talent from Top Colleges</h2>
             <div class="college-logos">
-                <div class="college-item">
-                    <img src="assets/iit1.png" alt="College Logo">
+                <div class="college-item"><img src="assets/iit1.png" alt="College Logo"></div>
+                <div class="college-item"><img src="assets/iit2.png" alt="College Logo"></div>
+                <div class="college-item"><img src="assets/iit3.png" alt="College Logo"></div>
+                <div class="college-item"><img src="assets/iit4.png" alt="College Logo"></div>
+                <div class="college-item"><img src="assets/iit5.png" alt="College Logo"></div>
+                <div class="college-item"><img src="assets/iit6.png" alt="College Logo"></div>
+            </div>
+        </section>
+
+        <section class="section human-ai-collab">
+            <h2>Human + AI: The Ultimate Power Duo</h2>
+            <p>Unlock the best of both worlds—our elite talent fuses human creativity with cutting-edge AI to supercharge your projects.</p>
+            <div class="collab-grid">
+                <div class="collab-card">
+                    <div class="icon-wrapper"><i class="fas fa-brain"></i></div>
+                    <h3>Creative Genius</h3>
+                    <p>Elite college students bring fresh ideas and expertise to tackle your toughest challenges.</p>
                 </div>
-                <div class="college-item">
-                    <img src="assets/iit2.png" alt="College Logo">
+                <div class="collab-card">
+                    <div class="icon-wrapper"><i class="fas fa-robot"></i></div>
+                    <h3>AI Precision</h3>
+                    <p>Smart AI agents accelerate workflows, ensuring speed and flawless execution.</p>
                 </div>
-                <div class="college-item">
-                    <img src="assets/iit3.png" alt="College Logo">
-                </div>
-                <div class="college-item">
-                    <img src="assets/iit4.png" alt="College Logo">
-                </div>
-                <div class="college-item">
-                    <img src="assets/iit5.png" alt="College Logo">
-                </div>
-                <div class="college-item">
-                    <img src="assets/iit6.png" alt="College Logo">
+                <div class="collab-card">
+                    <div class="icon-wrapper"><i class="fas fa-rocket"></i></div>
+                    <h3>Perfect Fusion</h3>
+                    <p>Together, they deliver top-tier results—fast, innovative, and unmatched in quality.</p>
                 </div>
             </div>
         </section>
 
-<!--
-
-        <section class="search-filter">
-            <div class="filter-bar">
-                <input type="text" id="search-input" placeholder="Find IIT Talent (e.g., organizing, research)" class="custom-input" aria-label="Search students">
-                <select id="category-filter" class="custom-dropdown" aria-label="Filter by category">
-                    <option value="all">All Skills</option>
-                    <option value="design">Design</option>
-                    <option value="coding">Coding</option>
-                    <option value="research">Research</option>
-                    <option value="data">Data Analysis</option>
-                    <option value="tech">Technology</option>
-                    <option value="content">Content Creation</option>
-                </select>
-                <button class="cta-button" onclick="filterStudents()" aria-label="Search talent">Search</button>
+        <section class="section how-it-works">
+            <h2>How It Works</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-icon"><i class="fas fa-search"></i></div>
+                    <div class="timeline-content">
+                        <h3>Explore Talent</h3>
+                        <p>Browse profiles of elite college students with diverse skills to find the perfect match for your project.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-icon"><i class="fas fa-tasks"></i></div>
+                    <div class="timeline-content">
+                        <h3>Assign Tasks</h3>
+                        <p>Delegate your routine or creative tasks to students who blend human ingenuity with AI tools.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="timeline-content">
+                        <h3>Get Results</h3>
+                        <p>Receive high-quality deliverables on time, freeing you to focus on what matters most.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
-    -->
-
-    <!--
-
-        <section class="task-grid-section">
-            <h2>Meet IIT’s Elite Talent</h2>
-            <div class="students-grid" id="students-grid">
-                
-            </div>
-            <div class="pagination">
-                <button class="pagination-btn" onclick="prevPage()" aria-label="Previous page">←</button>
-                <span id="page-info">Page 1 of 2</span>
-                <button class="pagination-btn" onclick="nextPage()" aria-label="Next page">→</button>
-            </div>
-        </section>
-    -->
-    
-
-        <!-- Human + AI Collaboration Section -->
-<section class="human-ai-collab">
-    <div class="collab-container">
-        <h2>Human + AI: The Ultimate Power Duo</h2>
-        <p class="collab-intro">Unlock the best of both worlds—our elite IIT talent fuses human creativity with cutting-edge AI to supercharge your projects.</p>
-        <div class="collab-grid">
-            <div class="collab-card">
-                <div class="icon-wrapper">
-                    <i class="fas fa-brain"></i>
+        <section class="why-taska">
+            <h2>Why Taska Elite?</h2>
+            <div class="content-grid">
+                <div class="content-card">
+                    <h3>Simplifying Work Life for Professionals</h3>
+                    <p>At Taska Elite, we take the burden off your shoulders by connecting you with elite talent from top colleges like IITs, NITs, and IIITs. Whether it’s tackling complex projects, managing repetitive tasks, or integrating AI-driven solutions, our students ensure your work is done faster, smarter, and with exceptional quality—leaving you free to focus on strategy and growth.</p>
                 </div>
-                <h3>Creative Genius</h3>
-                <p>IIT prodigies bring fresh ideas and expertise to tackle your toughest challenges.</p>
-            </div>
-            <div class="collab-card ai-card">
-                <div class="icon-wrapper">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <h3>AI Precision</h3>
-                <p>Smart AI agents accelerate workflows, ensuring speed and flawless execution.</p>
-            </div>
-            <div class="collab-card fusion-card">
-                <div class="icon-wrapper">
-                    <i class="fas fa-rocket"></i>
-                </div>
-                <h3>Perfect Fusion</h3>
-                <p>Together, they deliver top-tier results—fast, innovative, and unmatched in quality.</p>
-            </div>
-        </div>
-        <button class="cta-button collab-cta" onclick="window.location.href='login.html'" aria-label="Explore Collaboration">Explore the Magic</button>
-    </div>
-</section>
-
-<!--
-
-        <section class="number-summary">
-            <div class="summary-item">
-                <span id="students-count" data-target="500">0</span>
-                <p>IIT Prodigies</p>
-            </div>
-            <div class="summary-item">
-                <span id="professionals-count" data-target="200">0</span>
-                <p>Professionals Empowered</p>
-            </div>
-            <div class="summary-item">
-                <span id="projects-count" data-target="1000">0</span>
-                <p>Tasks Outsourced</p>
-            </div>
-        </section>
-
-    -->
-
-    <section class="how-tasks-work">
-        <h2>How Taska Simplifies Your Career with IIT Prodigies</h2>
-        <div class="how-steps">
-            <div class="step">
-                <img src="https://media.istockphoto.com/id/1163999037/vector/recruiting-professionals-studying-candidate-profiles.jpg?s=612x612&w=0&k=20&c=dGHZfTnZAmdKNIfbBslnSayJhhZO7ibjwJ9dyUCnsx0=" alt="Hiring an IIT Prodigy" class="step-image">
-                <h3>Hire an IIT Prodigy</h3>
-                <p>You’ve got tasks piling up—find a brilliant IIT student to help. Browse their profiles to match their skills with your needs. Hire talent eager to tackle your work with creativity and AI smarts.</p>
-            </div>
-            <div class="step">
-                <img src="https://cdni.iconscout.com/illustration/premium/thumb/work-delegation-illustration-download-in-svg-png-gif-file-formats--manager-distribute-assign-tasks-team-member-colleagues-business-pack-illustrations-6729095.png?f=webp" alt="Outsourcing Tasks" class="step-image">
-                <h3>Outsource Your Tasks</h3>
-                <p>Connect with your IIT prodigy and hand off the small stuff—like research or repetitive chores. They’ll use their sharp minds and AI tools to get it done fast and with a creative twist.</p>
-            </div>
-            <div class="step">
-                <img src="https://img.freepik.com/premium-vector/completed-task-work-done-happy-woman-worker-business-secretary-cartoon-illustration_385073-97.jpg" alt="Focusing on What Matters" class="step-image">
-                <h3>Focus on What Matters</h3>
-                <p>With IIT prodigies and AI handling the routine, you’re free to focus on the big wins. Get high-quality results on time, boost your career, and let them grow through real-world experience.</p>
-            </div>
-        </div>
-    </section>
-
-        <section class="user-feedback">
-            <h2>What Our Users Say</h2>
-            <div class="feedback-container" id="feedback-container">
-                <div class="feedback-item active">
-                    <p>"Taska’s IIT prodigies took over my repetitive tasks, saving me hours."</p>
-                    <span>- Vikram, Professional</span>
-                </div>
-                <div class="feedback-item">
-                    <p>"Working with professionals sharpened my skills and confidence."</p>
-                    <span>- Riya, IIT Student</span>
-                </div>
-                <div class="feedback-item">
-                    <p>"Outsourcing to an IIT prodigy made my workday so much smoother."</p>
-                    <span>- Sanjay, Professional</span>
+                <div class="content-card">
+                    <h3>Empowering College Students</h3>
+                    <p>We support elite college students by providing real-world opportunities to showcase their skills, earn income, and gain experience. With access to cutting-edge AI tools and a platform to collaborate with professionals, we help students from institutions like IITs, NITs, and IIITs bridge the gap between academia and industry, fostering innovation and career growth.</p>
                 </div>
             </div>
-            <div class="feedback-nav">
-                <button onclick="prevFeedback()" aria-label="Previous feedback">←</button>
-                <button onclick="nextFeedback()" aria-label="Next feedback">→</button>
-            </div>
-        </section>
-
-        
-
-        <br>
-
-        <section class="outsource-tasks-section">
-            <div class="outsource-tasks-container">
-              <h2>Outsource Regular Tasks</h2>
-              <p>Let IIT prodigies handle your routine work with expertise.</p>
-              <div class="tasks-grid">
-          
-                <div class="task-card">
-                  <i class="fas fa-file-powerpoint"></i>
-                  <h3>Powerpoint</h3>
-                  <a href="#" class="task-link">Outsource</a>
-                </div>
-          
-                <div class="task-card">
-                  <i class="fas fa-search"></i>
-                  <h3>Research Assistance</h3>
-                  <a href="#" class="task-link">Outsource</a>
-                </div>
-          
-                <div class="task-card">
-                  <i class="fas fa-bug"></i>
-                  <h3>Code Debugging</h3>
-                  <a href="#" class="task-link">Outsource</a>
-                </div>
-          
-                <div class="task-card">
-                  <i class="fas fa-pen"></i>
-                  <h3>Content Writing</h3>
-                  <a href="#" class="task-link">Outsource</a>
-                </div>
-          
-                <div class="task-card">
-                  <i class="fas fa-chart-line"></i>
-                  <h3>Data Entry</h3>
-                  <a href="#" class="task-link">Outsource</a>
-                </div>
-          
-                <div class="task-card">
-                  <i class="fas fa-table"></i>
-                  <h3>Spreadsheet Management</h3>
-                  <a href="#" class="task-link">Outsource</a>
-                </div>
-          
-                <div class="task-card">
-                  <i class="fas fa-video"></i>
-                  <h3>Video Editing</h3>
-                  <a href="#" class="task-link">Outsource</a>
-                </div>
-          
-                <div class="task-card">
-                  <i class="fas fa-code"></i>
-                  <h3>Web Development</h3>
-                  <a href="#" class="task-link">Outsource</a>
-                </div>
-          
-                <div class="task-card">
-                  <i class="fas fa-chart-pie"></i>
-                  <h3>Data Analysis</h3>
-                  <a href="#" class="task-link">Outsource</a>
-                </div>
-        
-          
-                <div class="task-card">
-                  <i class="fas fa-thumbs-up"></i>
-                  <h3>Social Media Management</h3>
-                  <a href="#" class="task-link">Outsource</a>
-                </div>
-          
-                <div class="task-card">
-                  <i class="fas fa-bullhorn"></i>
-                  <h3>Marketing Support</h3>
-                  <a href="#" class="task-link">Outsource</a>
-                </div>
-          
-                <div class="task-card">
-                  <i class="fas fa-search-dollar"></i>
-                  <h3>SEO Optimization</h3>
-                  <a href="#" class="task-link">Outsource</a>
-                </div>
-          
-                
-          
-              </div>
-            </div>
-          </section>
-
-        <section class="call-to-action">
-            <h2>Simplify Your Workload Today</h2>
-            <p>Join Taska and get college student assistants to support your worklife.</p>
-            <button class="cta-button collab-cta" onclick="window.location.href='login.html'" aria-label="Join now">Join Now</button>
         </section>
     </main>
 
     <footer>
         <p>© 2025 Taska Elite. All rights reserved.</p>
         <div class="footer-links">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="terms.html">Terms of Use</a>
-            <a href="contact.html">Contact Us</a>
+            <a href="">Privacy Policy</a>
+            <a href="">Terms & Conditions</a>
+            <a href="">Contact Us</a>
         </div>
     </footer>
 
-    <button class="scroll-to-top" onclick="scrollToTop()" aria-label="Scroll to top">↑</button>
-
-    <script type="module" src="js/firebase-config.js"></script>
-    <script src="js/main.js"></script>
     <script>
-        // Function to handle Get Started button click with debugging
-        function handleGetStarted() {
-            console.log("Get Started button clicked");
-            window.location.href = 'login.html';
-        }
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91e814a66fe9bf7c',t:'MTc0MTY2NDk1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
