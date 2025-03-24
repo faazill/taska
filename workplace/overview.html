@@ -333,38 +333,225 @@
         }
         /* Responsive Styles */
         @media (max-width: 768px) {
-            .navbar { padding: 1rem 1.5rem; }
-            .navbar .nav-menu { 
-                display: none; 
-                position: absolute; 
-                top: 70px; 
-                left: 0; 
-                right: 0; 
-                background: #ffffff; 
-                flex-direction: column; 
-                padding: 1.5rem; 
-                border-top: 1px solid #e8ecef; 
-                gap: 1.5rem; 
-            }
-            .navbar .nav-menu.active { display: flex; }
-            .navbar .hamburger { display: block; }
-            .dashboard-content { padding: 1.5rem; }
-            .chat-interface { padding: 1rem; gap: 1.5rem; }
-            .chat-area.active { 
-                position: fixed; 
-                top: 70px; 
-                left: 0; 
-                width: 100%; 
-                height: calc(100% - 70px); 
-                z-index: 999; 
-                border-radius: 0; 
-                padding: 1.2rem; 
-            }
-            .chat-messages { max-height: calc(100vh - 250px); }
-            .chat-input { flex-direction: column; gap: 0.8rem; }
-            .collaborate-btn, .send-btn { width: 100%; }
-        }
-        @media (min-width: 769px) {
+    .navbar { 
+        padding: 0.8rem 1rem; 
+    }
+    
+    .navbar .nav-menu { 
+        display: none; 
+        position: absolute; 
+        top: 60px; 
+        left: 0; 
+        right: 0; 
+        background: #ffffff; 
+        flex-direction: column; 
+        padding: 1rem; 
+        border-top: 1px solid #e8ecef; 
+        gap: 1rem; 
+    }
+    
+    .navbar .nav-menu.active { 
+        display: flex; 
+    }
+    
+    .navbar .hamburger { 
+        display: block; 
+    }
+    
+    .dashboard-content { 
+        padding: 0; /* Remove padding to maximize space */
+    }
+    
+    .chat-interface { 
+        padding: 0; 
+        display: block;
+    }
+    
+    /* Sidebar (Contacts List) Styling */
+    .sidebar { 
+        width: 100%;
+        padding: 0;
+        position: relative;
+        min-height: calc(100vh - 60px);
+        background: #ffffff;
+    }
+    
+    /* Add header with back button to sidebar */
+    .sidebar-header {
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #e8ecef;
+    }
+    
+    .sidebar-back-btn {
+        background: #ffffff;
+        border: none;
+        font-size: 1.2rem;
+        color: #007bff;
+        cursor: pointer;
+        padding: 0.8rem;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        margin-right: 1rem;
+    }
+    
+    .sidebar-back-btn:hover {
+        background: #007bff;
+        color: #ffffff;
+        transform: scale(1.1);
+    }
+    
+    .chat-heading {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+    
+    .search-bar {
+        padding: 0 1rem 1rem 1rem;
+    }
+    
+    .contact-list {
+        width: 95%; /* 95% of screen width */
+        margin: 0 auto; /* Center it */
+        border: none;
+        border-radius: 0;
+        max-height: calc(100vh - 180px); /* Adjust for header and search */
+    }
+    
+    .contact {
+        padding: 1rem;
+        border-bottom: 1px solid #e8ecef;
+    }
+    
+    /* Chat area - completely hidden until active */
+    .chat-area { 
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 60px);
+        z-index: 999;
+        border-radius: 0;
+        padding: 0;
+    }
+    
+    .chat-area.active { 
+        display: flex;
+    }
+    
+    /* Chat back button */
+    .back-btn {
+        background: #ffffff;
+        border: none;
+        font-size: 1.2rem;
+        color: #007bff;
+        cursor: pointer;
+        padding: 0.8rem;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+    
+    .back-btn:hover {
+        background: #007bff;
+        color: #ffffff;
+        transform: scale(1.1);
+    }
+    
+    .chat-header {
+        padding: 1rem;
+        background: #ffffff;
+        border-bottom: 1px solid #e8ecef;
+    }
+    
+    /* Pinned message */
+    .message.pinned {
+        max-width: 100%;
+        margin: 0.5rem 1rem;
+    }
+    
+    .message.pinned .card-header {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    .message.pinned .card-body {
+        padding: 0.5rem 0.8rem;
+    }
+    
+    .message.pinned p {
+        font-size: 0.7rem;
+        margin: 0.2rem 0;
+    }
+    
+    .message.pinned .timestamp {
+        font-size: 0.65rem;
+    }
+    
+    /* Regular messages */
+    .chat-messages { 
+        max-height: calc(100vh - 180px);
+        padding: 1rem;
+    }
+    
+    .message {
+        padding: 0.6rem 0.8rem;
+        margin: 0.4rem 0;
+    }
+    
+    /* Chat input */
+    .chat-input { 
+        flex-direction: row;
+        align-items: center;
+        padding: 1rem;
+        border-top: 1px solid #e8ecef;
+        background: #ffffff;
+    }
+    
+    .chat-input .custom-input {
+        flex: 1;
+        margin: 0;
+        padding: 0.6rem;
+        font-size: 0.85rem;
+        border-radius: 20px;
+        margin-right: 0.5rem;
+    }
+    
+    .send-btn {
+        padding: 0.6rem 1rem;
+        border-radius: 20px;
+        width: auto;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .collaborate-btn {
+        padding: 0.6rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+    }
+    
+    /* Hide sidebar when chat is active */
+    .sidebar.hidden {
+        display: none;
+    }
+}
+@media (min-width: 769px) {
             .chat-interface { flex-direction: row; padding: 2rem; }
             .sidebar { flex: 1; max-width: 350px; }
             .chat-area { flex: 2; }
@@ -417,10 +604,15 @@
                 </div>
             </div>
         </section>
-
+        <div class="chat-heading">Interact with Connected Professionals</div>
         <section class="chat-interface">
-            <div class="sidebar">
-                <div class="chat-heading">Interact with Connected Professionals</div>
+            <div class="sidebar active" id="sidebar">
+                <div class="sidebar-header">
+                    <button class="sidebar-back-btn" onclick="goBackToDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    
+                </div>
                 <div class="search-bar">
                     <input type="text" id="search-contacts" placeholder="Search contacts..." class="custom-input">
                 </div>
@@ -428,7 +620,7 @@
             </div>
             <div class="chat-prompt" id="chat-prompt">Please select a chat to start interacting</div>
             <div class="chat-area" id="chat-area">
-                <div class="chat-heading">Interact with Connected Professionals</div>
+                
                 <div class="chat-header" id="chat-header">
                     <div class="contact-info">
                         <h3 id="contact-name">Select a contact</h3>
@@ -538,7 +730,7 @@
         window.loadChat = (connId, contactName) => {
             selectedConnectionId = connId;
             document.getElementById('contact-name').textContent = contactName;
-            document.getElementById('contact-status').textContent = 'Online';
+            document.getElementById('contact-status').textContent = '';
             const chatMessages = document.getElementById('chat-messages');
             chatMessages.innerHTML = '<p>Loading messages...</p>';
 
@@ -692,6 +884,11 @@
                 alert('File not found.');
             }
         };
+
+        window.goBackToDashboard = () => {
+    // Assuming you want to go back to a dashboard or previous page
+    window.location.href = 'overview.html'; // Adjust this URL as needed
+};
     </script>
     <script src="../js/main.js"></script>
 </body>

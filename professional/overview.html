@@ -426,7 +426,7 @@
                 </div>
             </div>
         </section>
-
+        <div class="chat-heading">Interact with Connected Prodigies</div>
         <section class="chat-interface">
             <div class="sidebar">
                 <div class="search-bar">
@@ -539,7 +539,7 @@
         window.loadChat = (connId, contactName) => {
             selectedConnectionId = connId;
             document.getElementById('contact-name').textContent = contactName;
-            document.getElementById('contact-status').textContent = 'Online';
+            document.getElementById('contact-status').textContent = '';
             const chatMessages = document.getElementById('chat-messages');
             chatMessages.innerHTML = '<p>Loading messages...</p>';
 
