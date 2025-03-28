@@ -19,19 +19,21 @@ export function showForm(userType) {
     }
 }
 
-// Popup message function using existing auth-popup
-function showPopup(message) {
-    const popup = document.getElementById('auth-error-popup') || document.createElement('div');
-    if (!popup.id) {
-        popup.id = 'auth-error-popup';
-        popup.className = 'auth-popup';
-        document.body.appendChild(popup);
-    }
-    popup.textContent = message;
-    popup.classList.add('active');
+// Show warning notice
+function showWarning(message) {
+    const notice = document.getElementById('warning-notice');
+    const messageSpan = document.getElementById('warning-message');
+    messageSpan.textContent = message;
+    notice.style.display = 'flex';
     setTimeout(() => {
-        popup.classList.remove('active');
-    }, 3000); // Remove after 3 seconds
+        notice.style.display = 'none';
+    }, 3000); // Hide after 3 seconds
+}
+
+// Show/Hide loading overlay
+function toggleLoading(show) {
+    const overlay = document.getElementById('loading-overlay');
+    overlay.style.display = show ? 'flex' : 'none';
 }
 
 // Login function
@@ -39,6 +41,7 @@ export function login(userType) {
     const email = document.getElementById(userType === 'professional' ? 'prof-email' : 'stud-email').value;
     const password = document.getElementById(userType === 'professional' ? 'prof-password' : 'stud-password').value;
 
+    toggleLoading(true);
     setPersistence(auth, browserLocalPersistence)
         .then(() => {
             return signInWithEmailAndPassword(auth, email, password);
@@ -46,19 +49,18 @@ export function login(userType) {
         .then((userCredential) => {
             const user = userCredential.user;
             console.log(`${userType} logged in: ${user.email}, UID: ${user.uid}`);
-            localStorage.setItem('userId', user.uid); // Store UID in localStorage
-            localStorage.setItem('userRole', userType); // Store role
-            console.log("Stored userId in localStorage:", user.uid); // Debug
-            console.log("Stored userRole in localStorage:", userType); // Debug
+            localStorage.setItem('userId', user.uid);
+            localStorage.setItem('userRole', userType);
+            toggleLoading(false);
             window.location.href = userType === 'professional' ? 'professional/overview.html' : 'workplace/overview.html';
         })
         .catch((error) => {
-            console.debug("Login error:", error.code, error.message); // Silent logging for debugging
-            // Handle all relevant auth errors with custom popup
+            toggleLoading(false);
+            console.debug("Login error:", error.code, error.message);
             if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-                showPopup("No account found! Sign up first to join Taska Elite.");
+                showWarning("No account found! Please sign up first.");
             } else {
-                showPopup("Something went wrong. Try again!");
+                showWarning("Please check your email and password once again!");
             }
         });
 }
@@ -68,76 +70,67 @@ export function signup(userType) {
     const email = document.getElementById(userType === 'professional' ? 'prof-email' : 'stud-email').value;
     const password = document.getElementById(userType === 'professional' ? 'prof-password' : 'stud-password').value;
 
+    toggleLoading(true);
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
             console.log(`${userType} signed up: ${user.email}, UID: ${user.uid}`);
-            localStorage.setItem('userId', user.uid); // Store UID in localStorage
-            localStorage.setItem('userRole', userType); // Store role
-            console.log("Stored userId in localStorage:", user.uid); // Debug
-            console.log("Stored userRole in localStorage:", userType); // Debug
+            localStorage.setItem('userId', user.uid);
+            localStorage.setItem('userRole', userType);
 
-            // Determine list name
-                const list = userType === 'professional' ? 'professionalslist' : 'studentslist';
+            const list = userType === 'professional' ? 'professionalslist' : 'studentslist';
+            const path = userType === 'professional' 
+                ? `${list}/${user.uid}` 
+                : `${list}/${user.uid}/personal`;
+            const userRef = ref(database, path);
+            const initialData = userType === 'professional'
+                ? {
+                    email: user.email,
+                    coins: 500,
+                    isHiring: true
+                }
+                : {
+                    email: user.email
+                };
 
-                // Determine path based on userType
-                const path = userType === 'professional' 
-                    ? `${list}/${user.uid}` 
-                    : `${list}/${user.uid}/personal`;
-
-                const userRef = ref(database, path);
-
-                // Set initial data accordingly
-                const initialData = userType === 'professional'
-                    ? {
-                        email: user.email,
-                        coins: 500,         // Default for professionals
-                        isHiring: true      // Default for professionals
-                    }
-                    : {
-                        email: user.email   // Default field for students in 'personal'
-                    };
-
-            set(userRef, initialData)
-                .then(() => {
-                    console.log("Initial data stored in database for UID:", user.uid, initialData);
-                    window.location.href = userType === 'professional' ? 'professional/update-profile.html' : 'workplace/update-profile.html';
-                })
-                .catch((error) => {
-                    console.debug("Error storing initial data:", error);
-                    showPopup("Signup succeeded, but failed to store data. Try again!");
-                });
+            return set(userRef, initialData);
+        })
+        .then(() => {
+            toggleLoading(false);
+            window.location.href = userType === 'professional' ? 'professional/update-profile.html' : 'workplace/update-profile.html';
         })
         .catch((error) => {
+            toggleLoading(false);
             console.debug("Signup error:", error.code, error.message);
-            showPopup("Signup failed. Try again!");
+            showWarning("Signup failed. Please try again!");
         });
 }
 
 // Logout function
 export function signOut() {
+    toggleLoading(true);
     auth.signOut()
         .then(() => {
             console.log("User signed out, clearing localStorage");
-            localStorage.removeItem('userId'); // Clear UID
-            localStorage.removeItem('userRole'); // Clear role
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userRole');
+            toggleLoading(false);
             window.location.href = 'login.html';
         })
         .catch((error) => {
+            toggleLoading(false);
             console.debug("Logout error:", error);
-            showPopup("Logout failed. Try again!");
+            showWarning("Logout failed. Please try again!");
         });
 }
 
-// Check auth state and sync persistent value
+// Check auth state
 auth.onAuthStateChanged((user) => {
     if (user) {
         const storedUserId = localStorage.getItem('userId');
         if (!storedUserId || storedUserId !== user.uid) {
             localStorage.setItem('userId', user.uid);
             localStorage.setItem('userRole', window.location.href.includes('professional') ? 'professional' : 'student');
-            console.log("Auth state changed, updated userId:", user.uid);
-            console.log("Auth state changed, updated userRole:", localStorage.getItem('userRole'));
         }
         console.log(`User logged in: ${user.email}, UID: ${user.uid}`);
     } else {

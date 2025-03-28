@@ -33,7 +33,7 @@
         }
         .logo {
             font-size: 1.8rem;
-            font-weight: 600; /* Matches index.html */
+            font-weight: 600;
             color: #60a5fa;
             letter-spacing: -0.5px;
             cursor: pointer;
@@ -227,8 +227,106 @@
             padding: 2rem 6%;
             border-top: 1px solid #e5e7eb;
         }
+        /* Warning Notice Styles */
+        .warning-notice {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            animation: slideIn 0.3s ease-out;
+        }
+        .warning-notice i {
+            font-size: 1.2rem;
+        }
+        .warning-notice span {
+            font-size: 1rem;
+            font-weight: 300;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(-50%) translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+        /* Modern Please Wait Overlay Styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1f2937, #4b5563);
+            animation: pulseBackground 1.5s infinite ease-in-out;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1500;
+        }
+        .loading-dots {
+            display: flex;
+            gap: 10px;
+        }
+        .dot {
+            width: 16px;
+            height: 8px;
+            background: #00d4ff; /* Cyan starting color */
+            border-radius: 50px;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+            animation: wave 2s infinite ease-in-out, scale 2s infinite ease-in-out, colorShift 3s infinite ease-in-out;
+        }
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+            background: #ff00ff; /* Magenta starting color */
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.8);
+        }
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+            background: #00ff7f; /* Lime green starting color */
+            box-shadow: 0 0 10px rgba(0, 255, 127, 0.8);
+        }
+        .loading-text {
+            color: #ffffff;
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            font-weight: 300;
+            animation: fadeText 4s infinite ease-in-out;
+        }
+        @keyframes pulseBackground {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 0.8; }
+        }
+        @keyframes wave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        @keyframes colorShift {
+            0% { background: #00d4ff; }
+            33% { background: #ff00ff; }
+            66% { background: #00ff7f; }
+            100% { background: #00d4ff; }
+        }
+        @keyframes fadeText {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
         @media (max-width: 768px) {
-            
             .auth-container h1 {
                 font-size: 2.2rem;
             }
@@ -262,9 +360,7 @@
         <div class="logo" onclick="window.location.href='index.html'">Taska Elite</div>
         <ul class="nav-menu">
             <li><a href="index.html">Home</a></li>
-            
         </ul>
-        
     </nav>
 
     <main>
@@ -310,11 +406,29 @@
         </section>
     </main>
 
+    <!-- Warning Notice -->
+    <div class="warning-notice" id="warning-notice">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span id="warning-message"></span>
+    </div>
+
+    <!-- Modern Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div>
+            <div class="loading-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <div class="loading-text">Please Wait...</div>
+        </div>
+    </div>
+
     <footer>
         <p>© 2025 Taska Elite. All rights reserved.</p>
     </footer>
 
-    <!-- Scripts (unchanged backend) -->
+    <!-- Scripts -->
     <script type="module">
         import { showForm, login, signup, signOut } from './js/auth.js';
         window.showForm = showForm;
@@ -340,5 +454,5 @@
             navMenu.classList.toggle('active');
         });
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9278424a29b3ed32',t:'MTc0MzE3Njc3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
