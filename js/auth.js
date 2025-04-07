@@ -52,7 +52,7 @@ export function login(userType) {
             localStorage.setItem('userId', user.uid);
             localStorage.setItem('userRole', userType);
             toggleLoading(false);
-            window.location.href = userType === 'professional' ? 'professional/overview.html' : 'workplace/overview.html';
+            window.location.href = userType === 'professional' ? 'professional/explore.html' : 'workplace/overview.html';
         })
         .catch((error) => {
             toggleLoading(false);

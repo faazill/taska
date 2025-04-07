@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Directory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { 
+            background: #ffffff; 
+            min-height: 100vh; 
+            color: #2d3748; 
+            padding-bottom: 60px;
+        }
+        .navbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a202c;
+            letter-spacing: -0.05rem;
+        }
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .profile-section i {
+            font-size: 1.5rem;
+            color: #3182ce;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .profile-section i:hover {
+            color: #2b6cb0;
+        }
+        .dashboard-content { 
+            padding: 2rem; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .search-container {
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            margin-bottom: 3rem;
+            transition: opacity 0.3s ease;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #f7fafc;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            transition: border-color 0.3s ease;
+        }
+        .search-box:focus-within {
+            border-color: #3182ce;
+        }
+        .search-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 0.75rem 1.5rem;
+            font-size: 1.1rem;
+            color: #2d3748;
+            outline: none;
+        }
+        .search-btn {
+            padding: 0.75rem 2.5rem;
+            background: #3182ce;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .search-btn:hover {
+            background: #2b6cb0;
+            transform: translateY(-2px);
+        }
+        .students-list { 
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+            width: 90%;
+            margin: 0 auto;
+        }
+        .student-card { 
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .student-card:hover { 
+            border-color: #3182ce;
+        }
+        .student-info h3 { 
+            font-size: 1.5rem; 
+            color: #1a202c; 
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .details-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        .detail-box {
+            background: #edf2f7;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .detail-box i {
+            color: #3182ce;
+        }
+        .icons-container {
+            display: flex;
+            gap: 1rem;
+            align-self: flex-end;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .icon-btn.whatsapp { color: #38a169; }
+        .icon-btn.whatsapp:hover { color: #2f855a; }
+        .icon-btn.linkedin { color: #3182ce; }
+        .icon-btn.linkedin:hover { color: #2b6cb0; }
+        .search-again-btn {
+            padding: 0.5rem 1.5rem;
+            background: #718096;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.3s ease;
+            margin-bottom: 2rem;
+            display: none;
+        }
+        .search-again-btn:hover {
+            background: #5a677b;
+        }
+        .ai-result-header {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #3182ce;
+            text-align: center;
+            margin: 2rem 0;
+            display: none;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .loading-bar {
+            width: 400px;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+        .loading-bar::before {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 100%;
+            background: #3182ce;
+            animation: loading 1.5s infinite ease-in-out;
+        }
+        @keyframes loading {
+            0% { left: -120px; }
+            100% { left: 400px; }
+        }
+        footer { 
+            background: #ffffff; 
+            padding: 1rem; 
+            text-align: center; 
+            width: 100%; 
+            color: #718096; 
+            border-top: 1px solid #e2e8f0; 
+            position: fixed;
+            bottom: 0;
+        }
+        @media (max-width: 768px) {
+            .logo { font-size: 1.5rem; }
+            .search-box { flex-direction: column; padding: 0.75rem; }
+            .search-btn { margin-top: 0.75rem; width: 100%; }
+            .search-input { font-size: 1rem; padding: 0.75rem; }
+            .student-info h3 { font-size: 1.3rem; }
+            .detail-box { font-size: 0.85rem; }
+            .icon-btn { font-size: 1.2rem; }
+            .students-list { width: 95%; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Taska Elite</div>
+        <div class="profile-section">
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </nav>
+
+    <main class="dashboard-content">
+        <section class="dashboard-section">
+            <div class="search-container" id="searchContainer">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="searchInput" placeholder="e.g., I want a student with Python skills from IIT Delhi">
+                    <button class="search-btn" onclick="aiSearch()">AI Search</button>
+                </div>
+            </div>
+            <button class="search-again-btn" onclick="searchAgain()" id="searchAgainBtn">Search Again</button>
+            <div class="ai-result-header" id="aiResultHeader">Top 10 AI Picked Profiles for Your Requirements</div>
+            <div class="students-list" id="students-list"></div>
+        </section>
+    </main>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-bar"></div>
+    </div>
+
+    <footer>
+        <p>© 2025 Taska Elite. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let studentsData = [];
+        const apiKey = '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';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('manualstudentlist.csv')
+                .then(response => response.text())
+                .then(csvText => {
+                    const rows = csvText.split('\n');
+                    const headers = rows[0].split(',').map(header => header.trim().replace(/^"|"$/g, ''));
+                    studentsData = rows.slice(1).map(row => {
+                        const values = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+                        return headers.reduce((obj, header, index) => {
+                            obj[header] = values[index] ? values[index].replace(/^"|"$/g, '') : '';
+                            return obj;
+                        }, {});
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading CSV:', error);
+                    document.getElementById('students-list').innerHTML = '<p>Error loading student data.</p>';
+                });
+        });
+
+        function displayStudents(students) {
+            const studentsList = document.getElementById('students-list');
+            const searchContainer = document.getElementById('searchContainer');
+            studentsList.style.display = 'flex';
+            searchContainer.style.display = 'none';
+            studentsList.innerHTML = students.map(student => `
+                <div class="student-card">
+                    <div class="student-info">
+                        <h3>${student["Full Name"] || 'Unnamed'}</h3>
+                        <div class="details-container">
+                            <div class="detail-box"><i class="fas fa-university"></i> ${student["Branch & College"] || 'Not set'}</div>
+                            <div class="detail-box"><i class="fas fa-calendar-alt"></i> ${student["Year of Study"] || 'Not set'}</div>
+                            <div class="detail-box"><i class="fas fa-tools"></i> ${student["Skills"] || 'Not set'}</div>
+                            <div class="detail-box"><i class="fas fa-trophy"></i> ${student["Notable Achievements"] || 'Not set'}</div>
+                            <div class="detail-box"><i class="fas fa-star"></i> ${student["Interested in"] || 'Not set'}</div>
+                            <div class="detail-box"><i class="fab fa-whatsapp"></i> ${student["WhatsApp Number"] || 'Not set'}</div>
+                        </div>
+                    </div>
+                    <div class="icons-container">
+                        <button class="icon-btn whatsapp" onclick="sendWhatsAppMessage('${student["WhatsApp Number"]}', '${student["Full Name"]}')">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                        <button class="icon-btn linkedin" onclick="openLinkedIn('${student["LinkedIn Profile"]}')">
+                            <i class="fab fa-linkedin"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('searchAgainBtn').style.display = 'block';
+            document.getElementById('aiResultHeader').style.display = 'block';
+        }
+
+        async function aiSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return alert('Please enter a search query.');
+
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+
+            const csvText = await fetch('manualstudentlist.csv').then(res => res.text());
+            const prompt = `
+                Given the following CSV data of students:
+                ${csvText}
+                
+                And the user's requirement: "${query}"
+                
+                Analyze the data and return the top 10 best matching students based on the requirement. 
+                Provide only their "Full Name" in order of relevance, as a JSON array like:
+                ["Name1", "Name2", ..., "Name10"]
+            `;
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: [{ role: 'user', content: prompt }],
+                        max_tokens: 500
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error?.message || 'API request failed');
+
+                const shortlistedNames = JSON.parse(data.choices[0].message.content);
+                const shortlistedStudents = studentsData.filter(student => 
+                    shortlistedNames.includes(student["Full Name"])
+                ).sort((a, b) => 
+                    shortlistedNames.indexOf(a["Full Name"]) - shortlistedNames.indexOf(b["Full Name"])
+                );
+
+                displayStudents(shortlistedStudents.slice(0, 10));
+            } catch (error) {
+                console.error('AI Search Error:', error);
+                alert('Error performing AI search: ' + error.message);
+            } finally {
+                loadingOverlay.style.display = 'none';
+            }
+        }
+
+        function sendWhatsAppMessage(number, name) {
+            if (!number) return alert('No WhatsApp number available.');
+            const message = `Hello ${name}, greetings from Taska Elite! How can we assist you today?`;
+            const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        function openLinkedIn(url) {
+            if (!url || url === '#') return alert('No LinkedIn profile available.');
+            window.open(url, '_blank');
+        }
+
+        function searchAgain() {
+            document.getElementById('searchInput').value = '';
+            const studentsList = document.getElementById('students-list');
+            const searchContainer = document.getElementById('searchContainer');
+            studentsList.style.display = 'none';
+            searchContainer.style.display = 'block';
+            studentsList.innerHTML = '';
+            document.getElementById('searchAgainBtn').style.display = 'none';
+            document.getElementById('aiResultHeader').style.display = 'none';
+        }
+
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                aiSearch();
+            }
+        });
+    </script>
+</body>
+</html>

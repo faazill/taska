@@ -1,0 +1,942 @@
+[
+    {
+        "id": "student_1",
+        "personal": {
+            "name": "Allison Hill",
+            "email": "jillrhodes@miller.com",
+            "gender": "Male",
+            "location": "Delhi",
+            "linkedin": "https://www.linkedin.com/in/allison_hill",
+            "whatsapp": "890.838.6379"
+        },
+        "education": {
+            "college": "IITBombay",
+            "degree": "B.Tech",
+            "branch": "Electrical Engineering",
+            "year": "Second"
+        },
+        "skills": "C++, C, Node.js, SQL, CSS",
+        "experience": "Worked on empower clicks-and-mortar communities project",
+        "availability": {
+            "hours": "25",
+            "worktime": "Mornings",
+            "remote": "Yes",
+            "duration": "1 month"
+        },
+        "portfolio": [
+            "https://github.com/allison_hill/project1"
+        ],
+        "preferences": {
+            "roles": "Data Analyst",
+            "why": "Future choice whatever from behavior benefit suggest page southern."
+        },
+        "softSkills": {
+            "communication": "Good",
+            "deadlines": "Needs Improvement"
+        },
+        "profiles": {
+            "github": {
+                "username": "allison_hill"
+            },
+            "codeforces": {
+                "username": "allison_hill_cf"
+            },
+            "leetcode": {
+                "username": "allison_hill_lc"
+            }
+        }
+    },
+    {
+        "id": "student_2",
+        "personal": {
+            "name": "Kimberly Dudley",
+            "email": "arnoldmaria@hotmail.com",
+            "gender": "Male",
+            "location": "Chennai",
+            "linkedin": "https://www.linkedin.com/in/kimberly_dudley",
+            "whatsapp": "(931)034-1316x475"
+        },
+        "education": {
+            "college": "IITKanpur",
+            "degree": "B.Tech",
+            "branch": "Civil Engineering",
+            "year": "Second"
+        },
+        "skills": "React, SQL, CSS, Python, Java",
+        "experience": "Worked on leverage out-of-the-box convergence project",
+        "availability": {
+            "hours": "15",
+            "worktime": "Flexible",
+            "remote": "Yes",
+            "duration": "3 months"
+        },
+        "portfolio": [
+            "https://github.com/kimberly_dudley/project2"
+        ],
+        "preferences": {
+            "roles": "Data Analyst",
+            "why": "Prove reduce raise author play move."
+        },
+        "softSkills": {
+            "communication": "Good",
+            "deadlines": "Good"
+        },
+        "profiles": {
+            "github": {
+                "username": "kimberly_dudley"
+            },
+            "codeforces": {
+                "username": "kimberly_dudley_cf"
+            },
+            "leetcode": {
+                "username": "kimberly_dudley_lc"
+            }
+        }
+    },
+    {
+        "id": "student_3",
+        "personal": {
+            "name": "Joel Nelson",
+            "email": "megan03@trujillo.com",
+            "gender": "Male",
+            "location": "Mumbai",
+            "linkedin": "https://www.linkedin.com/in/joel_nelson",
+            "whatsapp": "395-376-7242"
+        },
+        "education": {
+            "college": "IITMadras",
+            "degree": "B.Tech",
+            "branch": "Computer Science",
+            "year": "Third"
+        },
+        "skills": "JS, SQL, CSS, Python, Machine Learning",
+        "experience": "Worked on incentivize back-end applications project",
+        "availability": {
+            "hours": "25",
+            "worktime": "Mornings",
+            "remote": "Yes",
+            "duration": "6 months"
+        },
+        "portfolio": [
+            "https://github.com/joel_nelson/project1"
+        ],
+        "preferences": {
+            "roles": "UI/UX Designer",
+            "why": "Today human despite young meeting before another body physical."
+        },
+        "softSkills": {
+            "communication": "Excellent",
+            "deadlines": "Needs Improvement"
+        },
+        "profiles": {
+            "github": {
+                "username": "joel_nelson"
+            },
+            "codeforces": {
+                "username": "joel_nelson_cf"
+            },
+            "leetcode": {
+                "username": "joel_nelson_lc"
+            }
+        }
+    },
+    {
+        "id": "student_4",
+        "personal": {
+            "name": "Jennifer Brown",
+            "email": "jrice@gmail.com",
+            "gender": "Female",
+            "location": "Chennai",
+            "linkedin": "https://www.linkedin.com/in/jennifer_brown",
+            "whatsapp": "+1-184-514-6270x48281"
+        },
+        "education": {
+            "college": "IIT Delhi",
+            "degree": "B.Tech",
+            "branch": "Computer Science",
+            "year": "Second"
+        },
+        "skills": "CSS, C, HTML, SQL, Node.js",
+        "experience": "Worked on cultivate seamless functionalities project",
+        "availability": {
+            "hours": "20",
+            "worktime": "Flexible",
+            "remote": "Yes",
+            "duration": "3 months"
+        },
+        "portfolio": [
+            "https://github.com/jennifer_brown/project1"
+        ],
+        "preferences": {
+            "roles": "Backend Developer",
+            "why": "Participant check several much single morning a food affect."
+        },
+        "softSkills": {
+            "communication": "Excellent",
+            "deadlines": "Excellent"
+        },
+        "profiles": {
+            "github": {
+                "username": "jennifer_brown"
+            },
+            "codeforces": {
+                "username": "jennifer_brown_cf"
+            },
+            "leetcode": {
+                "username": "jennifer_brown_lc"
+            }
+        }
+    },
+    {
+        "id": "student_5",
+        "personal": {
+            "name": "Sherry Decker",
+            "email": "brianhumphrey@gmail.com",
+            "gender": "Female",
+            "location": "Mumbai",
+            "linkedin": "https://www.linkedin.com/in/sherry_decker",
+            "whatsapp": "718-227-8248"
+        },
+        "education": {
+            "college": "IITKanpur",
+            "degree": "B.Tech",
+            "branch": "Electrical Engineering",
+            "year": "Second"
+        },
+        "skills": "C++, React, Java, CSS, JS",
+        "experience": "Worked on cultivate cutting-edge e-tailers project",
+        "availability": {
+            "hours": "15",
+            "worktime": "Evenings",
+            "remote": "Yes",
+            "duration": "1 month"
+        },
+        "portfolio": [
+            "https://github.com/sherry_decker/project1"
+        ],
+        "preferences": {
+            "roles": "Full Stack Developer",
+            "why": "Sense ready require human public health tonight later easy ask."
+        },
+        "softSkills": {
+            "communication": "Excellent",
+            "deadlines": "Good"
+        },
+        "profiles": {
+            "github": {
+                "username": "sherry_decker"
+            },
+            "codeforces": {
+                "username": "sherry_decker_cf"
+            },
+            "leetcode": {
+                "username": "sherry_decker_lc"
+            }
+        }
+    },
+    {
+        "id": "student_6",
+        "personal": {
+            "name": "Julian Chapman",
+            "email": "zimmermanbrian@whitehead.com",
+            "gender": "Female",
+            "location": "Mumbai",
+            "linkedin": "https://www.linkedin.com/in/julian_chapman",
+            "whatsapp": "347.382.9973x76311"
+        },
+        "education": {
+            "college": "IITBHU",
+            "degree": "B.Tech",
+            "branch": "Chemical Engineering",
+            "year": "Third"
+        },
+        "skills": "HTML, React, Java, SQL, C",
+        "experience": "Worked on repurpose user-centric convergence project",
+        "availability": {
+            "hours": "20",
+            "worktime": "Afternoons",
+            "remote": "Yes",
+            "duration": "2 months"
+        },
+        "portfolio": [
+            "https://github.com/julian_chapman/project3"
+        ],
+        "preferences": {
+            "roles": "UI/UX Designer",
+            "why": "In tell approach president position art rock song body."
+        },
+        "softSkills": {
+            "communication": "Average",
+            "deadlines": "Good"
+        },
+        "profiles": {
+            "github": {
+                "username": "julian_chapman"
+            },
+            "codeforces": {
+                "username": "julian_chapman_cf"
+            },
+            "leetcode": {
+                "username": "julian_chapman_lc"
+            }
+        }
+    },
+    {
+        "id": "student_7",
+        "personal": {
+            "name": "Joshua Taylor",
+            "email": "steven17@garcia.com",
+            "gender": "Female",
+            "location": "Pune",
+            "linkedin": "https://www.linkedin.com/in/joshua_taylor",
+            "whatsapp": "326-773-6026"
+        },
+        "education": {
+            "college": "IITBombay",
+            "degree": "B.Tech",
+            "branch": "Electrical Engineering",
+            "year": "Second"
+        },
+        "skills": "Node.js, React, C, Python, Java",
+        "experience": "Worked on implement integrated portals project",
+        "availability": {
+            "hours": "10",
+            "worktime": "Afternoons",
+            "remote": "Yes",
+            "duration": "2 months"
+        },
+        "portfolio": [
+            "https://github.com/joshua_taylor/project3"
+        ],
+        "preferences": {
+            "roles": "Content Writer",
+            "why": "Expect recent room situation product main couple design around."
+        },
+        "softSkills": {
+            "communication": "Average",
+            "deadlines": "Excellent"
+        },
+        "profiles": {
+            "github": {
+                "username": "joshua_taylor"
+            },
+            "codeforces": {
+                "username": "joshua_taylor_cf"
+            },
+            "leetcode": {
+                "username": "joshua_taylor_lc"
+            }
+        }
+    },
+    {
+        "id": "student_8",
+        "personal": {
+            "name": "Amy Edwards",
+            "email": "hshaw@brown.com",
+            "gender": "Female",
+            "location": "Pune",
+            "linkedin": "https://www.linkedin.com/in/amy_edwards",
+            "whatsapp": "(191)361-9399"
+        },
+        "education": {
+            "college": "IITKanpur",
+            "degree": "B.Tech",
+            "branch": "Civil Engineering",
+            "year": "Third"
+        },
+        "skills": "Node.js, Python, C, CSS, Java",
+        "experience": "Worked on integrate strategic e-markets project",
+        "availability": {
+            "hours": "20",
+            "worktime": "Mornings",
+            "remote": "Yes",
+            "duration": "3 months"
+        },
+        "portfolio": [
+            "https://github.com/amy_edwards/project2"
+        ],
+        "preferences": {
+            "roles": "Data Analyst",
+            "why": "North first end prove fire enter capital population lead upon."
+        },
+        "softSkills": {
+            "communication": "Excellent",
+            "deadlines": "Excellent"
+        },
+        "profiles": {
+            "github": {
+                "username": "amy_edwards"
+            },
+            "codeforces": {
+                "username": "amy_edwards_cf"
+            },
+            "leetcode": {
+                "username": "amy_edwards_lc"
+            }
+        }
+    },
+    {
+        "id": "student_9",
+        "personal": {
+            "name": "Alexandra Howell",
+            "email": "medinawilliam@mahoney.com",
+            "gender": "Female",
+            "location": "Bangalore",
+            "linkedin": "https://www.linkedin.com/in/alexandra_howell",
+            "whatsapp": "(427)849-8084x124"
+        },
+        "education": {
+            "college": "IITKanpur",
+            "degree": "B.Tech",
+            "branch": "Computer Science",
+            "year": "Third"
+        },
+        "skills": "Machine Learning, Node.js, HTML, C++, React",
+        "experience": "Worked on embrace sticky schemas project",
+        "availability": {
+            "hours": "15",
+            "worktime": "Mornings",
+            "remote": "Yes",
+            "duration": "3 months"
+        },
+        "portfolio": [
+            "https://github.com/alexandra_howell/project2"
+        ],
+        "preferences": {
+            "roles": "Full Stack Developer",
+            "why": "Evening painting response data plant enough."
+        },
+        "softSkills": {
+            "communication": "Good",
+            "deadlines": "Good"
+        },
+        "profiles": {
+            "github": {
+                "username": "alexandra_howell"
+            },
+            "codeforces": {
+                "username": "alexandra_howell_cf"
+            },
+            "leetcode": {
+                "username": "alexandra_howell_lc"
+            }
+        }
+    },
+    {
+        "id": "student_10",
+        "personal": {
+            "name": "Taylor Mathis Jr.",
+            "email": "bradley52@hotmail.com",
+            "gender": "Female",
+            "location": "Chennai",
+            "linkedin": "https://www.linkedin.com/in/taylor_mathis_jr.",
+            "whatsapp": "278-680-1128x059"
+        },
+        "education": {
+            "college": "IIT Delhi",
+            "degree": "B.Tech",
+            "branch": "Electrical Engineering",
+            "year": "First"
+        },
+        "skills": "C, React, Machine Learning, C++, Node.js",
+        "experience": "Worked on engage B2B e-commerce project",
+        "availability": {
+            "hours": "25",
+            "worktime": "Afternoons",
+            "remote": "Yes",
+            "duration": "3 months"
+        },
+        "portfolio": [
+            "https://github.com/taylor_mathis_jr./project3"
+        ],
+        "preferences": {
+            "roles": "UI/UX Designer",
+            "why": "Among half value win always group."
+        },
+        "softSkills": {
+            "communication": "Excellent",
+            "deadlines": "Excellent"
+        },
+        "profiles": {
+            "github": {
+                "username": "taylor_mathis_jr."
+            },
+            "codeforces": {
+                "username": "taylor_mathis_jr._cf"
+            },
+            "leetcode": {
+                "username": "taylor_mathis_jr._lc"
+            }
+        }
+    },
+    {
+        "id": "student_11",
+        "personal": {
+            "name": "Mary Gomez",
+            "email": "sarayoung@gmail.com",
+            "gender": "Male",
+            "location": "Kolkata",
+            "linkedin": "https://www.linkedin.com/in/mary_gomez",
+            "whatsapp": "(602)563-4216"
+        },
+        "education": {
+            "college": "IITMadras",
+            "degree": "B.Tech",
+            "branch": "Mechanical Engineering",
+            "year": "Fourth"
+        },
+        "skills": "Node.js, React, C, HTML, Machine Learning",
+        "experience": "Worked on cultivate robust info-mediaries project",
+        "availability": {
+            "hours": "10",
+            "worktime": "Evenings",
+            "remote": "Yes",
+            "duration": "1 month"
+        },
+        "portfolio": [
+            "https://github.com/mary_gomez/project3"
+        ],
+        "preferences": {
+            "roles": "UI/UX Designer",
+            "why": "Current truth glass star the development process."
+        },
+        "softSkills": {
+            "communication": "Good",
+            "deadlines": "Needs Improvement"
+        },
+        "profiles": {
+            "github": {
+                "username": "mary_gomez"
+            },
+            "codeforces": {
+                "username": "mary_gomez_cf"
+            },
+            "leetcode": {
+                "username": "mary_gomez_lc"
+            }
+        }
+    },
+    {
+        "id": "student_12",
+        "personal": {
+            "name": "Donald Jones",
+            "email": "darlene68@yahoo.com",
+            "gender": "Male",
+            "location": "Delhi",
+            "linkedin": "https://www.linkedin.com/in/donald_jones",
+            "whatsapp": "1429401965"
+        },
+        "education": {
+            "college": "IIT Delhi",
+            "degree": "B.Tech",
+            "branch": "Computer Science",
+            "year": "Second"
+        },
+        "skills": "C, Python, JS, Machine Learning, CSS",
+        "experience": "Worked on drive turn-key e-commerce project",
+        "availability": {
+            "hours": "15",
+            "worktime": "Evenings",
+            "remote": "Yes",
+            "duration": "6 months"
+        },
+        "portfolio": [
+            "https://github.com/donald_jones/project1"
+        ],
+        "preferences": {
+            "roles": "UI/UX Designer",
+            "why": "Worker break tonight couple and job mind southern rather vote."
+        },
+        "softSkills": {
+            "communication": "Good",
+            "deadlines": "Needs Improvement"
+        },
+        "profiles": {
+            "github": {
+                "username": "donald_jones"
+            },
+            "codeforces": {
+                "username": "donald_jones_cf"
+            },
+            "leetcode": {
+                "username": "donald_jones_lc"
+            }
+        }
+    },
+    {
+        "id": "student_13",
+        "personal": {
+            "name": "Christina Reynolds",
+            "email": "elizabeth14@hotmail.com",
+            "gender": "Female",
+            "location": "Chennai",
+            "linkedin": "https://www.linkedin.com/in/christina_reynolds",
+            "whatsapp": "656-482-3662x9946"
+        },
+        "education": {
+            "college": "IITMadras",
+            "degree": "B.Tech",
+            "branch": "Civil Engineering",
+            "year": "Second"
+        },
+        "skills": "C, Machine Learning, Java, JS, HTML",
+        "experience": "Worked on engage clicks-and-mortar content project",
+        "availability": {
+            "hours": "25",
+            "worktime": "Flexible",
+            "remote": "Yes",
+            "duration": "1 month"
+        },
+        "portfolio": [
+            "https://github.com/christina_reynolds/project3"
+        ],
+        "preferences": {
+            "roles": "Full Stack Developer",
+            "why": "Decision size parent focus kid put memory."
+        },
+        "softSkills": {
+            "communication": "Good",
+            "deadlines": "Good"
+        },
+        "profiles": {
+            "github": {
+                "username": "christina_reynolds"
+            },
+            "codeforces": {
+                "username": "christina_reynolds_cf"
+            },
+            "leetcode": {
+                "username": "christina_reynolds_lc"
+            }
+        }
+    },
+    {
+        "id": "student_14",
+        "personal": {
+            "name": "Toni Fitzgerald",
+            "email": "zachary95@cardenas.com",
+            "gender": "Female",
+            "location": "Mumbai",
+            "linkedin": "https://www.linkedin.com/in/toni_fitzgerald",
+            "whatsapp": "320.037.9176"
+        },
+        "education": {
+            "college": "IITBHU",
+            "degree": "B.Tech",
+            "branch": "Electrical Engineering",
+            "year": "Second"
+        },
+        "skills": "Node.js, React, C++, Java, C",
+        "experience": "Worked on matrix dynamic architectures project",
+        "availability": {
+            "hours": "20",
+            "worktime": "Flexible",
+            "remote": "Yes",
+            "duration": "2 months"
+        },
+        "portfolio": [
+            "https://github.com/toni_fitzgerald/project1"
+        ],
+        "preferences": {
+            "roles": "Content Writer",
+            "why": "Hundred challenge reach throughout team those sing despite sound."
+        },
+        "softSkills": {
+            "communication": "Average",
+            "deadlines": "Excellent"
+        },
+        "profiles": {
+            "github": {
+                "username": "toni_fitzgerald"
+            },
+            "codeforces": {
+                "username": "toni_fitzgerald_cf"
+            },
+            "leetcode": {
+                "username": "toni_fitzgerald_lc"
+            }
+        }
+    },
+    {
+        "id": "student_15",
+        "personal": {
+            "name": "Julie Grant",
+            "email": "danderson@schmidt.info",
+            "gender": "Male",
+            "location": "Delhi",
+            "linkedin": "https://www.linkedin.com/in/julie_grant",
+            "whatsapp": "+1-868-727-7434x873"
+        },
+        "education": {
+            "college": "IIT Delhi",
+            "degree": "B.Tech",
+            "branch": "Electrical Engineering",
+            "year": "Second"
+        },
+        "skills": "Java, React, SQL, HTML, Machine Learning",
+        "experience": "Worked on empower visionary partnerships project",
+        "availability": {
+            "hours": "25",
+            "worktime": "Mornings",
+            "remote": "Yes",
+            "duration": "2 months"
+        },
+        "portfolio": [
+            "https://github.com/julie_grant/project2"
+        ],
+        "preferences": {
+            "roles": "Full Stack Developer",
+            "why": "Doctor from throw ball character him check."
+        },
+        "softSkills": {
+            "communication": "Excellent",
+            "deadlines": "Good"
+        },
+        "profiles": {
+            "github": {
+                "username": "julie_grant"
+            },
+            "codeforces": {
+                "username": "julie_grant_cf"
+            },
+            "leetcode": {
+                "username": "julie_grant_lc"
+            }
+        }
+    },
+    {
+        "id": "student_16",
+        "personal": {
+            "name": "Jason Rivera",
+            "email": "abrown@yahoo.com",
+            "gender": "Female",
+            "location": "Kolkata",
+            "linkedin": "https://www.linkedin.com/in/jason_rivera",
+            "whatsapp": "001-909-670-5466x88937"
+        },
+        "education": {
+            "college": "IITMadras",
+            "degree": "B.Tech",
+            "branch": "Chemical Engineering",
+            "year": "Fourth"
+        },
+        "skills": "C++, HTML, CSS, SQL, Python",
+        "experience": "Worked on enhance real-time e-commerce project",
+        "availability": {
+            "hours": "10",
+            "worktime": "Evenings",
+            "remote": "Yes",
+            "duration": "1 month"
+        },
+        "portfolio": [
+            "https://github.com/jason_rivera/project1"
+        ],
+        "preferences": {
+            "roles": "UI/UX Designer",
+            "why": "Ahead from quickly identify close level camera performance agree."
+        },
+        "softSkills": {
+            "communication": "Excellent",
+            "deadlines": "Needs Improvement"
+        },
+        "profiles": {
+            "github": {
+                "username": "jason_rivera"
+            },
+            "codeforces": {
+                "username": "jason_rivera_cf"
+            },
+            "leetcode": {
+                "username": "jason_rivera_lc"
+            }
+        }
+    },
+    {
+        "id": "student_17",
+        "personal": {
+            "name": "Justin Johnson",
+            "email": "michellewhite@yahoo.com",
+            "gender": "Male",
+            "location": "Delhi",
+            "linkedin": "https://www.linkedin.com/in/justin_johnson",
+            "whatsapp": "(537)556-4641x7080"
+        },
+        "education": {
+            "college": "IITKanpur",
+            "degree": "B.Tech",
+            "branch": "Computer Science",
+            "year": "Second"
+        },
+        "skills": "C, SQL, Machine Learning, HTML, React",
+        "experience": "Worked on seize magnetic experiences project",
+        "availability": {
+            "hours": "10",
+            "worktime": "Afternoons",
+            "remote": "Yes",
+            "duration": "1 month"
+        },
+        "portfolio": [
+            "https://github.com/justin_johnson/project3"
+        ],
+        "preferences": {
+            "roles": "Full Stack Developer",
+            "why": "Sit prepare senior wear current."
+        },
+        "softSkills": {
+            "communication": "Excellent",
+            "deadlines": "Needs Improvement"
+        },
+        "profiles": {
+            "github": {
+                "username": "justin_johnson"
+            },
+            "codeforces": {
+                "username": "justin_johnson_cf"
+            },
+            "leetcode": {
+                "username": "justin_johnson_lc"
+            }
+        }
+    },
+    {
+        "id": "student_18",
+        "personal": {
+            "name": "Christian Martinez",
+            "email": "stevenscott@jackson-lawson.com",
+            "gender": "Female",
+            "location": "Kolkata",
+            "linkedin": "https://www.linkedin.com/in/christian_martinez",
+            "whatsapp": "001-241-904-9663x19314"
+        },
+        "education": {
+            "college": "IITBHU",
+            "degree": "B.Tech",
+            "branch": "Mechanical Engineering",
+            "year": "Second"
+        },
+        "skills": "CSS, Java, C++, Machine Learning, HTML",
+        "experience": "Worked on iterate 24/7 networks project",
+        "availability": {
+            "hours": "20",
+            "worktime": "Mornings",
+            "remote": "Yes",
+            "duration": "1 month"
+        },
+        "portfolio": [
+            "https://github.com/christian_martinez/project2"
+        ],
+        "preferences": {
+            "roles": "UI/UX Designer",
+            "why": "Girl into have media game."
+        },
+        "softSkills": {
+            "communication": "Average",
+            "deadlines": "Excellent"
+        },
+        "profiles": {
+            "github": {
+                "username": "christian_martinez"
+            },
+            "codeforces": {
+                "username": "christian_martinez_cf"
+            },
+            "leetcode": {
+                "username": "christian_martinez_lc"
+            }
+        }
+    },
+    {
+        "id": "student_19",
+        "personal": {
+            "name": "Samantha Garcia",
+            "email": "bzimmerman@gmail.com",
+            "gender": "Male",
+            "location": "Chennai",
+            "linkedin": "https://www.linkedin.com/in/samantha_garcia",
+            "whatsapp": "001-849-877-6945x3147"
+        },
+        "education": {
+            "college": "IITKanpur",
+            "degree": "B.Tech",
+            "branch": "Mechanical Engineering",
+            "year": "Second"
+        },
+        "skills": "JS, C, HTML, Machine Learning, C++",
+        "experience": "Worked on incentivize plug-and-play networks project",
+        "availability": {
+            "hours": "15",
+            "worktime": "Flexible",
+            "remote": "Yes",
+            "duration": "3 months"
+        },
+        "portfolio": [
+            "https://github.com/samantha_garcia/project3"
+        ],
+        "preferences": {
+            "roles": "UI/UX Designer",
+            "why": "Property from management foot maintain great election evidence other they new."
+        },
+        "softSkills": {
+            "communication": "Good",
+            "deadlines": "Needs Improvement"
+        },
+        "profiles": {
+            "github": {
+                "username": "samantha_garcia"
+            },
+            "codeforces": {
+                "username": "samantha_garcia_cf"
+            },
+            "leetcode": {
+                "username": "samantha_garcia_lc"
+            }
+        }
+    },
+    {
+        "id": "student_20",
+        "personal": {
+            "name": "Cheryl Allen",
+            "email": "ppeters@hotmail.com",
+            "gender": "Female",
+            "location": "Mumbai",
+            "linkedin": "https://www.linkedin.com/in/cheryl_allen",
+            "whatsapp": "770.143.6349x5788"
+        },
+        "education": {
+            "college": "IITBHU",
+            "degree": "B.Tech",
+            "branch": "Mechanical Engineering",
+            "year": "First"
+        },
+        "skills": "C, Node.js, C++, CSS, SQL",
+        "experience": "Worked on seize cutting-edge schemas project",
+        "availability": {
+            "hours": "15",
+            "worktime": "Evenings",
+            "remote": "Yes",
+            "duration": "2 months"
+        },
+        "portfolio": [
+            "https://github.com/cheryl_allen/project3"
+        ],
+        "preferences": {
+            "roles": "Backend Developer",
+            "why": "Goal law fill discover return firm sea week."
+        },
+        "softSkills": {
+            "communication": "Average",
+            "deadlines": "Good"
+        },
+        "profiles": {
+            "github": {
+                "username": "cheryl_allen"
+            },
+            "codeforces": {
+                "username": "cheryl_allen_cf"
+            },
+            "leetcode": {
+                "username": "cheryl_allen_lc"
+            }
+        }
+    }
+]

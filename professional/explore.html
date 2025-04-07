@@ -117,29 +117,39 @@
             background: #4B5563; 
             transform: scale(1.05); 
         }
-        .loading-overlay { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(249, 250, 251, 0.9); 
-            display: none; 
-            justify-content: center; 
-            align-items: center; 
-            z-index: 1001; 
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(249, 250, 251, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
         }
-        .loader { 
-            width: 60px; 
-            height: 60px; 
-            border: 5px solid #374151; 
-            border-top: 5px solid transparent; 
-            border-radius: 50%; 
-            animation: spin 1s linear infinite; 
+        .loader {
+            width: 200px;
+            height: 4px;
+            background: #E5E7EB;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
         }
-        @keyframes spin { 
-            0% { transform: rotate(0deg); } 
-            100% { transform: rotate(360deg); } 
+        .loader::before {
+            content: '';
+            position: absolute;
+            left: -50%;
+            height: 100%;
+            width: 50%;
+            background: #374151;
+            animation: lineLoading 1.5s infinite ease-in-out;
+        }
+        @keyframes lineLoading {
+            0% { left: -50%; }
+            50% { left: 50%; }
+            100% { left: 150%; }
         }
         .students-list { 
             display: grid; 
@@ -204,6 +214,21 @@
             transition: opacity 0.3s ease; 
         }
         .view-profile:hover { opacity: 0.7; }
+        .student-actions .social-icons {
+            display: flex;
+            gap: 0.8rem;
+        }
+        .social-icon {
+            font-size: 1.2rem;
+            color: #374151;
+            cursor: pointer;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        .social-icon:hover {
+            transform: scale(1.2);
+        }
+        .social-icon.linkedin:hover { color: #0077B5; }
+        .social-icon.whatsapp:hover { color: #25D366; }
         .pagination { 
             display: flex; 
             justify-content: center; 
@@ -288,6 +313,53 @@
             display: block; 
             transform: translate(-50%, -50%) scale(1); 
         }
+        .whatsapp-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            background: #FFFFFF;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 90%;
+            max-width: 500px;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .whatsapp-popup.active {
+            display: block;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .whatsapp-popup h2 {
+            font-size: 1.5rem;
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+        .whatsapp-popup textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 1rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            resize: vertical;
+        }
+        .whatsapp-popup .send-btn {
+            padding: 0.8rem 2rem;
+            background: #25D366;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .whatsapp-popup .send-btn:hover {
+            background: #20BD5A;
+            transform: scale(1.05);
+        }
         .profile-content { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
@@ -350,7 +422,7 @@
             grid-template-columns: repeat(4, 1fr); 
             gap: 1.5rem; 
         }
-        .profile-popup .close-btn { 
+        .profile-popup .close-btn, .whatsapp-popup .close-btn { 
             position: absolute; 
             top: 0.5rem; 
             right: 0.5rem; 
@@ -361,7 +433,7 @@
             color: #6B7280; 
             transition: color 0.3s ease; 
         }
-        .profile-popup .close-btn:hover { color: #374151; }
+        .profile-popup .close-btn:hover, .whatsapp-popup .close-btn:hover { color: #374151; }
         footer { 
             background: #FFFFFF; 
             padding: 1rem; 
@@ -417,10 +489,8 @@
     <nav class="navbar">
         <div class="logo">Taska Elite</div>
         <ul class="nav-menu">
-            <li><a href="overview.html">Overview</a></li>
-            <li><a href="connections.html">Connections</a></li>
             <li><a href="explore.html" class="active">Explore</a></li>
-            <li><a href="tasks.html">Tasks</a></li>
+            
             <li><a href="profile.html">Profile</a></li>
             <li><a href="../index.html">Logout</a></li>
         </ul>
@@ -437,7 +507,7 @@
                     <i class="fas fa-search"></i>
                     <input type="text" class="search-input" id="ai-search-input" 
                            placeholder="e.g., IIT Delhi B.Tech Applied Mechanics student with Python skill">
-                    <button class="search-btn" onclick="aiSearch(1)">Search</button>
+                    <button class="search-btn" onclick="performSearch()">Search</button>
                 </div>
             </div>
             <div class="loading-overlay" id="loadingOverlay">
@@ -459,160 +529,171 @@
         <div class="profile-content" id="profileContent"></div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getDatabase, ref, onValue, push, get, remove, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
-    
-        const firebaseConfig = {
-            apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
-            authDomain: "taska-45011.firebaseapp.com",
-            databaseURL: "https://taska-45011-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "taska-45011",
-            storageBucket: "taska-45011.firebasestorage.app",
-            messagingSenderId: "205487498813",
-            appId: "1:205487498813:web:0de2c9eab567482781ec54"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const userId = localStorage.getItem('userId');
+    <!-- WhatsApp Popup -->
+    <div class="whatsapp-popup" id="whatsappPopup">
+        <button class="close-btn" onclick="closeWhatsappPopup()">×</button>
+        <h2>Send WhatsApp Message</h2>
+        <textarea id="whatsappMessage" placeholder="Write your message and requirements..."></textarea>
+        <button class="send-btn" onclick="sendWhatsapp()">Send</button>
+    </div>
+
+    <script>
+        const apiKey = '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';
         let studentsData = [];
         const sentRequests = new Map();
         const receivedRequests = new Map();
         const connectedProfiles = new Set();
-        const itemsPerPage = 9;
+        const itemsPerPage = 10;
         let currentPage = 1;
         let currentQuery = '';
-    
-        if (!userId) {
-            setTimeout(() => {
-                alert("Please log in or sign up first.");
-                window.location.href = '../login.html';
-            }, 1000);
-        }
-    
+        let currentWhatsappStudentId = null;
+
+        const userId = 'user123';
         const studentsList = document.getElementById('students-list');
         const pagination = document.getElementById('pagination');
-        const studentsRef = ref(db, 'studentslist');
-        const requestsRef = ref(db, 'connection_requests');
         const profilePopup = document.getElementById('profilePopup');
         const profileContent = document.getElementById('profileContent');
         const overlay = document.getElementById('overlay');
         const loadingOverlay = document.getElementById('loadingOverlay');
+        const whatsappPopup = document.getElementById('whatsappPopup');
+        const whatsappMessage = document.getElementById('whatsappMessage');
         const connectSound = new Audio('../assets/ding.mp3');
-    
-        async function checkConnectionStatus() {
-            connectedProfiles.clear();
-            sentRequests.clear();
-            receivedRequests.clear();
-    
-            const requestsSnapshot = await get(requestsRef);
-            if (requestsSnapshot.exists()) {
-                requestsSnapshot.forEach((childSnapshot) => {
-                    const request = childSnapshot.val();
-                    const requestId = childSnapshot.key;
-                    if (request.from === userId) {
-                        if (request.status === 'pending') {
-                            sentRequests.set(request.to, requestId);
-                        } else if (request.status === 'accepted') {
-                            connectedProfiles.add(request.to);
-                        }
-                    } else if (request.to === userId) {
-                        if (request.status === 'pending') {
-                            receivedRequests.set(request.from, requestId);
-                        } else if (request.status === 'accepted') {
-                            connectedProfiles.add(request.from);
-                        }
-                    }
+
+        // Load student data but don't display initially
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('manualstudentlist.json')
+                .then(response => response.json())
+                .then(data => {
+                    studentsData = data.map((student, index) => ({
+                        ...student,
+                        id: student.id || `student_${index}`
+                    }));
+                    // Removed initial aiSearch call
+                })
+                .catch(error => {
+                    console.error('Error loading JSON:', error);
+                    studentsList.innerHTML = '<p>Error loading student data.</p>';
                 });
-            }
-        }
-    
-        function aiFilterStudents(query) {
-            // Filter out connected profiles and the current user
-            const availableStudents = studentsData.filter(student => 
-                !connectedProfiles.has(student.id) && student.id !== userId
-            );
-    
+        });
+
+        async function aiSearch(page = 1, query = '') {
             if (!query) {
-                return availableStudents;
+                studentsList.innerHTML = '<p>Please enter a search query</p>';
+                return;
             }
-    
-            const keywords = query.split(/\s+/).map(k => k.toLowerCase());
-            const collegeMatch = keywords.find(k => k.includes('iit') || k === 'college') ? keywords.join(' ').match(/iit\s+\w+/)?.[0] : null;
-            const degreeMatch = keywords.includes('b.tech') || keywords.includes('btech') ? 'B.Tech' : null;
-            const branchMatch = keywords.find(k => /mechanics|cs|cse|ee|ece|civil|mech/.test(k)) || null;
-            const skillMatch = keywords.find(k => /python|java|cpp|c\+\+|js|javascript|ml|ai/.test(k)) || null;
-    
-            const studentsWithMatches = availableStudents.map(student => {
-                let matches = 0;
-                const name = student.personal.name?.toLowerCase() || '';
-                const college = student.education.college?.toLowerCase() || '';
-                const degree = student.education.degree?.toLowerCase() || '';
-                const branch = student.education.branch?.toLowerCase() || '';
-                const skills = student.skills?.toLowerCase() || '';
-    
-                if (collegeMatch && college.includes(collegeMatch)) matches++;
-                if (degreeMatch && degree === degreeMatch.toLowerCase()) matches++;
-                if (branchMatch && branch.includes(branchMatch)) matches++;
-                if (skillMatch && skills.includes(skillMatch)) matches++;
-                if (keywords.some(k => name.includes(k))) matches++;
-    
-                return { student, matches };
-            });
-    
-            return studentsWithMatches
-                .filter(item => item.matches > 0)
-                .sort((a, b) => b.matches - a.matches)
-                .map(item => item.student);
-        }
-    
-        window.aiSearch = async (page = 1, query = '') => {
+
             currentPage = page;
             currentQuery = query;
             loadingOverlay.style.display = 'flex';
-    
-            await checkConnectionStatus();
-            const filteredStudents = aiFilterStudents(query);
-    
+            pagination.innerHTML = ''; // Clear pagination while loading
+
+            const availableStudents = studentsData.filter(student => 
+                !connectedProfiles.has(student.id) && student.id !== userId
+            );
+
+            let filteredStudents = [];
+            const csvText = [
+                ['id', 'personal.name', 'education.college', 'education.degree', 'education.branch', 'education.year', 'skills', 'experience'].join(','),
+                ...availableStudents.map(student => [
+                    student.id,
+                    student.personal?.name || 'Unnamed',
+                    student.education?.college || 'Not set',
+                    student.education?.degree || 'Not set',
+                    student.education?.branch || 'Not set',
+                    student.education?.year || 'Not set',
+                    student.skills || 'Not set',
+                    student.experience || 'Not set'
+                ].join(','))
+            ].join('\n');
+
+            const prompt = `
+                Given the following CSV data of students:
+                ${csvText}
+                
+                And the user's requirement: "${query}"
+                
+                Analyze the data and return the top 10 best matching students based on the requirement. 
+                Provide only their "id" in order of relevance, as a JSON array like:
+                ["id1", "id2", ..., "id10"]
+            `;
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: [{ role: 'user', content: prompt }],
+                        max_tokens: 500
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error?.message || 'API request failed');
+
+                const shortlistedIds = JSON.parse(data.choices[0].message.content);
+                filteredStudents = availableStudents
+                    .filter(student => shortlistedIds.includes(student.id))
+                    .sort((a, b) => shortlistedIds.indexOf(a.id) - shortlistedIds.indexOf(b.id))
+                    .slice(0, 10);
+            } catch (error) {
+                console.error('AI Search Error:', error);
+                studentsList.innerHTML = `<p>Error performing search: ${error.message}</p>`;
+                loadingOverlay.style.display = 'none';
+                return;
+            }
+
             const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
             const startIndex = (page - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
             const paginatedStudents = filteredStudents.slice(startIndex, endIndex);
-    
-            studentsList.innerHTML = paginatedStudents.map(student => {
-                const isSent = sentRequests.has(student.id);
-                const isReceived = receivedRequests.has(student.id);
-                let buttonClass = '';
-                let buttonText = 'Connect';
-                if (isSent) {
-                    buttonClass = 'sent';
-                    buttonText = 'Connection Sent';
-                } else if (isReceived) {
-                    buttonClass = 'approve';
-                    buttonText = 'Approve Request';
-                }
-                return `
-                    <div class="student-card">
-                        <div class="student-info">
-                            <h3>${student.personal.name || 'Unnamed'}</h3>
-                            <p>${student.personal.name || 'Unnamed'} from <strong>${student.education.college || 'Not set'}</strong> pursuing a degree in <strong>${student.education.branch || 'Not set'}</strong></p>
+
+            studentsList.innerHTML = paginatedStudents.length > 0 ? 
+                paginatedStudents.map(student => {
+                    const isSent = sentRequests.has(student.id);
+                    const isReceived = receivedRequests.has(student.id);
+                    let buttonClass = '';
+                    let buttonText = 'Connect';
+                    if (isSent) {
+                        buttonClass = 'sent';
+                        buttonText = 'Connection Sent';
+                    } else if (isReceived) {
+                        buttonClass = 'approve';
+                        buttonText = 'Approve Request';
+                    }
+                    return `
+                        <div class="student-card">
+                            <div class="student-info">
+                                <h3>${student.personal?.name || 'Unnamed'}</h3>
+                                <p>${student.personal?.name || 'Unnamed'} from <strong>${student.education?.college || 'Not set'}</strong> pursuing a degree in <strong>${student.education?.branch || 'Not set'}</strong></p>
+                            </div>
+                            <div class="student-actions">
+                                
+                                <span class="view-profile" onclick="showProfile('${student.id}')">View Profile</span>
+                                <div class="social-icons">
+                                    <i class="fab fa-linkedin social-icon linkedin" 
+                                       onclick="window.open('${student.personal?.linkedin || '#'}', '_blank')"></i>
+                                    <i class="fab fa-whatsapp social-icon whatsapp" 
+                                       onclick="showWhatsappPopup('${student.id}')"></i>
+                                </div>
+                            </div>
                         </div>
-                        <div class="student-actions">
-                            <button class="connect-btn ${buttonClass}" 
-                                    onclick="toggleConnectionRequest('${student.id}', this)">
-                                ${buttonText}
-                            </button>
-                            <span class="view-profile" onclick="showProfile('${student.id}')">View Profile</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-    
+                    `;
+                }).join('') : 
+                '<p>No matching students found</p>';
+
             updatePagination(page, totalPages);
             loadingOverlay.style.display = 'none';
-        };
-    
+        }
+
         function updatePagination(currentPage, totalPages) {
+            if (totalPages <= 0) {
+                pagination.innerHTML = '';
+                return;
+            }
             pagination.innerHTML = `
                 <button class="pagination-btn" onclick="aiSearch(${currentPage - 1}, '${currentQuery}')" ${currentPage === 1 ? 'disabled' : ''}>‹</button>
                 ${Array.from({ length: totalPages }, (_, i) => `
@@ -622,156 +703,147 @@
                 <button class="pagination-btn" onclick="aiSearch(${currentPage + 1}, '${currentQuery}')" ${currentPage === totalPages ? 'disabled' : ''}>›</button>
             `;
         }
-    
+
         window.performSearch = () => {
-            const query = document.getElementById('ai-search-input').value.toLowerCase().trim();
+            const query = document.getElementById('ai-search-input').value.trim();
             aiSearch(1, query);
         };
-    
-        window.toggleConnectionRequest = async (studentId, button) => {
+
+        window.toggleConnectionRequest = (studentId, button) => {
             if (sentRequests.has(studentId)) {
-                const requestId = sentRequests.get(studentId);
-                await remove(ref(db, `connection_requests/${requestId}`));
                 sentRequests.delete(studentId);
                 button.classList.remove('sent');
                 button.textContent = 'Connect';
                 alert('Connection request removed!');
-                aiSearch(currentPage, currentQuery);
             } else if (receivedRequests.has(studentId)) {
-                const requestId = receivedRequests.get(studentId);
-                try {
-                    await Promise.all([
-                        set(ref(db, `studentslist/${userId}/connections/${studentId}`), true),
-                        set(ref(db, `studentslist/${studentId}/connections/${userId}`), true),
-                        remove(ref(db, `connection_requests/${requestId}`))
-                    ]);
-                    receivedRequests.delete(studentId);
-                    connectedProfiles.add(studentId);
-                    button.parentElement.parentElement.remove();
-                    alert('Connection request approved!');
-                    connectSound.play();
-                    aiSearch(currentPage, currentQuery);
-                } catch (error) {
-                    alert('Failed to approve request: ' + error.message);
-                }
+                receivedRequests.delete(studentId);
+                connectedProfiles.add(studentId);
+                button.parentElement.parentElement.remove();
+                alert('Connection request approved!');
+                connectSound.play();
             } else {
-                const requestData = {
-                    from: userId,
-                    to: studentId,
-                    status: 'pending',
-                    timestamp: new Date().toISOString()
-                };
-                const newRequestRef = await push(ref(db, 'connection_requests'), requestData);
-                sentRequests.set(studentId, newRequestRef.key);
+                sentRequests.set(studentId, true);
                 button.classList.add('sent');
                 button.textContent = 'Connection Sent';
                 alert('Connection request sent!');
                 connectSound.play();
-                aiSearch(currentPage, currentQuery);
             }
+            aiSearch(currentPage, currentQuery);
         };
-    
-        window.showProfile = async (targetUserId) => {
-            try {
-                const studentRef = ref(db, `studentslist/${targetUserId}`);
-                const snapshot = await get(studentRef);
-                if (snapshot.exists()) {
-                    const profileData = snapshot.val();
-                    profileContent.innerHTML = `
-                        <h2 class="profile-name">${profileData.personal.name || 'Unnamed'}</h2>
+
+        window.showProfile = (targetUserId) => {
+            const student = studentsData.find(s => s.id === targetUserId);
+            if (student) {
+                profileContent.innerHTML = `
+                    <h2 class="profile-name">${student.personal?.name || 'Unnamed'}</h2>
+                    <div class="profile-section">
+                        <h2>Personal Details</h2>
+                        <p><strong>Email:</strong> ${student.personal?.email || 'Not set'}</p>
+                        <p><strong>Gender:</strong> ${student.personal?.gender || 'Not set'}</p>
+                        <p><strong>Location:</strong> ${student.personal?.location || 'Not set'}</p>
+                        <p><strong>LinkedIn:</strong> <a href="${student.personal?.linkedin || '#'}" target="_blank">${student.personal?.linkedin || 'Not set'}</a></p>
+                    </div>
+                    <div class="profile-section">
+                        <h2>Profiles</h2>
+                        <p><strong>GitHub:</strong> ${student.profiles?.github?.username || 'Not set'}</p>
+                        <p><strong>Codeforces:</strong> ${student.profiles?.codeforces?.username || 'Not set'}</p>
+                        <p><strong>LeetCode:</strong> ${student.profiles?.leetcode?.username || 'Not set'}</p>
+                    </div>
+                    <div class="profile-section">
+                        <h2>Educational Details</h2>
+                        <p><strong>College:</strong> ${student.education?.college || 'Not set'}</p>
+                        <p><strong>Degree:</strong> ${student.education?.degree || 'Not set'}</p>
+                        <p><strong>Branch:</strong> ${student.education?.branch || 'Not set'}</p>
+                        <p><strong>Year:</strong> ${student.education?.year || 'Not set'}</p>
+                    </div>
+                    <div class="profile-section">
+                        <h2>Skills & Experience</h2>
+                        <p><strong>Skills:</strong> ${student.skills || 'Not set'}</p>
+                        <p><strong>Experience:</strong> ${student.experience || 'Not set'}</p>
+                    </div>
+                    <div class="bottom-section">
                         <div class="profile-section">
-                            <h2>Personal Details</h2>
-                            <p><strong>Email:</strong> ${profileData.personal.email || 'Not set'}</p>
-                            <p><strong>Gender:</strong> ${profileData.personal.gender || 'Not set'}</p>
-                            <p><strong>Location:</strong> ${profileData.personal.location || 'Not set'}</p>
-                            <p><strong>LinkedIn:</strong> <a href="${profileData.personal.linkedin || '#'}" target="_blank">${profileData.personal.linkedin || 'Not set'}</a></p>
+                            <h2>Availability</h2>
+                            <p><strong>Hours/Week:</strong> ${student.availability?.hours || 'Not set'}</p>
+                            <p><strong>Work Time:</strong> ${student.availability?.worktime || 'Not set'}</p>
+                            <p><strong>Remote:</strong> ${student.availability?.remote || 'Not set'}</p>
+                            <p><strong>Duration:</strong> ${student.availability?.duration || 'Not set'}</p>
                         </div>
                         <div class="profile-section">
-                            <h2>Profiles</h2>
-                            <p><strong>GitHub:</strong> ${profileData.profiles?.github?.username ? `${profileData.profiles.github.username} (Repos: ${profileData.profiles.github.details?.repos || 0})` : 'Not set'}</p>
-                            <p><strong>Codeforces:</strong> ${profileData.profiles?.codeforces?.username ? `${profileData.profiles.codeforces.username} (Rating: ${profileData.profiles.codeforces.details?.rating || 'N/A'})` : 'Not set'}</p>
-                            <p><strong>LeetCode:</strong> ${profileData.profiles?.leetcode?.username ? `${profileData.profiles.leetcode.username} (Solved: ${profileData.profiles.leetcode.details?.totalSolved || 0})` : 'Not set'}</p>
+                            <h2>Portfolio</h2>
+                            <ul>${
+                                student.portfolio && student.portfolio.length > 0 
+                                ? student.portfolio.map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`).join('')
+                                : '<li>Not set</li>'
+                            }</ul>
                         </div>
                         <div class="profile-section">
-                            <h2>Educational Details</h2>
-                            <p><strong>College:</strong> ${profileData.education.college || 'Not set'}</p>
-                            <p><strong>Degree:</strong> ${profileData.education.degree || 'Not set'}</p>
-                            <p><strong>Branch:</strong> ${profileData.education.branch || 'Not set'}</p>
-                            <p><strong>Year:</strong> ${profileData.education.year || 'Not set'}</p>
+                            <h2>Preferences</h2>
+                            <p><strong>Roles:</strong> ${student.preferences?.roles || 'Not set'}</p>
+                            <p><strong>Why:</strong> ${student.preferences?.why || 'Not set'}</p>
                         </div>
                         <div class="profile-section">
-                            <h2>Skills & Experience</h2>
-                            <p><strong>Skills:</strong> ${profileData.skills || 'Not set'}</p>
-                            <p><strong>Experience:</strong> ${profileData.experience || 'Not set'}</p>
+                            <h2>Soft Skills</h2>
+                            <p><strong>Communication:</strong> ${student.softSkills?.communication || 'Not set'}</p>
+                            <p><strong>Deadlines:</strong> ${student.softSkills?.deadlines || 'Not set'}</p>
                         </div>
-                        <div class="bottom-section">
-                            <div class="profile-section">
-                                <h2>Availability</h2>
-                                <p><strong>Hours/Week:</strong> ${profileData.availability?.hours || 'Not set'}</p>
-                                <p><strong>Work Time:</strong> ${profileData.availability?.worktime || 'Not set'}</p>
-                                <p><strong>Remote:</strong> ${profileData.availability?.remote || 'Not set'}</p>
-                                <p><strong>Duration:</strong> ${profileData.availability?.duration || 'Not set'}</p>
-                            </div>
-                            <div class="profile-section">
-                                <h2>Portfolio</h2>
-                                <ul>${
-                                    profileData.portfolio && profileData.portfolio.length > 0 
-                                    ? profileData.portfolio.map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`).join('')
-                                    : '<li>Not set</li>'
-                                }</ul>
-                            </div>
-                            <div class="profile-section">
-                                <h2>Preferences</h2>
-                                <p><strong>Roles:</strong> ${profileData.preferences?.roles || 'Not set'}</p>
-                                <p><strong>Why:</strong> ${profileData.preferences?.why || 'Not set'}</p>
-                            </div>
-                            <div class="profile-section">
-                                <h2>Soft Skills</h2>
-                                <p><strong>Communication:</strong> ${profileData.softSkills?.communication || 'Not set'}</p>
-                                <p><strong>Deadlines:</strong> ${profileData.softSkills?.deadlines || 'Not set'}</p>
-                            </div>
-                        </div>
-                    `;
-                    profilePopup.classList.add('active');
-                    overlay.classList.add('active');
-                } else {
-                    profileContent.innerHTML = '<h2>Profile Not Found</h2><p>No data available.</p>';
-                    profilePopup.classList.add('active');
-                    overlay.classList.add('active');
-                }
-            } catch (error) {
-                profileContent.innerHTML = `<h2>Error</h2><p>Failed to load profile: ${error.message}</p>`;
+                    </div>
+                `;
+                profilePopup.classList.add('active');
+                overlay.classList.add('active');
+            } else {
+                profileContent.innerHTML = '<h2>Profile Not Found</h2><p>No data available.</p>';
                 profilePopup.classList.add('active');
                 overlay.classList.add('active');
             }
         };
-    
+
         window.closeProfilePopup = () => {
             profilePopup.classList.remove('active');
             overlay.classList.remove('active');
         };
-    
-        // Real-time listeners
-        onValue(studentsRef, (snapshot) => {
-            studentsData = [];
-            snapshot.forEach((childSnapshot) => {
-                const student = childSnapshot.val();
-                student.id = childSnapshot.key;
-                if (student.personal && student.education) {
-                    studentsData.push(student);
-                }
-            });
-            aiSearch(currentPage, currentQuery);
+
+        window.showWhatsappPopup = (studentId) => {
+            currentWhatsappStudentId = studentId;
+            whatsappMessage.value = '';
+            whatsappPopup.classList.add('active');
+            overlay.classList.add('active');
+        };
+
+        window.closeWhatsappPopup = () => {
+            whatsappPopup.classList.remove('active');
+            overlay.classList.remove('active');
+            currentWhatsappStudentId = null;
+        };
+
+        window.sendWhatsapp = () => {
+            if (!currentWhatsappStudentId) return;
+            
+            const student = studentsData.find(s => s.id === currentWhatsappStudentId);
+            const message = whatsappMessage.value.trim();
+            
+            if (!message) {
+                alert('Please enter a message!');
+                return;
+            }
+
+            const phone = student.personal?.whatsapp || '';
+            if (!phone) {
+                alert('No WhatsApp number available for this student!');
+                return;
+            }
+
+            const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            
+            closeWhatsappPopup();
+            alert('Opening WhatsApp with your message!');
+        };
+
+        overlay.addEventListener('click', () => {
+            closeProfilePopup();
+            closeWhatsappPopup();
         });
-    
-        onValue(requestsRef, () => {
-            aiSearch(currentPage, currentQuery);
-        });
-    
-        overlay.addEventListener('click', closeProfilePopup);
-    
-        // Initial load
-        aiSearch(1, '');
     </script>
 </body>
 </html>
