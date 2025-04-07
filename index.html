@@ -402,9 +402,39 @@
                 width: 100%;
             }
         }
+
+        /* WhatsApp Button Styles */
+.whatsapp-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px; /* Changed from left to right */
+    background: #25D366;
+    color: #ffffff;
+    padding: 1rem 1.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.whatsapp-button:hover {
+    background: #20b956;
+    transform: scale(1.05);
+}
+
+.whatsapp-button i {
+    font-size: 1.5rem;
+}
     </style>
 </head>
 <body>
+    
     <nav class="navbar">
         <div class="logo">Taska</div>
         <ul class="nav-menu">
@@ -504,7 +534,10 @@
             <a href="">Contact Us</a>
         </div>
     </footer>
-
+    <!-- WhatsApp Button -->
+<a href="https://wa.me/919266124039?text=Hello%20Taska,%20I%20would%20like%20to%20know%20more%20about%20your%20services!" class="whatsapp-button" target="_blank">
+    <i class="fab fa-whatsapp"></i> Message Us
+</a>
     <script>
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
