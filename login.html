@@ -386,8 +386,8 @@
                     <input type="email" id="prof-email" placeholder="Enter your email" required>
                     <input type="password" id="prof-password" placeholder="Enter your password" required>
                     <div class="form-buttons">
-                        <button class="cta-button login-btn" onclick="login('professional')">Login</button>
                         <button class="cta-button signup-btn" onclick="signup('professional')">Create Account</button>
+                        <button class="cta-button login-btn" onclick="login('professional')">Login</button>
                     </div>
                 </div>
             </div>
@@ -398,8 +398,7 @@
                     <input type="email" id="stud-email" placeholder="Enter your email" required>
                     <input type="password" id="stud-password" placeholder="Enter your password" required>
                     <div class="form-buttons">
-                        <button class="cta-button login-btn" onclick="login('student')">Login</button>
-                        <button class="cta-button signup-btn" onclick="signup('student')">Create Account</button>
+                        <button class="cta-button login-btn" onclick="login('student')" style="display: none;">Login</button>                        <button class="cta-button signup-btn" onclick="signup('student')">Create Account</button>
                     </div>
                 </div>
             </div>
@@ -443,6 +442,8 @@
                 window.showForm(role);
             });
         });
+
+        
     </script>
     <script type="module" src="js/firebase-config.js"></script>
     <script type="module" src="js/auth.js"></script>

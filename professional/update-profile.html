@@ -14,112 +14,86 @@
 <body>
   <nav class="navbar">
     <div class="logo">Taska Elite</div>
-    <ul class="nav-menu">
-      <li><a href="overview.html">Overview</a></li>
-      <li><a href="connections.html">Connections</a></li>
-      <li><a href="explore.html">Explore</a></li>
-      <li><a href="earnings.html">Earnings</a></li>
-      <li><a href="profile.html" class="active">Profile</a></li>
-      <li><a href="../index.html">Logout</a></li>
-    </ul>
     <div class="hamburger">☰</div>
+    <ul class="nav-menu">
+      
+      <li><a href="profile.html">Profile</a></li>
+    </ul>
   </nav>
 
   <main class="dashboard-content">
     <section class="update-section">
-      <div class="update-container">
-        <div class="update-header">
-          <h1>Update Your Profile</h1>
-          <br>
-          <p>Edit your professional details below.</p>
+      <h1>Update Profile</h1>
+      <br>
+      <form id="update-profile-form" class="update-form">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" class="custom-input" placeholder="Enter Name">
         </div>
-        <form id="update-profile-form" class="update-form">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" class="custom-input" placeholder="Enter Name">
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" class="custom-input" placeholder="Enter Email" readonly>
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="phone">Phone</label>
-              <input type="tel" id="phone" class="custom-input" placeholder="Enter Phone">
-            </div>
-            <div class="form-group">
-              <label for="company">Company</label>
-              <input type="text" id="company" class="custom-input" placeholder="Enter Company">
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="experience">Experience</label>
-              <select id="experience" class="custom-input">
-                <option value="" disabled selected>Select Experience</option>
-                <option value="Fresher">Fresher</option>
-                <option value="Junior">Junior</option>
-                <option value="Senior">Senior</option>
-                <option value="Mid-Level">Mid-Level</option>
-                <option value="Experienced">Experienced</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="location">Location</label>
-              <input type="text" id="location" class="custom-input" placeholder="Enter Location">
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="jobRole">Job Role</label>
-              <input type="text" id="jobRole" class="custom-input" placeholder="Enter Job Role">
-            </div>
-            <div class="form-group">
-              <label for="college">College Studied</label>
-              <input type="text" id="college" class="custom-input" placeholder="Enter College">
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="degree">Degree</label>
-              <input type="text" id="degree" class="custom-input" placeholder="Enter Degree">
-            </div>
-            <div class="form-group">
-              <label for="areaOfStudy">Area of Study</label>
-              <input type="text" id="areaOfStudy" class="custom-input" placeholder="Enter Field (e.g., CS, Math)">
-            </div>
-          </div>
-          
-          <div class="form-group full-width">
-            <label for="bio">Bio</label>
-            <textarea id="bio" class="custom-input" placeholder="Write something about yourself..."></textarea>
-          </div>
-          
-          <div class="form-actions">
-            <button type="submit" class="cta-button">Save Changes</button>
-            <button type="button" class="cta-button cancel-btn" onclick="window.location.href='profile.html'">Cancel</button>
-          </div>
-        </form>
-      </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" class="custom-input" placeholder="Enter Email" readonly>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" class="custom-input" placeholder="Enter Phone">
+        </div>
+        <div class="form-group">
+          <label for="company">Company</label>
+          <input type="text" id="company" class="custom-input" placeholder="Enter Company">
+        </div>
+        <div class="form-group">
+          <label for="experience">Experience</label>
+          <select id="experience" class="custom-input">
+            <option value="" disabled selected>Select Experience</option>
+            <option value="Fresher">Fresher</option>
+            <option value="Junior">Junior</option>
+            <option value="Senior">Senior</option>
+            <option value="Mid-Level">Mid-Level</option>
+            <option value="Experienced">Experienced</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input type="text" id="location" class="custom-input" placeholder="Enter Location">
+        </div>
+        <div class="form-group">
+          <label for="jobRole">Job Role</label>
+          <input type="text" id="jobRole" class="custom-input" placeholder="Enter Job Role">
+        </div>
+        <div class="form-group">
+          <label for="college">College</label>
+          <input type="text" id="college" class="custom-input" placeholder="Enter College">
+        </div>
+        <div class="form-group">
+          <label for="degree">Degree</label>
+          <input type="text" id="degree" class="custom-input" placeholder="Enter Degree">
+        </div>
+        <div class="form-group">
+          <label for="areaOfStudy">Area of Study</label>
+          <input type="text" id="areaOfStudy" class="custom-input" placeholder="Enter Field">
+        </div>
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea id="bio" class="custom-input" placeholder="Tell us about yourself..."></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="cta-button">Save</button>
+          <button type="button" class="cta-button cancel-btn" onclick="window.location.href='profile.html'">Cancel</button>
+        </div>
+      </form>
     </section>
   </main>
 
   <footer>
-    <p>© 2025 Taska Elite. All rights reserved. | <a href="#" class="privacy-policy">Privacy Policy</a></p>
+    <p>© 2025 Taska Elite | <a href="#" class="privacy-policy">Privacy Policy</a></p>
   </footer>
 
-  <!-- Only showing the script section as the rest remains unchanged -->
-<script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-  import { getDatabase, ref, get, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+    import { getDatabase, ref, get, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
-  const firebaseConfig = {
+    const firebaseConfig = {
       apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
       authDomain: "taska-45011.firebaseapp.com",
       databaseURL: "https://taska-45011-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -127,42 +101,40 @@
       storageBucket: "taska-45011.firebasestorage.app",
       messagingSenderId: "205487498813",
       appId: "1:205487498813:web:0de2c9eab567482781ec54"
-  };
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
 
-  const userId = localStorage.getItem('userId');
-  if (!userId) {
-      console.error("No user ID found in localStorage");
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
       alert("Please log in or sign up first.");
       window.location.href = '../login.html';
-  }
+    }
 
-  document.getElementById('email').value = localStorage.getItem('userEmail') || ''; // Optional: store email separately if needed
+    document.getElementById('email').value = localStorage.getItem('userEmail') || '';
 
-  function loadProfileData() {
+    function loadProfileData() {
       const userRef = ref(database, `professionalslist/${userId}`);
       get(userRef).then((snapshot) => {
-          const data = snapshot.val() || {};
-          document.getElementById('name').value = data.name || '';
-          document.getElementById('email').value = data.email || '';
-          document.getElementById('phone').value = data.phone || '';
-          document.getElementById('company').value = data.company || '';
-          document.getElementById('experience').value = data.experience || '';
-          document.getElementById('location').value = data.location || '';
-          document.getElementById('jobRole').value = data.jobRole || '';
-          document.getElementById('college').value = data.college || '';
-          document.getElementById('degree').value = data.degree || '';
-          document.getElementById('areaOfStudy').value = data.areaOfStudy || '';
-          document.getElementById('bio').value = data.bio || '';
+        const data = snapshot.val() || {};
+        document.getElementById('name').value = data.name || '';
+        document.getElementById('email').value = data.email || '';
+        document.getElementById('phone').value = data.phone || '';
+        document.getElementById('company').value = data.company || '';
+        document.getElementById('experience').value = data.experience || '';
+        document.getElementById('location').value = data.location || '';
+        document.getElementById('jobRole').value = data.jobRole || '';
+        document.getElementById('college').value = data.college || '';
+        document.getElementById('degree').value = data.degree || '';
+        document.getElementById('areaOfStudy').value = data.areaOfStudy || '';
+        document.getElementById('bio').value = data.bio || '';
       }).catch((error) => {
-          console.error("Error fetching data:", error);
-          alert("Failed to load profile data: " + error.message);
+        alert("Failed to load profile data: " + error.message);
       });
-  }
+    }
 
-  document.getElementById('update-profile-form').addEventListener('submit', (e) => {
+    document.getElementById('update-profile-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const updatedData = {
         email: document.getElementById('email').value,
@@ -181,18 +153,16 @@
 
       const userRef = ref(database, `professionalslist/${userId}`);
       set(userRef, updatedData)
-          .then(() => {
-              console.log("Data updated:", updatedData);
-              alert("Profile updated successfully!");
-              window.location.href = 'profile.html';
-          })
-          .catch((error) => {
-              console.error("Error updating data:", error);
-              alert("Failed to update profile: " + error.message);
-          });
-  });
+        .then(() => {
+          alert("Profile updated successfully!");
+          window.location.href = 'profile.html';
+        })
+        .catch((error) => {
+          alert("Failed to update profile: " + error.message);
+        });
+    });
 
-  window.onload = loadProfileData;
-</script>
+    window.onload = loadProfileData;
+  </script>
 </body>
 </html>

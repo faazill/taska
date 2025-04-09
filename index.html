@@ -402,43 +402,38 @@
                 width: 100%;
             }
         }
-
-        /* WhatsApp Button Styles */
-.whatsapp-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px; /* Changed from left to right */
-    background: #25D366;
-    color: #ffffff;
-    padding: 1rem 1.5rem;
-    border-radius: 50px;
-    text-decoration: none;
-    font-size: 1.1rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    z-index: 1000;
-}
-
-.whatsapp-button:hover {
-    background: #20b956;
-    transform: scale(1.05);
-}
-
-.whatsapp-button i {
-    font-size: 1.5rem;
-}
+        .whatsapp-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #25D366;
+            color: #ffffff;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        .whatsapp-button:hover {
+            background: #20b956;
+            transform: scale(1.05);
+        }
+        .whatsapp-button i {
+            font-size: 1.5rem;
+        }
     </style>
 </head>
 <body>
-    
     <nav class="navbar">
         <div class="logo">Taska</div>
         <ul class="nav-menu">
-            <li><a href="login.html">Login</a></li>
+            <li><a href="#" id="auth-link">Login</a></li>
         </ul>
     </nav>
 
@@ -447,7 +442,7 @@
             <h1>Hire Elite Remote Assistants to Empower Your Business</h1>
             <p>Streamline your operations with talented remote professionals. Choose our premium service powered by top-tier students from IITs, NITs, and IIITs for unparalleled creativity and precision.</p>
             <div class="cta-buttons">
-                <button class="cta-button explore" onclick="window.location.href='login.html'">Hire Assistants</button>
+                <button class="cta-button explore" id="hire-assistants-btn">Hire Assistants</button>
                 <a href="login.html" class="cta-button join">Join as a Student</a>
             </div>
         </section>
@@ -534,10 +529,40 @@
             <a href="">Contact Us</a>
         </div>
     </footer>
+
     <!-- WhatsApp Button -->
-<a href="https://wa.me/919266124039?text=Hello%20Taska,%20I%20would%20like%20to%20know%20more%20about%20your%20services!" class="whatsapp-button" target="_blank">
-    <i class="fab fa-whatsapp"></i> Message Us
-</a>
+    <a href="https://wa.me/919266124039?text=Hello%20Taska,%20I%20would%20like%20to%20know%20more%20about%20your%20services!" class="whatsapp-button" target="_blank">
+        <i class="fab fa-whatsapp"></i> Message Us
+    </a>
+
+    <!-- Scripts -->
+    <script type="module">
+        // Check user role on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const userRole = localStorage.getItem('userRole');
+            const authLink = document.getElementById('auth-link');
+            const hireAssistantsBtn = document.getElementById('hire-assistants-btn');
+
+            if (userRole === 'professional') {
+                // Change Login to Profile
+                authLink.textContent = 'Profile';
+                authLink.href = 'professional/explore.html';
+
+                // Update Hire Assistants button behavior
+                hireAssistantsBtn.onclick = () => {
+                    window.location.href = 'professional/explore.html';
+                };
+            } else {
+                // Default behavior
+                authLink.textContent = 'Login';
+                authLink.href = 'login.html';
+                hireAssistantsBtn.onclick = () => {
+                    window.location.href = 'login.html';
+                };
+            }
+        });
+    </script>
+    <script type="module" src="js/auth.js"></script>
     <script>
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');

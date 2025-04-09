@@ -1,6 +1,6 @@
 // js/auth.js
 import { auth, database } from './firebase-config.js';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence, fetchSignInMethodsForEmail } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 import { ref, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
 // Show form based on role selection
@@ -65,45 +65,57 @@ export function login(userType) {
         });
 }
 
-// Signup function
-export function signup(userType) {
+// Signup function with validation
+export async function signup(userType) {
     const email = document.getElementById(userType === 'professional' ? 'prof-email' : 'stud-email').value;
     const password = document.getElementById(userType === 'professional' ? 'prof-password' : 'stud-password').value;
 
+    // Password length validation
+    if (password.length < 6) {
+        showWarning("Password must be at least 6 characters long");
+        return;
+    }
+
     toggleLoading(true);
-    createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            console.log(`${userType} signed up: ${user.email}, UID: ${user.uid}`);
-            localStorage.setItem('userId', user.uid);
-            localStorage.setItem('userRole', userType);
-
-            const list = userType === 'professional' ? 'professionalslist' : 'studentslist';
-            const path = userType === 'professional' 
-                ? `${list}/${user.uid}` 
-                : `${list}/${user.uid}/personal`;
-            const userRef = ref(database, path);
-            const initialData = userType === 'professional'
-                ? {
-                    email: user.email,
-                    coins: 500,
-                    isHiring: true
-                }
-                : {
-                    email: user.email
-                };
-
-            return set(userRef, initialData);
-        })
-        .then(() => {
+    
+    try {
+        // Check if email already exists
+        const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+        if (signInMethods.length > 0) {
             toggleLoading(false);
-            window.location.href = userType === 'professional' ? 'professional/update-profile.html' : 'workplace/update-profile.html';
-        })
-        .catch((error) => {
-            toggleLoading(false);
-            console.debug("Signup error:", error.code, error.message);
-            showWarning("Signup failed. Please try again!");
-        });
+            showWarning("Account already exists. Please login.");
+            return;
+        }
+
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        console.log(`${userType} signed up: ${user.email}, UID: ${user.uid}`);
+        localStorage.setItem('userId', user.uid);
+        localStorage.setItem('userRole', userType);
+
+        const list = userType === 'professional' ? 'professionalslist' : 'studentslist';
+        const path = userType === 'professional' 
+            ? `${list}/${user.uid}` 
+            : `${list}/${user.uid}/personal`;
+        const userRef = ref(database, path);
+        const initialData = userType === 'professional'
+            ? {
+                email: user.email,
+                coins: 500,
+                isHiring: true
+            }
+            : {
+                email: user.email
+            };
+
+        await set(userRef, initialData);
+        toggleLoading(false);
+        window.location.href = userType === 'professional' ? 'professional/update-profile.html' : 'workplace/update-profile.html';
+    } catch (error) {
+        toggleLoading(false);
+        console.debug("Signup error:", error.code, error.message);
+        showWarning("Signup failed. Please try again!");
+    }
 }
 
 // Logout function

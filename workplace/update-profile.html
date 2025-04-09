@@ -9,14 +9,15 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { 
-            background: #FFFFFF; 
+            background: #F9FAFB; 
             min-height: 100vh; 
-            color: #666666; 
-            padding-top: 80px; 
+            color: #333333; 
+            padding-top: 70px; 
+            padding-bottom: 60px; 
         }
         .navbar { 
             background: #FFFFFF; 
-            padding: 1.5rem 2rem; 
+            padding: 1rem 1.5rem; 
             position: fixed; 
             top: 0; 
             left: 0; 
@@ -25,183 +26,139 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            border-bottom: 1px solid #E5E5E5; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
         }
-        .navbar .logo { 
-            font-size: 1.8rem; 
-            font-weight: 600; 
-            color: #333333; 
-        }
-        .nav-menu { 
-            display: flex; 
-            gap: 1.5rem; 
-            list-style: none; 
-        }
+        .navbar .logo { font-size: 1.5rem; font-weight: 600; color: #007AFF; }
+        .nav-menu { display: flex; gap: 1rem; list-style: none; }
         .nav-menu a { 
             text-decoration: none; 
             color: #666666; 
-            font-weight: 400; 
-            font-size: 1rem; 
-            position: relative; 
+            font-size: 0.9rem; 
+            padding: 0.5rem; 
             transition: color 0.3s ease; 
         }
-        .nav-menu a::after { 
-            content: ''; 
-            position: absolute; 
-            width: 0; 
-            height: 2px; 
-            bottom: -4px; 
-            left: 0; 
-            background: #007AFF; 
-            transition: width 0.3s ease; 
-        }
-        .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
-        .nav-menu a:hover, .nav-menu a.active { color: #007AFF; font-weight: 500; }
+        .nav-menu a:hover, .nav-menu a.active { color: #007AFF; }
         .hamburger { display: none; font-size: 1.5rem; cursor: pointer; color: #333333; }
-        .dashboard-content { 
-            padding: 3rem 2rem; 
-        }
-        .update-section { width: 100%; max-width: 100%; padding: 0 1rem; }
+        .dashboard-content { padding: 2rem 1rem; }
         .update-container { 
             background: #FFFFFF; 
-            border-radius: 12px; 
-            padding: 2.5rem; 
-            width: 100%; 
-            border: 1px solid #E5E5E5; 
+            border-radius: 10px; 
+            padding: 2rem; 
+            max-width: 700px; 
+            margin: 0 auto; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
         }
         .update-header h1 { 
-            font-size: 2.2rem; 
+            font-size: 1.8rem; 
             font-weight: 600; 
             text-align: center; 
+            color: #007AFF; 
             margin-bottom: 0.5rem; 
-            color: #333333; 
         }
         .update-header p { 
-            font-size: 1.1rem; 
+            font-size: 0.9rem; 
             color: #666666; 
             text-align: center; 
-            margin-bottom: 2rem; 
+            margin-bottom: 1.5rem; 
         }
-        .update-form { display: flex; flex-direction: column; gap: 1.8rem; }
-        .form-row { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-        .form-group { flex: 1; min-width: 300px; }
+        .update-form { display: flex; flex-direction: column; gap: 1.5rem; }
+        .form-group { width: 100%; }
         .form-group label { 
             font-weight: 500; 
             color: #333333; 
-            margin-bottom: 0.4rem; 
+            margin-bottom: 0.3rem; 
             display: block; 
-            font-size: 0.95rem; 
+            font-size: 0.9rem; 
         }
+        .form-group label span.required { color: #E63946; }
         .custom-input, select.custom-input { 
             width: 100%; 
-            padding: 0.9rem; 
-            border: 1px solid #E5E5E5; 
-            border-radius: 8px; 
+            padding: 0.8rem; 
+            border: 1px solid #D1D5DB; 
+            border-radius: 6px; 
             background: #FFFFFF; 
             color: #333333; 
-            font-size: 1rem; 
+            font-size: 0.9rem; 
             transition: border-color 0.3s ease; 
         }
         .custom-input:focus, select.custom-input:focus { 
             border-color: #007AFF; 
             outline: none; 
         }
-        .custom-input[readonly] { background: #F9F9F9; color: #666666; }
-        textarea.custom-input { min-height: 120px; resize: vertical; }
-        .form-group.full-width { flex: 100%; }
-        .input-with-btn { display: flex; align-items: center; gap: 0.5rem; }
+        .custom-input[readonly] { background: #F3F4F6; color: #666666; }
+        textarea.custom-input { min-height: 100px; resize: vertical; }
+        .input-with-btn { display: flex; gap: 0.5rem; align-items: center; }
         .fetch-btn { 
             padding: 0.5rem 1rem; 
             background: #007AFF; 
             color: #FFFFFF; 
             border: none; 
-            border-radius: 8px; 
+            border-radius: 6px; 
             cursor: pointer; 
             font-size: 0.8rem; 
-            transition: background 0.3s ease; 
         }
         .fetch-btn:hover { background: #005BB5; }
         .summary-box { 
             margin-top: 0.5rem; 
-            padding: 1rem; 
-            background: #FAFAFA; 
-            border-radius: 8px; 
-            font-size: 0.9rem; 
+            padding: 0.8rem; 
+            background: #F9FAFB; 
+            border-radius: 6px; 
+            font-size: 0.85rem; 
             color: #333333; 
             display: none; 
-            max-height: 200px; 
+            max-height: 150px; 
             overflow-y: auto; 
-            border: 1px solid #E5E5E5; 
+            border: 1px solid #D1D5DB; 
         }
         .summary-box ul { list-style: none; padding-left: 0; }
-        .summary-box li { margin-bottom: 0.6rem; font-size: 0.85rem; }
+        .summary-box li { margin-bottom: 0.5rem; }
         .portfolio-list { list-style: none; padding: 0; }
-        .portfolio-list li { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+        .portfolio-list li { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center; }
         .add-btn { 
             padding: 0.5rem 1rem; 
             background: #007AFF; 
             color: #FFFFFF; 
             border: none; 
-            border-radius: 8px; 
+            border-radius: 6px; 
             cursor: pointer; 
             font-size: 0.9rem; 
-            transition: background 0.3s ease; 
         }
         .add-btn:hover { background: #005BB5; }
-        .form-actions { display: flex; justify-content: center; gap: 1.5rem; }
+        .form-actions { display: flex; justify-content: center; gap: 1rem; margin-top: 1.5rem; }
         .cta-button { 
-            padding: 0.9rem 2.5rem; 
+            padding: 0.8rem 2rem; 
             background: #007AFF; 
             color: #FFFFFF; 
             border: none; 
-            border-radius: 8px; 
-            font-size: 1rem; 
-            font-weight: 500; 
+            border-radius: 6px; 
+            font-size: 0.9rem; 
             cursor: pointer; 
-            transition: background 0.3s ease; 
         }
-        .cta-button:hover { 
-            background: #005BB5; 
-        }
-        .cancel-btn { background: #E5E5E5; color: #333333; }
+        .cta-button:hover { background: #005BB5; }
+        .cancel-btn { background: #E5E7EB; color: #333333; }
         .cancel-btn:hover { background: #D1D5DB; }
         footer { 
             background: #FFFFFF; 
             padding: 1rem; 
             text-align: center; 
-            border-top: 1px solid #E5E5E5; 
-            width: 100%; 
             color: #666666; 
             position: fixed; 
             bottom: 0; 
             left: 0; 
             right: 0; 
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05); 
         }
-        footer a { 
-            color: #007AFF; 
-            text-decoration: none; 
-            transition: color 0.3s ease; 
-        }
+        footer a { color: #007AFF; text-decoration: none; }
         footer a:hover { color: #005BB5; }
         @media (max-width: 768px) {
-            .form-row { flex-direction: column; }
-            .form-group { min-width: 100%; }
-            .navbar { padding: 1rem 1.5rem; }
-            .nav-menu { display: none; }
-            .nav-menu.active { 
-                display: flex; 
-                flex-direction: column; 
-                position: absolute; 
-                top: 60px; 
-                left: 0; 
-                right: 0; 
-                background: #FFFFFF; 
-                padding: 1rem; 
-                border-bottom: 1px solid #E5E5E5; 
-            }
-            .hamburger { display: block; }
-            .update-header h1 { font-size: 1.8rem; }
-            .update-header p { font-size: 1rem; }
+            
+            
+            .update-container { padding: 1.5rem; }
+            .update-header h1 { font-size: 1.5rem; }
+            .update-header p { font-size: 0.85rem; }
+            .form-actions { flex-direction: column; gap: 0.8rem; }
+            .input-with-btn { flex-direction: column; align-items: stretch; }
+            .fetch-btn { width: 100%; }
         }
     </style>
 </head>
@@ -209,199 +166,117 @@
     <nav class="navbar">
         <div class="logo">Taska Elite</div>
         <ul class="nav-menu">
-            <li><a href="overview.html">Overview</a></li>
-            <li><a href="connections.html">Connections</a></li>
-            <li><a href="explore.html">Explore</a></li>
-            <li><a href="tasks.html">Tasks</a></li>
-            <li><a href="profile.html" class="active">Profile</a></li>
+            
             <li><a href="../index.html">Logout</a></li>
         </ul>
-        <div class="hamburger">☰</div>
+        
     </nav>
 
     <main class="dashboard-content">
-        <section class="update-section">
-            <div class="update-container">
-                <div class="update-header">
-                    <h1>Update Your Profile</h1>
-                    <p>Let’s craft your standout student profile!</p>
-                </div>
-                <form id="update-profile-form" class="update-form">
-                    <!-- Personal Information -->
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">Full Name *</label>
-                            <input type="text" id="name" class="custom-input" placeholder="e.g., John Doe" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email *</label>
-                            <input type="email" id="email" class="custom-input" placeholder="e.g., john@iitd.ac.in" readonly required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="whatsapp">WhatsApp Number *</label>
-                            <input type="tel" id="whatsapp" class="custom-input" placeholder="e.g., +91 9876543210" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="gender">Gender *</label>
-                            <select id="gender" class="custom-input" required>
-                                <option value="" disabled selected>Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="not-preferred">Not Preferred</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="location">City / Location *</label>
-                            <input type="text" id="location" class="custom-input" placeholder="e.g., Delhi" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="github">GitHub Username</label>
-                            <div class="input-with-btn">
-                                <input type="text" id="github" class="custom-input" placeholder="e.g., johndoe">
-                                <button type="button" id="fetch-github" class="fetch-btn">Fetch</button>
-                            </div>
-                            <div id="github-summary" class="summary-box"></div>
-                        </div>
-                    </div>
-
-                    <!-- College & Education -->
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="college">College Name *</label>
-                            <input type="text" id="college" class="custom-input" placeholder="e.g., IIT Delhi" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="degree">Degree *</label>
-                            <select id="degree" class="custom-input" required>
-                                <option value="" disabled selected>Select Degree</option>
-                                <option value="B.Tech">B.Tech</option>
-                                <option value="M.Tech">M.Tech</option>
-                                <option value="PhD">PhD</option>
-                                <option value="Dual">Dual Degree</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="branch">Branch / Subject *</label>
-                            <input type="text" id="branch" class="custom-input" placeholder="e.g., CSE" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="year">Year of Study *</label>
-                            <select id="year" class="custom-input" required>
-                                <option value="" disabled selected>Select Year</option>
-                                <option value="1st">1st</option>
-                                <option value="2nd">2nd</option>
-                                <option value="3rd">3rd</option>
-                                <option value="4th">4th</option>
-                                <option value="5th">5th</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Availability -->
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="hours">Available Hours/Week</label>
-                            <input type="number" id="hours" class="custom-input" placeholder="e.g., 10">
-                        </div>
-                        <div class="form-group">
-                            <label for="worktime">Preferred Work Time</label>
-                            <select id="worktime" class="custom-input">
-                                <option value="" disabled selected>Select Time</option>
-                                <option value="morning">Morning</option>
-                                <option value="evening">Evening</option>
-                                <option value="weekends">Weekends</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="remote">Available for Remote Work?</label>
-                            <select id="remote" class="custom-input">
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="duration">Work Duration</label>
-                            <input type="text" id="duration" class="custom-input" placeholder="e.g., 1 month">
-                        </div>
-                    </div>
-
-                    <!-- Skills & Tools -->
-                    <div class="form-group full-width">
-                        <label for="skills">Skills (comma-separated)</label>
-                        <input type="text" id="skills" class="custom-input" placeholder="e.g., Python, Figma, SEO">
-                    </div>
-
-                    <!-- Experience -->
-                    <div class="form-group full-width">
-                        <label for="experience">Experience (Internships/Projects)</label>
-                        <textarea id="experience" class="custom-input" placeholder="e.g., Intern at XYZ, Built a web app"></textarea>
-                    </div>
-
-                    <!-- Work Samples -->
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="codeforces">Codeforces Username</label>
-                            <div class="input-with-btn">
-                                <input type="text" id="codeforces" class="custom-input" placeholder="e.g., johndoe">
-                                <button type="button" id="fetch-codeforces" class="fetch-btn">Fetch</button>
-                            </div>
-                            <div id="codeforces-summary" class="summary-box"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="leetcode">LeetCode Username</label>
-                            <div class="input-with-btn">
-                                <input type="text" id="leetcode" class="custom-input" placeholder="e.g., johndoe">
-                                <button type="button" id="fetch-leetcode" class="fetch-btn">Fetch</button>
-                            </div>
-                            <div id="leetcode-summary" class="summary-box"></div>
-                        </div>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Portfolio / Work Samples</label>
-                        <ul id="portfolio-list" class="portfolio-list"></ul>
-                        <button type="button" id="add-portfolio" class="add-btn">Add Link</button>
-                    </div>
-
-                    <!-- Job Preferences -->
-                    <div class="form-group full-width">
-                        <label for="roles">Interested Roles (comma-separated)</label>
-                        <input type="text" id="roles" class="custom-input" placeholder="e.g., Coding, Content Writing">
-                    </div>
-
-                    <!-- Soft Skills -->
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="communication">Communication Skill (1-5)</label>
-                            <input type="number" id="communication" class="custom-input" min="1" max="5">
-                        </div>
-                        <div class="form-group">
-                            <label for="deadlines">Can Work Under Deadlines?</label>
-                            <select id="deadlines" class="custom-input">
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="why">Why Part-Time Work?</label>
-                        <textarea id="why" class="custom-input" placeholder="e.g., To gain experience"></textarea>
-                    </div>
-
-                    <!-- Form Actions -->
-                    <div class="form-actions">
-                        <button type="submit" class="cta-button">Save Profile</button>
-                        <button type="button" class="cta-button cancel-btn" onclick="window.location.href='profile.html'">Cancel</button>
-                    </div>
-                </form>
+        <section class="update-container">
+            <div class="update-header">
+                <h1>Update Your Profile</h1>
+                <p>Keep it simple and boost your chances!</p>
             </div>
+            <form id="update-profile-form" class="update-form">
+                <!-- Personal Information -->
+                <div class="form-group">
+                    <label for="name">Full Name <span class="required">*</span></label>
+                    <input type="text" id="name" class="custom-input" placeholder="e.g., John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email <span class="required">*</span></label>
+                    <input type="email" id="email" class="custom-input" placeholder="e.g., john@iitd.ac.in" readonly required>
+                </div>
+                <div class="form-group">
+                    <label for="whatsapp">WhatsApp Number <span class="required">*</span></label>
+                    <input type="tel" id="whatsapp" class="custom-input" placeholder="e.g., +91 9876543210" required>
+                </div>
+                <div class="form-group">
+                    <label for="location">City / Location <span class="required">*</span></label>
+                    <input type="text" id="location" class="custom-input" placeholder="e.g., Delhi" required>
+                </div>
+
+                <!-- Brief About Yourself -->
+                <div class="form-group">
+                    <label for="about">Brief About Yourself <span class="required">*</span> <small>(This is what we display - it increases your selection chances!)</small></label>
+                    <textarea id="about" class="custom-input" placeholder="e.g., I’m a passionate coder with a knack for problem-solving..." required></textarea>
+                </div>
+
+                <!-- Education -->
+                <div class="form-group">
+                    <label for="college">College Name <span class="required">*</span></label>
+                    <input type="text" id="college" class="custom-input" placeholder="e.g., IIT Delhi" required>
+                </div>
+                <div class="form-group">
+                    <label for="degree">Degree <span class="required">*</span></label>
+                    <select id="degree" class="custom-input" required>
+                        <option value="" disabled selected>Select Degree</option>
+                        <option value="B.Tech">B.Tech</option>
+                        <option value="M.Tech">M.Tech</option>
+                        <option value="PhD">PhD</option>
+                        <option value="Dual">Dual Degree</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="branch">Branch / Subject <span class="required">*</span></label>
+                    <input type="text" id="branch" class="custom-input" placeholder="e.g., CSE" required>
+                </div>
+                <div class="form-group">
+                    <label for="year">Year of Study <span class="required">*</span></label>
+                    <select id="year" class="custom-input" required>
+                        <option value="" disabled selected>Select Year</option>
+                        <option value="1st">1st</option>
+                        <option value="2nd">2nd</option>
+                        <option value="3rd">3rd</option>
+                        <option value="4th">4th</option>
+                        <option value="5th">5th</option>
+                    </select>
+                </div>
+
+                <!-- Skills & Profiles -->
+                <div class="form-group">
+                    <label for="skills">Skills (comma-separated)</label>
+                    <input type="text" id="skills" class="custom-input" placeholder="e.g., Python, Figma, SEO">
+                </div>
+                <div class="form-group">
+                    <label for="github">GitHub Username</label>
+                    <div class="input-with-btn">
+                        <input type="text" id="github" class="custom-input" placeholder="e.g., johndoe">
+                        <button type="button" id="fetch-github" class="fetch-btn">Fetch</button>
+                    </div>
+                    <div id="github-summary" class="summary-box"></div>
+                </div>
+                <div class="form-group">
+                    <label for="codeforces">Codeforces Username</label>
+                    <div class="input-with-btn">
+                        <input type="text" id="codeforces" class="custom-input" placeholder="e.g., johndoe">
+                        <button type="button" id="fetch-codeforces" class="fetch-btn">Fetch</button>
+                    </div>
+                    <div id="codeforces-summary" class="summary-box"></div>
+                </div>
+                <div class="form-group">
+                    <label for="leetcode">LeetCode Username</label>
+                    <div class="input-with-btn">
+                        <input type="text" id="leetcode" class="custom-input" placeholder="e.g., johndoe">
+                        <button type="button" id="fetch-leetcode" class="fetch-btn">Fetch</button>
+                    </div>
+                    <div id="leetcode-summary" class="summary-box"></div>
+                </div>
+
+                <!-- Portfolio -->
+                <div class="form-group">
+                    <label>Portfolio / Work Samples</label>
+                    <ul id="portfolio-list" class="portfolio-list"></ul>
+                    <button type="button" id="add-portfolio" class="add-btn">Add Link</button>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="cta-button">Save Profile</button>
+                    <button type="button" class="cta-button cancel-btn" onclick="window.location.href='profile.html'">Cancel</button>
+                </div>
+            </form>
         </section>
     </main>
 
@@ -449,26 +324,17 @@
                 document.getElementById('name').value = data.personal?.name || '';
                 document.getElementById('email').value = data.personal?.email || '';
                 document.getElementById('whatsapp').value = data.personal?.whatsapp || '';
-                document.getElementById('gender').value = data.personal?.gender || '';
                 document.getElementById('location').value = data.personal?.location || '';
-                document.getElementById('github').value = data.profiles?.github?.username || '';
+                document.getElementById('about').value = data.personal?.about || '';
                 document.getElementById('college').value = data.education?.college || '';
                 document.getElementById('degree').value = data.education?.degree || '';
                 document.getElementById('branch').value = data.education?.branch || '';
                 document.getElementById('year').value = data.education?.year || '';
-                document.getElementById('hours').value = data.availability?.hours || '';
-                document.getElementById('worktime').value = data.availability?.worktime || '';
-                document.getElementById('remote').value = data.availability?.remote || 'yes';
-                document.getElementById('duration').value = data.availability?.duration || '';
                 document.getElementById('skills').value = data.skills || '';
-                document.getElementById('experience').value = data.experience || '';
+                document.getElementById('github').value = data.profiles?.github?.username || '';
                 document.getElementById('codeforces').value = data.profiles?.codeforces?.username || '';
                 document.getElementById('leetcode').value = data.profiles?.leetcode?.username || '';
                 loadPortfolio(data.portfolio || []);
-                document.getElementById('roles').value = data.preferences?.roles || '';
-                document.getElementById('communication').value = data.softSkills?.communication || '';
-                document.getElementById('deadlines').value = data.softSkills?.deadlines || 'yes';
-                document.getElementById('why').value = data.preferences?.why || '';
                 if (data.profiles) {
                     displaySummary('github', data.profiles.github?.details);
                     displaySummary('codeforces', data.profiles.codeforces?.details);
@@ -562,14 +428,14 @@
                 if (platform === 'github') {
                     let html = `Repos: ${summary.repos} | Languages: ${summary.languages.join(', ')}<br><strong>Top Projects:</strong><ul>`;
                     summary.projects.forEach(project => {
-                        html += `<li>${project.name}: ${project.description} (Lang: ${project.language}, Stars: ${project.stars})</li>`;
+                        html += `<li>${project.name}: ${project.description} (Stars: ${project.stars})</li>`;
                     });
                     html += '</ul>';
                     summaryBox.innerHTML = html;
                 } else if (platform === 'leetcode') {
-                    summaryBox.innerHTML = `<strong>Stats:</strong><br>Total Solved: ${summary.totalSolved}<br>Easy: ${summary.easySolved}<br>Medium: ${summary.mediumSolved}<br>Hard: ${summary.hardSolved}<br>Ranking: ${summary.ranking}`;
+                    summaryBox.innerHTML = `Total Solved: ${summary.totalSolved}<br>Easy: ${summary.easySolved}<br>Medium: ${summary.mediumSolved}<br>Hard: ${summary.hardSolved}`;
                 } else if (platform === 'codeforces') {
-                    summaryBox.innerHTML = `<strong>Stats:</strong><br>Rating: ${summary.rating}<br>Max Rating: ${summary.maxRating}<br>Rank: ${summary.rank}<br>Contribution: ${summary.contribution}`;
+                    summaryBox.innerHTML = `Rating: ${summary.rating}<br>Rank: ${summary.rank}<br>Contribution: ${summary.contribution}`;
                 }
             } else {
                 summaryBox.style.display = 'none';
@@ -675,8 +541,8 @@
                     name: document.getElementById('name').value.trim(),
                     email: document.getElementById('email').value.trim(),
                     whatsapp: document.getElementById('whatsapp').value.trim(),
-                    gender: document.getElementById('gender').value,
-                    location: document.getElementById('location').value.trim()
+                    location: document.getElementById('location').value.trim(),
+                    about: document.getElementById('about').value.trim()
                 },
                 education: {
                     college: document.getElementById('college').value.trim(),
@@ -684,24 +550,9 @@
                     branch: document.getElementById('branch').value.trim(),
                     year: document.getElementById('year').value
                 },
-                availability: {
-                    hours: document.getElementById('hours').value.trim() || '',
-                    worktime: document.getElementById('worktime').value || '',
-                    remote: document.getElementById('remote').value,
-                    duration: document.getElementById('duration').value.trim() || ''
-                },
                 skills: document.getElementById('skills').value.trim() || '',
-                experience: document.getElementById('experience').value.trim() || '',
                 profiles: profiles,
-                portfolio: portfolioLinks.length > 0 ? portfolioLinks : [],
-                preferences: {
-                    roles: document.getElementById('roles').value.trim() || '',
-                    why: document.getElementById('why').value.trim() || ''
-                },
-                softSkills: {
-                    communication: document.getElementById('communication').value.trim() || '',
-                    deadlines: document.getElementById('deadlines').value
-                }
+                portfolio: portfolioLinks.length > 0 ? portfolioLinks : []
             };
 
             const userRef = ref(db, `studentslist/${userId}`);
