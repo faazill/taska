@@ -127,6 +127,20 @@
             text-decoration: none; 
         }
 
+        .logout-btn {
+        display: inline-block;
+        padding: 0.8rem 2rem;
+        background: #e74c3c; /* Red color for logout */
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        margin-left: 1rem; /* Space between Edit and Logout buttons */
+    }
+        .logout-btn:hover {
+        background: #c0392b; /* Darker red on hover */
+    }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             .navbar .nav-menu {
@@ -236,6 +250,7 @@
 
             <div class="profile-actions">
                 <a href="update-profile.html" class="edit-btn">Edit Profile</a>
+                <a href="#" id="logout-btn" class="logout-btn">Logout</a>
             </div>
         </div>
     </main>
@@ -298,6 +313,14 @@
                 alert(`Failed to load profile: ${error.message}`);
             }
         }
+
+        document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        // Clear all localStorage data
+        localStorage.clear();
+        // Redirect to index.html
+        window.location.href = '../index.html';
+    });
     </script>
 </body>
 </html>

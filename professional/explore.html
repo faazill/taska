@@ -361,7 +361,7 @@
 
         const part1 = 'sk-proj-3F9d8rVuPthYn2jvKneznUYN-ZYaFSy0nKkKIJ5IOEVdjRQdGebYsRkkmJqn25YfZNDLUY12S6T3BlbkFJVBfH9b';
         const part2 = 'EfOVjVB3iRmikjAcyzHapDxOwLArvNo2eln91xFnjyR_D-Mo7XeXcjgcdjRiTueSh8MA';
-        const apiKey = part1 + part2;  
+        const apiKey = part1 + part2;        
         let studentsData = [];
         let currentStudentId = null;
 
@@ -415,7 +415,7 @@
                 ${csvText}
                 
                 And the user's requirement: "${query}"
-                
+                based on the requirement , find the best matched students , analyse each students datas and find out who will be the most suitable candidate with respect to the given requirement.
                 Return EXACTLY 10 student IDs that best match the requirement, in order of relevance.
                 If fewer than 10 exact matches exist, fill the remaining slots with the most relevant students available.
                 Provide the response STRICTLY as a JSON array of 10 strings (student IDs) with no additional text, like this:
@@ -430,9 +430,9 @@
                         'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
-                        model: 'gpt-4o-mini',
+                        model: 'gpt-4o',
                         messages: [{ role: 'user', content: prompt }],
-                        max_tokens: 200
+                        max_tokens: 2000
                     })
                 });
 
