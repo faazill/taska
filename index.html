@@ -16,7 +16,7 @@
             font-family: 'Poppins', sans-serif;
         }
         body {
-            background: #f5f7fa;
+            background: #fafaf5;
             color: #37474F;
             line-height: 1.8;
         }
@@ -32,10 +32,10 @@
             z-index: 1000;
         }
         .logo {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #26A69A;
-            letter-spacing: -0.5px;
+            font-size: 1.7rem;
+            font-weight: 400;
+            color: #0c2720;
+            letter-spacing: 0px;
         }
         .nav-menu {
             list-style: none;
@@ -44,7 +44,7 @@
         }
         .nav-menu li a {
             text-decoration: none;
-            color: #78909C;
+            color: #01090d;
             font-weight: 500;
             transition: color 0.3s ease;
         }
@@ -52,7 +52,7 @@
             color: #26A69A;
         }
         .hero {
-            background: linear-gradient(135deg, #ffffff, #e0f2f1);
+            background: linear-gradient(135deg, #ffffff, #f9f8f0);
             color: #37474F;
             text-align: center;
             padding: 6rem 6%;
@@ -60,19 +60,19 @@
         }
         .hero h1 {
             font-size: 3.5rem;
-            font-weight: 800;
+            font-weight: 500;
             margin-bottom: 1.5rem;
             line-height: 1.3;
-            color: #26A69A;
+            color: #135a56;
         }
         .hero p {
             font-size: 1.3rem;
-            font-weight: 300;
+            font-weight: 400;
             margin-bottom: 2.5rem;
-            max-width: 700px;
+            max-width: 900px;
             margin-left: auto;
             margin-right: auto;
-            color: #78909C;
+            color: #104a47;
         }
         .cta-buttons {
             display: flex;
@@ -107,54 +107,61 @@
             transform: scale(1.05);
         }
         .exclusive {
-            background: #ffffff;
-            padding: 4rem 6%;
-            text-align: center;
-            position: relative;
-            max-width: 900px;
-            margin: 0 auto 4rem;
-            border: 2px solid #26A69A;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        .exclusive::before {
-            content: 'Premium Talent Service';
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #26A69A;
-            color: #ffffff;
-            font-size: 0.9rem;
-            font-weight: 600;
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            letter-spacing: 1px;
-        }
-        .exclusive h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: #26A69A;
-        }
-        .exclusive p {
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto 2rem;
-            color: #78909C;
-        }
-        .exclusive .cta-button {
-            background: #26A69A;
-            color: #ffffff;
-            padding: 1rem 2.5rem;
-            font-size: 1.2rem;
-            position: relative;
-            overflow: hidden;
-        }
-        .exclusive .cta-button:hover {
-            background: #1d8379;
-            transform: scale(1.05);
-        }
+    background: #ffffff; /* Already white, kept for clarity */
+    padding: 4rem 6%;
+    text-align: center;
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto 4rem;
+    border: 2px solid #e0e0e0; /* Lighter, subtle border */
+    border-radius: 15px;
+
+}
+
+.exclusive::before {
+    content: 'Connect with Premium Talent';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffffff; /* Light gray-white for contrast */
+    color: #140720; /* Keep the brand color */
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    border: 1px solid #e0e0e0; /* Subtle border */
+}
+
+.exclusive h2 {
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    color: #333333; /* Darker gray for readability */
+}
+
+.exclusive p {
+    font-size: 1.2rem;
+    max-width: 900px;
+    margin: 0 auto 2rem;
+    color: #666666; /* Softer gray for text */
+}
+
+.exclusive .cta-button {
+    background: #26A69A; /* Keep brand color */
+    color: #ffffff;
+    padding: 1rem 2.5rem;
+    font-size: 1.2rem;
+    position: relative;
+    overflow: hidden;
+    border: none; /* Clean look */
+}
+
+.exclusive .cta-button:hover {
+    background: #1d8379;
+    transform: scale(1.05);
+}
         .section {
             padding: 4rem 6%;
             text-align: center;
@@ -277,13 +284,13 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         .why-taska {
-            background: #f5f7fa;
+            background: #f7faf5;
             padding: 4rem 6%;
         }
         .why-taska h2 {
             text-align: center;
             font-size: 2.5rem;
-            font-weight: 700;
+            font-weight: 600;
             color: #26A69A;
             margin-bottom: 3rem;
             position: relative;
@@ -328,12 +335,12 @@
         .why-taska .content-card h3 {
             font-size: 1.8rem;
             font-weight: 600;
-            color: #37474F;
+            color: #485a63;
             margin-bottom: 1rem;
         }
         .why-taska .content-card p {
             font-size: 1.1rem;
-            color: #78909C;
+            color: #313f48;
         }
         footer {
             background: #ffffff;
@@ -427,11 +434,178 @@
         .whatsapp-button i {
             font-size: 1.5rem;
         }
+
+        .premier-talent {
+        padding: 4rem 6%;
+        background: #f9faf5; /* Light background to distinguish from other sections */
+        text-align: center;
+        position: relative;
+    }
+    .premier-header h2 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: #26A69A;
+        background: linear-gradient(135deg, #26A69A, #4DB6AC); /* Gradient text */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1rem;
+        position: relative;
+        letter-spacing: 0.5px;
+    }
+    .premier-header p {
+        font-size: 1.7rem;
+        color: #091921;
+        font-weight: 300;
+        max-width: 600px;
+        margin: 0 auto 2.5rem;
+        line-height: 1.7;
+    }
+    .premier-logos {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap; /* Allows wrapping on smaller screens */
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .logo-circle {
+        width: 150px;
+        height: 150px;
+        background: #ffffff;
+        border-radius: 50%; /* Circular shape */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #bcd0ce; /* Subtle border */
+        box-shadow: 0 4px 12px rgba(38, 166, 154, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        overflow: hidden; /* Ensures image stays within circle */
+    }
+    .logo-circle:hover {
+        transform: scale(1.15); /* Slight zoom on hover */
+        box-shadow: 0 6px 20px rgba(38, 166, 154, 0.25);
+        border-color: #4DB6AC; /* Slightly lighter border on hover */
+    }
+    .logo-circle img {
+        width: 80%; /* Ensures logos fit well within the circle */
+        height: 80%;
+        object-fit: contain; /* Maintains aspect ratio */
+        filter: grayscale(30%); /* Subtle desaturation for modern look */
+        transition: filter 0.3s ease;
+    }
+    .logo-circle:hover img {
+        filter: grayscale(0%); /* Full color on hover */
+    }
+
+    @media (max-width: 768px) {
+        .premier-header h2 {
+            font-size: 2.2rem;
+        }
+        .premier-header p {
+            font-size: 1.1rem;
+        }
+        .premier-logos {
+            gap: 1.5rem;
+        }
+        .logo-circle {
+            width: 100px;
+            height: 100px;
+        }
+    }
+    @media (max-width: 480px) {
+        .premier-logos {
+            gap: 1rem;
+        }
+        .logo-circle {
+            width: 80px;
+            height: 80px;
+        }
+    }
+
+    .modern-questions {
+    padding: 4rem 6%;
+    background: #fafaf5; /* Whitish background matching body */
+    text-align: center;
+}
+
+.questions-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.questions-text {
+    flex: 1;
+    text-align: left;
+}
+
+.questions-text h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #031311;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    letter-spacing: 0px;
+}
+
+.modern-list {
+    list-style: none;
+    color: #37474F;
+    font-size: 1.2rem;
+    line-height: 2;
+}
+
+.modern-list li {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 400;
+}
+
+.modern-list li:before {
+    content: ' '; 
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0a1615;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.questions-visual {
+    flex: 1;
+    max-width: 400px;
+}
+
+.questions-visual img {
+    width: 100%;
+    height: auto;
+    
+}
+
+@media (max-width: 768px) {
+    .questions-wrapper {
+        flex-direction: column-reverse; /* Image below text on mobile */
+        gap: 2rem;
+    }
+    .questions-text h2 {
+        font-size: 2.1rem;
+    }
+    .modern-list {
+        font-size: 1.1rem;
+    }
+    .questions-visual {
+        max-width: 300px;
+    }
+}
     </style>
 </head>
 <body>
     <nav class="navbar">
-        <div class="logo">Taska</div>
+        <div class="logo">Taska Elite</div>
         <ul class="nav-menu">
             <li><a href="#" id="auth-link">Login</a></li>
         </ul>
@@ -439,75 +613,80 @@
 
     <main>
         <section class="hero">
-            <h1>Hire Elite Remote Assistants to Empower Your Business</h1>
-            <p>Streamline your operations with talented remote professionals. Choose our premium service powered by top-tier students from IITs, NITs, and IIITs for unparalleled creativity and precision.</p>
+            <h1>Hire Remote Assistants to Empower Your Business</h1>
+            <p>Get things done faster with smart remote talent.
+                Work with top students from IITs, NITs, and IIITs for high quality, creative, and reliable results.
+                </p>
             <div class="cta-buttons">
                 <button class="cta-button explore" id="hire-assistants-btn">Hire Assistants</button>
                 <a href="login.html" class="cta-button join">Join as a Student</a>
             </div>
         </section>
         <br>
+
+        <section class="premier-talent">
+            <div class="premier-header">
+                <p>Network of Students from premier colleges</p>
+            </div>
+            <div class="premier-logos">
+                <div class="logo-circle">
+                    <img src="assets/iit1.webp" alt="IIT 1 Logo">
+                </div>
+                <div class="logo-circle">
+                    <img src="assets/iit2.webp" alt="IIT 2 Logo">
+                </div>
+                <div class="logo-circle">
+                    <img src="assets/iit3.webp" alt="IIT 3 Logo">
+                </div>
+                <div class="logo-circle">
+                    <img src="assets/iit4.webp" alt="IIT 4 Logo">
+                </div>
+                <div class="logo-circle">
+                    <img src="assets/iit5.webp" alt="IIT 5 Logo">
+                </div>
+                <div class="logo-circle">
+                    <img src="assets/iit6.webp" alt="IIT 6 Logo">
+                </div>
+            </div>
+        </section>
+        <br>
         <section class="exclusive">
-            <h2>Premium: Elite Student Talent</h2>
-            <p>Elevate your business with our exclusive talent service: Remote assistants recruited from India's most prestigious institutions including IITs, NITs, and IIITs. Get exceptional problem-solving skills and fresh perspectives for your most ambitious projects.</p>
-            <a href="contact.html" class="cta-button">Contact Us</a>
+            <h2>Outsource non-challenging Tasks</h2>
+            <p>Are there many non-challenging but essential tasks piling up in your business? Tasks that don’t require high expertise but still need someone reliable to get them done? Outsource them to our remote college assistants—talented students from IITs, NITs, and IIITs who are eager to work with you. Free up your time while tapping into exceptional skills and fresh energy for both routine and ambitious projects.</p>
+            
         </section>
 
-        <section class="comparison-section">
-            <h2>Standard vs. Premium: Choose Your Level</h2>
-            <div class="comparison-grid">
-                <div class="comparison-card">
-                    <h3>Standard Assistants</h3>
-                    <ul>
-                        <li>Efficient task execution</li>
-                        <li>Professional remote support</li>
-                        <li>High accuracy in administrative tasks</li>
-                        <li>Affordable and scalable</li>
-                        <li>Best for routine operations</li>
+        <section class="modern-questions">
+            <div class="questions-wrapper">
+                <div class="questions-text">
+                    <h2>Drowning in AI Tools, But Missing the Human Touch ?</h2>
+                    <br>
+
+                    <ul class="modern-list">
+                        <p>Are you a founder trying to build your dream , But everything feels robotic ?</p>
+                        <br>
+                        <li>Auto replies, AI emails yet no real connection?</li>
+                        <li>Content feels generic, not crafted with care ?</li>
+                        <li>Marketing runs, but no story behind your brand?</li>
+                        <li>Tools everywhere, but no team to trust ?</li>
+                        <p>You don’t just need automation.
+                            You need real people who understand your vision.</p>
+                        
                     </ul>
                 </div>
-                <div class="comparison-card">
-                    <h3>Premium Student Talent</h3>
-                    <ul>
-                        <li>Exceptional problem-solving capabilities</li>
-                        <li>Fresh innovation from elite institutions</li>
-                        <li>Advanced technical and analytical skills</li>
-                        <li>Premium value for complex challenges</li>
-                        <li>Best for strategic, creative, or technical projects</li>
-                    </ul>
+                <div class="questions-visual">
+                    <img src="assets/guy-removebg-preview.webp" alt="Guy asking questions">
                 </div>
             </div>
         </section>
 
-        <section class="section how-it-works">
-            <h2>How It Works</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-icon"><i class="fas fa-search"></i></div>
-                    <div class="timeline-content">
-                        <h3>Choose Your Solution</h3>
-                        <p>Select standard assistants for everyday tasks or premium student talent for specialized projects requiring advanced skills.</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-icon"><i class="fas fa-tasks"></i></div>
-                    <div class="timeline-content">
-                        <h3>Assign Tasks</h3>
-                        <p>Delegate work to your dedicated remote team members based on your business priorities and requirements.</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-icon"><i class="fas fa-check-circle"></i></div>
-                    <div class="timeline-content">
-                        <h3>Get Results</h3>
-                        <p>Receive high-quality work delivered promptly, with consistent communication throughout the process.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        
+
+        
 
         <section class="why-taska">
             <h2>Why Taska?</h2>
+            <br>
             <div class="content-grid">
                 <div class="content-card">
                     <h3>Boosting Business Efficiency</h3>
@@ -515,7 +694,7 @@
                 </div>
                 <div class="content-card">
                     <h3>Empowering Elite Students</h3>
-                    <p>We provide valuable opportunities for talented students from top institutions by connecting them with real-world business projects. These students gain professional experience, earn income while studying, and contribute innovative solutions—creating a win-win bridge between academia and industry.</p>
+                    <p>We provide valuable opportunities for talented students from top institutions by connecting them with real world business projects. These students gain professional experience, earn income while studying, and contribute innovative solutions, creating a win-win bridge between academia and industry.</p>
                 </div>
             </div>
         </section>
