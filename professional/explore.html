@@ -299,6 +299,67 @@
         @media (min-width: 768px) {
             .students-list { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
         }
+
+        .ai-explanation {
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            padding: 2.5rem;
+            border-radius: 12px;
+            
+            margin: 2rem 0;
+            text-align: left;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            font-family: 'Roboto', sans-serif;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .ai-explanation h2 {
+            font-size: 1.75rem;
+            color: #2B6CB0;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .ai-explanation p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #4B5563;
+            margin-bottom: 1.25rem;
+            font-weight: 400;
+        }
+
+        .ai-explanation p strong {
+            color: #374151;
+            font-weight: 700;
+        }
+
+        .ai-explanation span#totalStudents {
+            font-weight: 700;
+            color: #2B6CB0;
+        }
+
+        .ai-explanation ul {
+            list-style-type: disc;
+            margin-left: 2rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .ai-explanation ul li {
+            font-size: 1rem;
+            color: #4B5563;
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
+        }
+
+        .ai-explanation.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            height: 0;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
@@ -317,16 +378,34 @@
             <h1>Explore IIT Talent</h1>
             <p>Find and connect with top IIT prodigies using AI-powered search.</p>
             
-                <div class="search-box">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="search-input" id="ai-search-input" 
-                           placeholder="e.g., IIT Delhi B.Tech Applied Mechanics student with Python skill">
-                    <button class="search-btn" onclick="performSearch()">
-                        <span class="btn-text">Search Talent</span>
-                        <i class="fas fa-arrow-right btn-icon"></i>
-                    </button>
-                </div>
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" id="ai-search-input" 
+                       placeholder="e.g., IIT Delhi B.Tech Applied Mechanics student with Python skill">
+                <button class="search-btn" onclick="performSearch()">
+                    <span class="btn-text">Search Talent</span>
+                    <i class="fas fa-arrow-right btn-icon"></i>
+                </button>
+            </div>
             
+            <!-- Enhanced Explanation Section -->
+            <div class="ai-explanation" id="aiExplanation">
+                <h2>Discover Talent with Precision</h2>
+                <p>Welcome to Taska Elite, where we harness the power of artificial intelligence to connect you with the brightest minds from India’s premier IITs. Our platform is designed to make talent discovery seamless, efficient, and tailored to your specific needs.</p>
+                
+                <p><strong>How Our AI Works:</strong> Our advanced AI engine dives deep into a comprehensive database of <span id="totalStudents">loading...</span> registered IIT students. It evaluates every profile based on key attributes—such as college, degree, branch, skills, and experience—and matches them against your search query. Whether you’re looking for a machine learning expert from IIT Bombay or a final-year B.Tech student from IIT Delhi with Python proficiency, our AI ensures you get the top 10 most relevant candidates, ranked by precision.</p>
+                
+                <p><strong>What Sets Us Apart:</strong></p>
+                <ul>
+                    <li><strong>Smart Filtering:</strong> The AI doesn’t just keyword-match—it understands context, prioritizing students whose profiles align closely with your requirements.</li>
+                    <li><strong>Dynamic Updates:</strong> Our student database grows daily, with new talent added regularly, ensuring you always have access to the latest prodigies.</li>
+                    <li><strong>Diverse Talent Pool:</strong> From freshers to experienced interns, we cover all IITs, branches, and skill sets—over <span id="totalStudents">loading...</span> unique profiles and counting.</li>
+                    <li><strong>Effortless Connection:</strong> Once you find a match, use our AI-generated intro messages to connect instantly via WhatsApp or LinkedIn.</li>
+                </ul>
+                
+                <p><strong>Why Choose Taska Elite?</strong> We’re not just a search tool—we’re your gateway to India’s future innovators. With students from every IIT campus, spanning disciplines like Computer Science, Mechanical Engineering, and more, our platform offers unmatched access to talent that drives innovation. Start your search now and see how easy it is to find the perfect fit!</p>
+            </div>
+
             <div class="loading-overlay" id="loadingOverlay">
                 <div class="loader"></div>
             </div>
@@ -389,100 +468,143 @@
         });
 
         async function aiSearch(query = '') {
-            if (!query) {
-                studentsList.innerHTML = '<p>Please enter a search query</p>';
-                return;
+    if (!query) {
+        studentsList.innerHTML = '<p>Please enter a search query</p>';
+        return;
+    }
+
+    loadingOverlay.style.display = 'flex';
+
+    // Prepare CSV data from studentsData
+    const csvText = [
+        ['id', 'personal.name', 'education.college', 'education.degree', 'education.branch', 'education.year', 'skills', 'experience'].join(','),
+        ...studentsData.map(student => [
+            student.id,
+            student.personal?.name || 'Unnamed',
+            student.education?.college || 'Not set',
+            student.education?.degree || 'Not set',
+            student.education?.branch || 'Not set',
+            student.education?.year || 'Not set',
+            student.skills || 'Not set',
+            student.experience || 'Not set'
+        ].join(','))
+    ].join('\n');
+
+    // Enhanced prompt with clearer instructions and examples
+    const prompt = `
+        You are an expert at analyzing student data for talent matching. Given the following CSV data of students:
+        ${csvText}
+
+        The user has provided this requirement: "${query}"
+        Your task is to:
+        1. Carefully analyze each student's data (name, college, degree, branch, year, skills, experience).
+        2. Match students to the requirement based on relevance (e.g., specific college, skills, branch, or experience mentioned in the query).
+        3. Rank the students by how well they match the requirement.
+        4. Return EXACTLY 10 student IDs in order of relevance as a JSON array of strings.
+        5. If fewer than 10 students match exactly, fill the remaining slots with the most relevant students based on partial matches.
+        6. Do not simply return the first 10 students unless they genuinely match the query.
+
+        Examples:
+        - Query: "IIT Delhi B.Tech Applied Mechanics student with Python skill"
+          - Prioritize students from IIT Delhi, with B.Tech in Applied Mechanics, and Python in skills.
+        - Query: "IIT Bombay student with machine learning experience"
+          - Prioritize IIT Bombay students with "machine learning" in skills or experience.
+
+        Return the result STRICTLY as a JSON array of 10 student IDs, e.g.:
+        ["student_1", "student_2", "student_3", "student_4", "student_5", "student_6", "student_7", "student_8", "student_9", "student_10"]
+    `;
+
+    try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-4o', // Ensure you're using a capable model
+                messages: [{ role: 'user', content: prompt }],
+                max_tokens: 2000,
+                temperature: 0.3 // Lower temperature for more precise responses
+            })
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error?.message || 'API request failed');
+
+        let shortlistedIds;
+        try {
+            shortlistedIds = JSON.parse(data.choices[0].message.content);
+            if (!Array.isArray(shortlistedIds) || shortlistedIds.length !== 10 || !shortlistedIds.every(id => typeof id === 'string')) {
+                throw new Error('Invalid response format: Expected an array of 10 student IDs');
             }
-
-            loadingOverlay.style.display = 'flex';
-
-            const csvText = [
-                ['id', 'personal.name', 'education.college', 'education.degree', 'education.branch', 'education.year', 'skills', 'experience'].join(','),
-                ...studentsData.map(student => [
-                    student.id,
-                    student.personal?.name || 'Unnamed',
-                    student.education?.college || 'Not set',
-                    student.education?.degree || 'Not set',
-                    student.education?.branch || 'Not set',
-                    student.education?.year || 'Not set',
-                    student.skills || 'Not set',
-                    student.experience || 'Not set'
-                ].join(','))
-            ].join('\n');
-
-            const prompt = `
-                You are an expert at analyzing student data. Given the following CSV data of students:
-                ${csvText}
-                
-                And the user's requirement: "${query}"
-                based on the requirement , find the best matched students , analyse each students datas and find out who will be the most suitable candidate with respect to the given requirement.
-                Return EXACTLY 10 student IDs that best match the requirement, in order of relevance.
-                If fewer than 10 exact matches exist, fill the remaining slots with the most relevant students available.
-                Provide the response STRICTLY as a JSON array of 10 strings (student IDs) with no additional text, like this:
-                ["id1", "id2", "id3", "id4", "id5", "id6", "id7", "id8", "id9", "id10"]
-            `;
-
-            try {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-4o',
-                        messages: [{ role: 'user', content: prompt }],
-                        max_tokens: 2000
-                    })
-                });
-
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.error?.message || 'API request failed');
-
-                let shortlistedIds;
-                try {
-                    shortlistedIds = JSON.parse(data.choices[0].message.content);
-                    if (!Array.isArray(shortlistedIds) || shortlistedIds.length !== 10 || !shortlistedIds.every(id => typeof id === 'string')) {
-                        throw new Error('Invalid response format');
-                    }
-                } catch (parseError) {
-                    console.error('JSON Parse Error:', parseError, 'Response:', data.choices[0].message.content);
-                    // Fallback: Select first 10 students if AI response is invalid
-                    shortlistedIds = studentsData.slice(0, 10).map(student => student.id);
-                }
-
-                const filteredStudents = studentsData
-                    .filter(student => shortlistedIds.includes(student.id))
-                    .sort((a, b) => shortlistedIds.indexOf(a.id) - shortlistedIds.indexOf(b.id));
-
-                studentsList.innerHTML = filteredStudents.map(student => `
-                 
-                <div class="student-card">
-                        <h3>${student.personal?.name || 'Unnamed'}</h3>
-                        <h4>${student.education?.college || 'Not set'} - ${student.education?.branch || 'Not set'}</h4>
-                        <p>${student.about || student.experience || 'No description available'}</p>
-                        <div class="student-actions">
-                            <button class="ai-intro-btn" onclick="generateAIIntro('${student.id}')">Connect</button>
-                            <span class="view-profile" onclick="showProfile('${student.id}')">View Profile</span>
-                            <div class="social-icons">
-                                <i class="fab fa-linkedin social-icon linkedin" onclick="window.open('${student.personal?.linkedin || '#'}', '_blank')"></i>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (error) {
-                console.error('AI Search Error:', error);
-                studentsList.innerHTML = `<p>Error performing search: ${error.message}</p>`;
+            // Verify that all IDs exist in studentsData
+            const validIds = shortlistedIds.filter(id => studentsData.some(student => student.id === id));
+            if (validIds.length < 10) {
+                console.warn('AI returned fewer valid IDs than expected:', validIds);
+                // Supplement with additional relevant students if needed
+                const remainingCount = 10 - validIds.length;
+                const additionalIds = studentsData
+                    .filter(student => !validIds.includes(student.id))
+                    .slice(0, remainingCount)
+                    .map(student => student.id);
+                shortlistedIds = [...validIds, ...additionalIds];
             }
-
-            loadingOverlay.style.display = 'none';
+        } catch (parseError) {
+            console.error('JSON Parse Error:', parseError, 'Response:', data.choices[0].message.content);
+            // Improved fallback: Basic keyword matching instead of first 10
+            shortlistedIds = basicKeywordMatch(query);
         }
 
-        window.performSearch = () => {
-            const query = document.getElementById('ai-search-input').value.trim();
-            aiSearch(query);
-        };
+        const filteredStudents = studentsData
+            .filter(student => shortlistedIds.includes(student.id))
+            .sort((a, b) => shortlistedIds.indexOf(a.id) - shortlistedIds.indexOf(b.id));
 
+        studentsList.innerHTML = filteredStudents.length > 0
+            ? filteredStudents.map(student => `
+                <div class="student-card">
+                    <h3>${student.personal?.name || 'Unnamed'}</h3>
+                    <h4>${student.education?.college || 'Not set'} - ${student.education?.branch || 'Not set'}</h4>
+                    <p>${student.about || student.experience || 'No description available'}</p>
+                    <div class="student-actions">
+                        <button class="ai-intro-btn" onclick="generateAIIntro('${student.id}')">Connect</button>
+                        <span class="view-profile" onclick="showProfile('${student.id}')">View Profile</span>
+                        <div class="social-icons">
+                            <i class="fab fa-linkedin social-icon linkedin" onclick="window.open('${student.personal?.linkedin || '#'}', '_blank')"></i>
+                        </div>
+                    </div>
+                </div>
+            `).join('')
+            : '<p>No matching students found.</p>';
+    } catch (error) {
+        console.error('AI Search Error:', error);
+        studentsList.innerHTML = `<p>Error performing search: ${error.message}</p>`;
+    }
+
+    loadingOverlay.style.display = 'none';
+}
+
+// Basic fallback keyword matching function
+function basicKeywordMatch(query) {
+    const keywords = query.toLowerCase().split(' ');
+    const scoredStudents = studentsData.map(student => {
+        let score = 0;
+        const studentText = `${student.personal?.name || ''} ${student.education?.college || ''} ${student.education?.degree || ''} ${student.education?.branch || ''} ${student.skills || ''} ${student.experience || ''}`.toLowerCase();
+        keywords.forEach(keyword => {
+            if (studentText.includes(keyword)) score += 1;
+        });
+        return { id: student.id, score };
+    });
+    return scoredStudents
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10)
+        .map(student => student.id);
+}
+
+window.performSearch = () => {
+    const query = document.getElementById('ai-search-input').value.trim();
+    aiSearch(query);
+};
         window.generateAIIntro = async (studentId) => {
             currentStudentId = studentId;
             loadingOverlay.style.display = 'flex';
@@ -547,6 +669,7 @@
                         <p><strong>Skills:</strong> ${student.skills || 'Not set'}</p>
                         <p><strong>Experience:</strong> ${student.experience || 'Not set'}</p>
                         <p><strong>Email:</strong> ${student.personal?.email || 'Not set'}</p>
+                        
                     </div>
                 `;
                 profilePopup.classList.add('active');
@@ -590,6 +713,80 @@
             closeProfilePopup();
             closeMessagePopup();
         });
+
+        // At the top of your script, after existing variable declarations
+const aiExplanation = document.getElementById('aiExplanation');
+const totalStudentsSpan = document.getElementById('totalStudents');
+
+// Update total students count when data loads
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('manualstudentlist.json')
+        .then(response => response.json())
+        .then(data => {
+            studentsData = data.map((student, index) => ({
+                ...student,
+                id: student.id || `student_${index}`
+            }));
+            totalStudentsSpan.textContent = studentsData.length; // Update all instances
+            document.querySelectorAll('#totalStudents').forEach(span => {
+                span.textContent = studentsData.length;
+            });
+        })
+        .catch(error => {
+            console.error('Error loading JSON:', error);
+            studentsList.innerHTML = '<p>Error loading student data.</p>';
+            document.querySelectorAll('#totalStudents').forEach(span => {
+                span.textContent = 'unknown';
+            });
+        });
+});
+
+// Modify performSearch to hide explanation
+window.performSearch = () => {
+    const query = document.getElementById('ai-search-input').value.trim();
+    aiExplanation.classList.add('hidden'); // Hide explanation when search is pressed
+    aiSearch(query);
+};
+
+// Update aiSearch to show explanation on failure
+async function aiSearch(query = '') {
+    if (!query) {
+        studentsList.innerHTML = '<p>Please enter a search query</p>';
+        aiExplanation.classList.remove('hidden'); // Show explanation again if no query
+        return;
+    }
+
+    loadingOverlay.style.display = 'flex';
+
+    // ... (rest of your aiSearch function remains unchanged)
+
+    try {
+        // ... (existing try block code)
+
+        studentsList.innerHTML = filteredStudents.length > 0
+            ? filteredStudents.map(student => `
+                <div class="student-card">
+                    <h3>${student.personal?.name || 'Unnamed'}</h3>
+                    <h4>${student.education?.college || 'Not set'} - ${student.education?.branch || 'Not set'}</h4>
+                    <p>${student.about || student.experience || 'No description available'}</p>
+                    <div class="student-actions">
+                        <button class="ai-intro-btn" onclick="generateAIIntro('${student.id}')">Connect</button>
+                        <span class="view-profile" onclick="showProfile('${student.id}')">View Profile</span>
+                        <div class="social-icons">
+                            <i class="fab fa-linkedin social-icon linkedin" onclick="window.open('${student.personal?.linkedin || '#'}', '_blank')"></i>
+                        </div>
+                    </div>
+                </div>
+            `).join('')
+            : '<p>No matching students found.</p>';
+    } catch (error) {
+        console.error('AI Search Error:', error);
+        studentsList.innerHTML = `<p>Error performing search: ${error.message}</p>`;
+        aiExplanation.classList.remove('hidden'); // Show explanation on error
+    }
+
+    loadingOverlay.style.display = 'none';
+}
     </script>
 </body>
 </html>
