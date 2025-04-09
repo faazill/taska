@@ -304,10 +304,10 @@
             background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
             padding: 2.5rem;
             border-radius: 12px;
-            
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             margin: 2rem 0;
             text-align: left;
-            width: 90%;
+            max-width: 900px;
             margin-left: auto;
             margin-right: auto;
             font-family: 'Roboto', sans-serif;
@@ -378,34 +378,16 @@
             <h1>Explore IIT Talent</h1>
             <p>Find and connect with top IIT prodigies using AI-powered search.</p>
             
-            <div class="search-box">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" id="ai-search-input" 
-                       placeholder="e.g., IIT Delhi B.Tech Applied Mechanics student with Python skill">
-                <button class="search-btn" onclick="performSearch()">
-                    <span class="btn-text">Search Talent</span>
-                    <i class="fas fa-arrow-right btn-icon"></i>
-                </button>
-            </div>
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="ai-search-input" 
+                           placeholder="e.g., IIT Delhi B.Tech Applied Mechanics student with Python skill">
+                    <button class="search-btn" onclick="performSearch()">
+                        <span class="btn-text">Search Talent</span>
+                        <i class="fas fa-arrow-right btn-icon"></i>
+                    </button>
+                </div>
             
-            <!-- Enhanced Explanation Section -->
-            <div class="ai-explanation" id="aiExplanation">
-                <h2>Discover Talent with Precision</h2>
-                <p>Welcome to Taska Elite, where we harness the power of artificial intelligence to connect you with the brightest minds from India’s premier IITs. Our platform is designed to make talent discovery seamless, efficient, and tailored to your specific needs.</p>
-                
-                <p><strong>How Our AI Works:</strong> Our advanced AI engine dives deep into a comprehensive database of <span id="totalStudents">loading...</span> registered IIT students. It evaluates every profile based on key attributes—such as college, degree, branch, skills, and experience—and matches them against your search query. Whether you’re looking for a machine learning expert from IIT Bombay or a final-year B.Tech student from IIT Delhi with Python proficiency, our AI ensures you get the top 10 most relevant candidates, ranked by precision.</p>
-                
-                <p><strong>What Sets Us Apart:</strong></p>
-                <ul>
-                    <li><strong>Smart Filtering:</strong> The AI doesn’t just keyword-match—it understands context, prioritizing students whose profiles align closely with your requirements.</li>
-                    <li><strong>Dynamic Updates:</strong> Our student database grows daily, with new talent added regularly, ensuring you always have access to the latest prodigies.</li>
-                    <li><strong>Diverse Talent Pool:</strong> From freshers to experienced interns, we cover all IITs, branches, and skill sets—over <span id="totalStudents">loading...</span> unique profiles and counting.</li>
-                    <li><strong>Effortless Connection:</strong> Once you find a match, use our AI-generated intro messages to connect instantly via WhatsApp or LinkedIn.</li>
-                </ul>
-                
-                <p><strong>Why Choose Taska Elite?</strong> We’re not just a search tool—we’re your gateway to India’s future innovators. With students from every IIT campus, spanning disciplines like Computer Science, Mechanical Engineering, and more, our platform offers unmatched access to talent that drives innovation. Start your search now and see how easy it is to find the perfect fit!</p>
-            </div>
-
             <div class="loading-overlay" id="loadingOverlay">
                 <div class="loader"></div>
             </div>
@@ -713,80 +695,6 @@ window.performSearch = () => {
             closeProfilePopup();
             closeMessagePopup();
         });
-
-        // At the top of your script, after existing variable declarations
-const aiExplanation = document.getElementById('aiExplanation');
-const totalStudentsSpan = document.getElementById('totalStudents');
-
-// Update total students count when data loads
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('manualstudentlist.json')
-        .then(response => response.json())
-        .then(data => {
-            studentsData = data.map((student, index) => ({
-                ...student,
-                id: student.id || `student_${index}`
-            }));
-            totalStudentsSpan.textContent = studentsData.length; // Update all instances
-            document.querySelectorAll('#totalStudents').forEach(span => {
-                span.textContent = studentsData.length;
-            });
-        })
-        .catch(error => {
-            console.error('Error loading JSON:', error);
-            studentsList.innerHTML = '<p>Error loading student data.</p>';
-            document.querySelectorAll('#totalStudents').forEach(span => {
-                span.textContent = 'unknown';
-            });
-        });
-});
-
-// Modify performSearch to hide explanation
-window.performSearch = () => {
-    const query = document.getElementById('ai-search-input').value.trim();
-    aiExplanation.classList.add('hidden'); // Hide explanation when search is pressed
-    aiSearch(query);
-};
-
-// Update aiSearch to show explanation on failure
-async function aiSearch(query = '') {
-    if (!query) {
-        studentsList.innerHTML = '<p>Please enter a search query</p>';
-        aiExplanation.classList.remove('hidden'); // Show explanation again if no query
-        return;
-    }
-
-    loadingOverlay.style.display = 'flex';
-
-    // ... (rest of your aiSearch function remains unchanged)
-
-    try {
-        // ... (existing try block code)
-
-        studentsList.innerHTML = filteredStudents.length > 0
-            ? filteredStudents.map(student => `
-                <div class="student-card">
-                    <h3>${student.personal?.name || 'Unnamed'}</h3>
-                    <h4>${student.education?.college || 'Not set'} - ${student.education?.branch || 'Not set'}</h4>
-                    <p>${student.about || student.experience || 'No description available'}</p>
-                    <div class="student-actions">
-                        <button class="ai-intro-btn" onclick="generateAIIntro('${student.id}')">Connect</button>
-                        <span class="view-profile" onclick="showProfile('${student.id}')">View Profile</span>
-                        <div class="social-icons">
-                            <i class="fab fa-linkedin social-icon linkedin" onclick="window.open('${student.personal?.linkedin || '#'}', '_blank')"></i>
-                        </div>
-                    </div>
-                </div>
-            `).join('')
-            : '<p>No matching students found.</p>';
-    } catch (error) {
-        console.error('AI Search Error:', error);
-        studentsList.innerHTML = `<p>Error performing search: ${error.message}</p>`;
-        aiExplanation.classList.remove('hidden'); // Show explanation on error
-    }
-
-    loadingOverlay.style.display = 'none';
-}
     </script>
 </body>
 </html>
