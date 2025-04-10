@@ -182,15 +182,16 @@
                 <!-- Personal Information -->
                 <div class="form-group">
                     <label for="name">Full Name <span class="required">*</span></label>
-                    <input type="text" id="name" class="custom-input" placeholder="e.g., John Doe" required>
+                    <input type="text" id="name" class="custom-input" placeholder="Enter your full name" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email <span class="required">*</span></label>
-                    <input type="email" id="email" class="custom-input" placeholder="e.g., john@iitd.ac.in" readonly required>
+                    <input type="email" id="email" class="custom-input" placeholder="Enter Email" readonly required>
                 </div>
                 <div class="form-group">
-                    <label for="whatsapp">WhatsApp Number <span class="required">*</span></label>
-                    <input type="tel" id="whatsapp" class="custom-input" placeholder="e.g., +91 9876543210" required>
+                    <label for="whatsapp">Enter your Whatsapp number <span class="required">*</span> <small>( It will be shared only with companies interested in working with you )</small></label>
+
+                    <input type="tel" id="whatsapp" class="custom-input" placeholder="Enter your Whatsapp Number" required>
                 </div>
                 <div class="form-group">
                     <label for="location">City / Location <span class="required">*</span></label>
@@ -199,14 +200,14 @@
 
                 <!-- Brief About Yourself -->
                 <div class="form-group">
-                    <label for="about">Brief About Yourself <span class="required">*</span> <small>(This is what we display - it increases your selection chances!)</small></label>
-                    <textarea id="about" class="custom-input" placeholder="e.g., I’m a passionate coder with a knack for problem-solving..." required></textarea>
+                    <label for="about">Brief About Yourself <span class="required">*</span> <small>( This is your spotlight. Add your achievements, projects, and skills , employers decide based on what they see here first. )</small></label>
+                    <textarea id="about" class="custom-input" placeholder="Write in your own words , avoid using AI tools.Keeping it natural and personal helps you stand out and makes your profile more genuine to employers." required></textarea>
                 </div>
 
                 <!-- Education -->
                 <div class="form-group">
                     <label for="college">College Name <span class="required">*</span></label>
-                    <input type="text" id="college" class="custom-input" placeholder="e.g., IIT Delhi" required>
+                    <input type="text" id="college" class="custom-input" placeholder="Enter your College name" required>
                 </div>
                 <div class="form-group">
                     <label for="degree">Degree <span class="required">*</span></label>
@@ -216,11 +217,12 @@
                         <option value="M.Tech">M.Tech</option>
                         <option value="PhD">PhD</option>
                         <option value="Dual">Dual Degree</option>
+                        <option value="other">Other</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="branch">Branch / Subject <span class="required">*</span></label>
-                    <input type="text" id="branch" class="custom-input" placeholder="e.g., CSE" required>
+                    <input type="text" id="branch" class="custom-input" placeholder="Enter your area of study" required>
                 </div>
                 <div class="form-group">
                     <label for="year">Year of Study <span class="required">*</span></label>
@@ -242,7 +244,7 @@
                 <div class="form-group">
                     <label for="github">GitHub Username</label>
                     <div class="input-with-btn">
-                        <input type="text" id="github" class="custom-input" placeholder="e.g., johndoe">
+                        <input type="text" id="github" class="custom-input" placeholder="Enter Github username and fetch data">
                         <button type="button" id="fetch-github" class="fetch-btn">Fetch</button>
                     </div>
                     <div id="github-summary" class="summary-box"></div>
@@ -250,7 +252,7 @@
                 <div class="form-group">
                     <label for="codeforces">Codeforces Username</label>
                     <div class="input-with-btn">
-                        <input type="text" id="codeforces" class="custom-input" placeholder="e.g., johndoe">
+                        <input type="text" id="codeforces" class="custom-input" placeholder="Enter Codeforces username and fetch data">
                         <button type="button" id="fetch-codeforces" class="fetch-btn">Fetch</button>
                     </div>
                     <div id="codeforces-summary" class="summary-box"></div>
@@ -258,7 +260,7 @@
                 <div class="form-group">
                     <label for="leetcode">LeetCode Username</label>
                     <div class="input-with-btn">
-                        <input type="text" id="leetcode" class="custom-input" placeholder="e.g., johndoe">
+                        <input type="text" id="leetcode" class="custom-input" placeholder="Enter LeetCode username and fetch data">
                         <button type="button" id="fetch-leetcode" class="fetch-btn">Fetch</button>
                     </div>
                     <div id="leetcode-summary" class="summary-box"></div>
