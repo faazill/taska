@@ -34,7 +34,7 @@
         .logo {
             font-size: 1.8rem;
             font-weight: 600;
-            color: #32373c;
+            color: #494d53;
             letter-spacing: -0.5px;
             cursor: pointer;
             transition: color 0.3s ease;
@@ -50,7 +50,7 @@
         .nav-menu li a {
             text-decoration: none;
             color: #4b5563;
-            font-weight: 300;
+            font-weight: 400;
             transition: color 0.3s ease;
         }
         .nav-menu li a:hover {
@@ -75,9 +75,9 @@
             margin-bottom: 1.5rem;
         }
         .auth-container .intro-text {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 300;
-            color: #2d3139;
+            color: #42464d;
             max-width: 800px;
             margin: 0 auto 4rem;
         }
@@ -366,20 +366,21 @@
     <main>
         <section class="auth-container">
             <h1>Join Taska Elite</h1>
-            <p class="intro-text">Ready to work part-time? Join our student network and get discovered by top companies looking for fresh talent.</p>
+            <p class="intro-text">Unlock elite talent from IITs, NITs, and IIITs and boost your efficiency and productivity</p>
             
-            
-            <div class="auth-form" id="student-form" >
-                <h2>Student Access</h2>
-                <p>Start your journey , create an account and work on meaningful projects.</p>
+            <div class="auth-form" id="professional-form">
+                <h2>Professional Access</h2>
+                <p>Login or sign up to hire elite talent for your projects.</p>
                 <div class="form-container">
-                    <input type="email" id="stud-email" placeholder="Enter your email" required>
-                    <input type="password" id="stud-password" placeholder="Enter your password" required>
+                    <input type="email" id="prof-email" placeholder="Enter your email" required>
+                    <input type="password" id="prof-password" placeholder="Enter your password" required>
                     <div class="form-buttons">
-                        <button class="cta-button login-btn" onclick="login('student')" style="display: none;">Login</button>                        <button class="cta-button signup-btn" onclick="signup('student')">Create Account</button>
+                        <button class="cta-button signup-btn" onclick="signup('professional')">Create Account</button>
+                        <button class="cta-button login-btn" onclick="login('professional')">Login</button>
                     </div>
                 </div>
             </div>
+            
         </section>
     </main>
 
