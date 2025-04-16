@@ -832,7 +832,7 @@
             if (studentData) return studentData; // Return cached data if already fetched
     
             try {
-                const response = await fetch('manualstudentlist.json');
+                const response = await fetch('../professional/manualstudentlist.json');
                 if (!response.ok) {
                     throw new Error(`Failed to fetch student data: ${response.statusText}`);
                 }
