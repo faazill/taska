@@ -397,7 +397,7 @@
             "profilePic": "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp"
         },
         "education": {
-            "college": "IITKanpur",
+            "college": "IIT Delhi",
             "degree": "B.Tech",
             "branch": "Computer Science",
             "year": "Third"
@@ -435,14 +435,15 @@
         "about": "Alexandra Howell is a Third-year B.Tech student in Computer Science at IITKanpur. Skilled in Machine Learning, Node.js, HTML, C++, React, with experience in worked on embrace sticky schemas project. Interested in the role of Full Stack Developer, Alexandra Howell is available for 15 hours per week, primarily during mornings. Remote work: Yes."
     },
     {
-        "id": "student_10",
+        "id": "bSa14TskFkWStpCfcXCdGsFGMRT2",
         "personal": {
-            "name": "Taylor Mathis Jr.",
+            "name": "Anupam Mittal",
             "email": "bradley52@hotmail.com",
             "gender": "Female",
             "location": "Chennai",
             "linkedin": "https://www.linkedin.com/in/taylor_mathis_jr.",
-            "whatsapp": "278-680-1128x059"
+            "whatsapp": "278-680-1128x059",
+            "profilePic":"https://assets.entrepreneur.com/content/3x2/2000/1673527877-anupammittal.jpg?format=pjeg&auto=webp&crop=1:1"
         },
         "education": {
             "college": "IIT Delhi",
