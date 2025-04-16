@@ -49,7 +49,7 @@
             transition: color 0.3s; 
         }
         .navbar .nav-menu li a.active { 
-            color: #6c757d; 
+            color: #0000ff; 
         }
         .navbar .hamburger { 
             display: none; 
@@ -85,6 +85,7 @@
             margin: 0.25rem 0; 
             cursor: pointer; 
             transition: background 0.3s; 
+            position: relative;
         }
         .user-item:hover { 
             background: #f1f3f5; 
@@ -98,6 +99,7 @@
         }
         .user-item .user-info { 
             color: #1a1a1a; 
+            flex: 1;
         }
         .user-item .user-info .name { 
             font-size: 0.95rem; 
@@ -106,6 +108,9 @@
         .user-item .user-info .last-message { 
             font-size: 0.85rem; 
             color: #6c757d; 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .user-item.active { 
             background: #f1f3f5; 
@@ -132,9 +137,12 @@
             padding: 0.75rem 1rem; 
             margin: 0.25rem 0; 
             background: #fff; 
-            border: 1px solid #e0e0e0; 
             border-radius: 8px; 
             justify-content: space-between; 
+            transition: background 0.3s;
+        }
+        .pending-item:hover {
+            background: #f1f3f5;
         }
         .pending-item .user-info { 
             display: flex; 
@@ -250,6 +258,13 @@
             font-size: 0.75rem; 
             color: #6c757d; 
             margin-left: auto; 
+        }
+        .message .read-status {
+            font-size: 0.75rem;
+            color: #6c757d;
+            font-style: italic;
+            margin-top: 0.25rem;
+            opacity: 0.7;
         }
         .chat-input { 
             width: 100%;
@@ -556,6 +571,84 @@
         .task-popup .actions .submit-btn:hover {
             background: #45a049;
         }
+        /* Confirmation Dialog Styles */
+        .confirmation-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1002;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .confirmation-dialog.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .confirmation-dialog .dialog-box {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(-50px);
+            transition: transform 0.3s ease;
+        }
+        .confirmation-dialog.active .dialog-box {
+            transform: translateY(0);
+        }
+        .confirmation-dialog h3 {
+            font-size: 1.2rem;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+        .confirmation-dialog p {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+        }
+        .confirmation-dialog .dialog-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .confirmation-dialog .dialog-actions button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .confirmation-dialog .dialog-actions .cancel {
+            background: #e0e0e0;
+            color: #1a1a1a;
+        }
+        .confirmation-dialog .dialog-actions .cancel:hover {
+            background: #d3d3d3;
+        }
+        .confirmation-dialog .dialog-actions .confirm {
+            background: #4CAF50;
+            color: #fff;
+        }
+        .confirmation-dialog .dialog-actions .confirm:hover {
+            background: #45a049;
+        }
+        .confirmation-dialog .dialog-actions .delete {
+            background: #FF5252;
+            color: #fff;
+        }
+        .confirmation-dialog .dialog-actions .delete:hover {
+            background: #e04848;
+        }
         @media (max-width: 768px) {
             .dashboard-content { 
                 flex-direction: column; 
@@ -603,7 +696,7 @@
         <ul class="nav-menu">
             <li><a href="explore.html">Explore</a></li>
             <li><a href="tasks.html" class="active">Tasks</a></li>
-            <li><a href="profile.html">Profile</a></li>
+            <li><a href="profile.html">Account</a></li>
         </ul>
         <div class="hamburger">☰</div>
     </nav>
@@ -666,657 +759,708 @@
         </div>
         <div class="actions">
             <button class="cancel-btn" onclick="closeTaskPopup()">Cancel</button>
-            <button class="submit-btn" onclick="submitTask()">Add Task</button>
+            <button class="submit-btn" onclick="confirmAction('submitTask', 'Add Task', 'Are you sure you want to add this task?')">Add Task</button>
+        </div>
+    </div>
+
+    <div class="confirmation-dialog" id="confirmation-dialog">
+        <div class="dialog-box">
+            <h3 id="dialog-title"></h3>
+            <p id="dialog-message"></p>
+            <div class="dialog-actions">
+                <button class="cancel" onclick="closeConfirmation()">Cancel</button>
+                <button id="confirm-button" class="confirm"></button>
+            </div>
         </div>
     </div>
 
     <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getDatabase, ref, get, push, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+    
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
+            authDomain: "taska-45011.firebaseapp.com",
+            databaseURL: "https://taska-45011-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "taska-45011",
+            storageBucket: "taska-45011.appspot.com",
+            messagingSenderId: "205487498813",
+            appId: "1:205487498813:web:0de2c9eab567482781ec54",
+            measurementId: "G-G0G1F6GQ9B"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+    
+        // Global variables
+        let userId = null;
+        let selectedStudentId = null;
+        let editingTaskId = null;
+        let studentData = null; // Cache for fetched student data
+    
+        // DOM Elements
+        const elements = {
+            connectionsList: document.getElementById('connections-list'),
+            pendingRequestsList: document.getElementById('pending-requests-list'),
+            chatArea: document.getElementById('chat-area'),
+            chatHeader: document.getElementById('chat-header'),
+            chatMessages: document.getElementById('chat-messages'),
+            chatInput: document.getElementById('chat-input'),
+            workflowArea: document.getElementById('workflow-area'),
+            workflowList: document.getElementById('workflow-list'),
+            completedTasksList: document.getElementById('completed-tasks-list'),
+            taskPopup: document.getElementById('task-popup'),
+            popupTitle: document.getElementById('popup-title'),
+            taskTitle: document.getElementById('task-title'),
+            taskDescription: document.getElementById('task-description'),
+            taskDeadline: document.getElementById('task-deadline'),
+            taskFile: document.getElementById('task-file'),
+            taskPayment: document.getElementById('task-payment'),
+            confirmationDialog: document.getElementById('confirmation-dialog'),
+            dialogTitle: document.getElementById('dialog-title'),
+            dialogMessage: document.getElementById('dialog-message'),
+            confirmButton: document.getElementById('confirm-button')
+        };
+    
+        // Fetch student data from local JSON file
+        async function fetchStudentData() {
+            if (studentData) return studentData; // Return cached data if already fetched
+    
+            try {
+                const response = await fetch('manualstudentlist.json');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch student data: ${response.statusText}`);
+                }
+                studentData = await response.json();
+                // Ensure each student has an id
+                studentData = studentData.map((student, index) => ({
+                    ...student,
+                    id: student.id || `student_${index}`
+                }));
+                return studentData;
+            } catch (error) {
+                console.error('Error fetching student data:', error);
+                return [];
+            }
+        }
+    
+        // Confirmation dialog handler
+        function confirmAction(action, title, message, actionParams = {}) {
+            elements.dialogTitle.textContent = title;
+            elements.dialogMessage.textContent = message;
+            elements.confirmationDialog.classList.add('active');
+    
+            // Set confirm button text and action
+            elements.confirmButton.textContent = title.includes('Delete') ? 'Delete' : 'Confirm';
+            elements.confirmButton.className = title.includes('Delete') ? 'delete' : 'confirm';
+    
+            elements.confirmButton.onclick = () => {
+                window[action](actionParams);
+                closeConfirmation();
+            };
+        }
+    
+        function closeConfirmation() {
+            elements.confirmationDialog.classList.remove('active');
+        }
+    
+        // Initialize application
+        async function init() {
+            document.addEventListener('DOMContentLoaded', async () => {
+                // Fetch student data before setting up the app
+                await fetchStudentData();
+                setupEventListeners();
+                auth.onAuthStateChanged(user => {
+                    if (user) {
+                        userId = user.uid;
+                        loadConnections();
+                        loadPendingRequests();
+                        loadCompletedTasks();
+                    } else {
+                        console.error("User not authenticated");
+                        window.location.href = "../index.html";
+                    }
+                });
+            });
+        }
+    
+        // Setup event listeners
+        function setupEventListeners() {
+            const hamburger = document.querySelector('.navbar .hamburger');
+            const navMenu = document.querySelector('.navbar .nav-menu');
+            if (hamburger && navMenu) {
+                hamburger.addEventListener('click', () => navMenu.classList.toggle('active'));
+            }
+    
+            document.addEventListener('click', (e) => {
+                const target = e.target;
+    
+                if (target.closest('.user-item')) {
+                    const studentId = target.closest('.user-item').dataset.studentId;
+                    selectStudent(studentId);
+                }
+    
+                if (target.matches('.accept-btn')) {
+                    const professionalId = target.closest('.pending-item').dataset.professionalId;
+                    confirmAction('acceptRequest', 'Accept Request', 'Are you sure you want to accept this connection request?', { professionalId });
+                }
+    
+                if (target.matches('.delete-btn')) {
+                    const professionalId = target.closest('.pending-item').dataset.professionalId;
+                    confirmAction('deleteRequest', 'Delete Request', 'Are you sure you want to delete this connection request?', { professionalId });
+                }
+    
+                if (target.matches('.edit-icon')) {
+                    const taskId = target.closest('.workflow-item').dataset.taskId;
+                    openTaskPopup(taskId);
+                }
+            });
+    
+            if (elements.workflowList) {
+                elements.workflowList.addEventListener('change', (e) => {
+                    if (e.target.matches('.status-select')) {
+                        const taskId = e.target.closest('.workflow-item').dataset.taskId;
+                        const newStatus = e.target.value;
+                        confirmAction('updateStatus', `Update Task Status`, `Are you sure you want to change the task status to "${newStatus}"?`, { taskId, status: newStatus });
+                    }
+                });
+            }
+    
+            if (elements.chatInput) {
+                elements.chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+            }
+        }
+    
+        // Load connections
+        async function loadConnections() {
+            if (!elements.connectionsList) return;
+    
+            try {
+                const connectionsRef = ref(db, `users/${userId}/connections`);
+                const snapshot = await get(connectionsRef);
+                if (snapshot.exists()) {
+                    const connections = snapshot.val();
+                    let hasConnections = false;
+    
+                    // Ensure studentData is available
+                    const students = await fetchStudentData();
+    
+                    for (const studentId in connections) {
+                        if (connections[studentId].status === "connected") {
+                            hasConnections = true;
+                            const student = students.find(s => s.id === studentId) || {};
+                            const userName = student.personal?.name || "Unnamed";
+                            // Use profilePic from JSON if available, else fallback
+                            const profilePic = student.personal?.profilePic 
+                                ? student.personal.profilePic 
+                                : student.personal?.linkedin 
+                                    ? `https://via.placeholder.com/40?text=${userName[0]}` 
+                                    : "../assets/avatar/1.png";
+    
+                            const chatId = [userId, studentId].sort().join("+");
+                            const chatRef = ref(db, `chats/${chatId}/messages`);
+                            let lastMessage = "No messages yet";
+                            const chatSnapshot = await get(chatRef);
+                            if (chatSnapshot.exists()) {
+                                const messages = Object.values(chatSnapshot.val());
+                                lastMessage = messages[messages.length - 1].content || "No messages yet";
+                            }
+    
+                            const userItem = document.createElement('div');
+                            userItem.className = 'user-item';
+                            userItem.dataset.studentId = studentId;
+                            userItem.innerHTML = `
+                                <img src="${profilePic}" alt="${userName}" class="profile-pic">
+                                <div class="user-info">
+                                    <div class="name">${userName}</div>
+                                    <div class="last-message">${lastMessage}</div>
+                                </div>
+                            `;
+                            elements.connectionsList.appendChild(userItem);
+                        }
+                    }
+    
+                    if (!hasConnections) {
+                        elements.connectionsList.innerHTML = '<p>No connected students found.</p>';
+                    }
+                } else {
+                    elements.connectionsList.innerHTML = '<p>No connected students found.</p>';
+                }
+            } catch (error) {
+                console.error("Error loading connections:", error);
+            }
+        }
+        
 
-// Import Firebase modules
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getDatabase, ref, get, push, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-
-// Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
-    authDomain: "taska-45011.firebaseapp.com",
-    databaseURL: "https://taska-45011-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "taska-45011",
-    storageBucket: "taska-45011.appspot.com",
-    messagingSenderId: "205487498813",
-    appId: "1:205487498813:web:0de2c9eab567482781ec54",
-    measurementId: "G-G0G1F6GQ9B"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const auth = getAuth(app);
-
-// Global variables
-let userId = null;
-let selectedStudentId = null;
-let editingTaskId = null;
-
-// DOM Elements
-const elements = {
-    connectionsList: document.getElementById('connections-list'),
-    pendingRequestsList: document.getElementById('pending-requests-list'),
-    chatArea: document.getElementById('chat-area'),
-    chatHeader: document.getElementById('chat-header'),
-    chatMessages: document.getElementById('chat-messages'),
-    chatInput: document.getElementById('chat-input'),
-    workflowArea: document.getElementById('workflow-area'),
-    workflowList: document.getElementById('workflow-list'),
-    completedTasksList: document.getElementById('completed-tasks-list'),
-    taskPopup: document.getElementById('task-popup'),
-    popupTitle: document.getElementById('popup-title'),
-    taskTitle: document.getElementById('task-title'),
-    taskDescription: document.getElementById('task-description'),
-    taskDeadline: document.getElementById('task-deadline'),
-    taskFile: document.getElementById('task-file'),
-    taskPayment: document.getElementById('task-payment')
-};
-
-// Initialize application
-function init() {
-    // Wait for DOM to load
-    document.addEventListener('DOMContentLoaded', () => {
-        setupEventListeners();
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                userId = user.uid;
+    
+        // Load pending requests
+        async function loadPendingRequests() {
+            if (!elements.pendingRequestsList) return;
+    
+            try {
+                const connectionsRef = ref(db, `users/${userId}/connections`);
+                const snapshot = await get(connectionsRef);
+                if (snapshot.exists()) {
+                    const connections = snapshot.val();
+                    let hasPending = false;
+    
+                    // Ensure studentData is available
+                    const students = await fetchStudentData();
+    
+                    for (const professionalId in connections) {
+                        if (connections[professionalId].status === "pending") {
+                            hasPending = true;
+                            const student = students.find(s => s.id === professionalId) || {};
+                            const userName = student.personal?.name || "Unnamed";
+                            // Use profilePic from JSON if available, else fallback
+                            const profilePic = student.personal?.profilePic 
+                                ? student.personal.profilePic 
+                                : student.personal?.linkedin 
+                                    ? `https://via.placeholder.com/40?text=${userName[0]}` 
+                                    : "../assets/avatar/1.png";
+    
+                            const pendingItem = document.createElement('div');
+                            pendingItem.className = 'pending-item user-item';
+                            pendingItem.dataset.professionalId = professionalId;
+                            pendingItem.innerHTML = `
+                                <div class="user-info">
+                                    <img src="${profilePic}" alt="${userName}" class="profile-pic">
+                                    <div class="name">${userName}</div>
+                                </div>
+                                <div class="actions">
+                                    <button class="accept-btn">Accept</button>
+                                    <button class="delete-btn">Delete</button>
+                                </div>
+                            `;
+                            elements.pendingRequestsList.appendChild(pendingItem);
+                        }
+                    }
+    
+                    if (!hasPending) {
+                        elements.pendingRequestsList.innerHTML = '<p>No pending requests.</p>';
+                    }
+                } else {
+                    elements.pendingRequestsList.innerHTML = '<p>No pending requests.</p>';
+                }
+            } catch (error) {
+                console.error("Error loading pending requests:", error);
+                elements.pendingRequestsList.innerHTML = '<p>Error loading pending requests.</p>';
+            }
+        }
+    
+        // Accept connection request
+        async function acceptRequest({ professionalId }) {
+            try {
+                const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
+                const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
+    
+                await update(studentConnectionRef, { status: "connected" });
+                await update(professionalConnectionRef, { status: "connected" });
+    
                 loadConnections();
                 loadPendingRequests();
-                loadCompletedTasks();
-            } else {
-                console.error("User not authenticated");
-                window.location.href = "../index.html";
+            } catch (error) {
+                console.error("Error accepting request:", error);
+                alert("Failed to accept request.");
             }
-        });
-    });
-}
-
-// Setup event listeners
-function setupEventListeners() {
-    // Navbar toggle
-    const hamburger = document.querySelector('.navbar .hamburger');
-    const navMenu = document.querySelector('.navbar .nav-menu');
-    if (hamburger && navMenu) {
-        hamburger.addEventListener('click', () => navMenu.classList.toggle('active'));
-    }
-
-    // Event delegation for dynamic and static elements
-    document.addEventListener('click', (e) => {
-        const target = e.target;
-        
-        // User item click
-        if (target.closest('.user-item')) {
-            const studentId = target.closest('.user-item').dataset.studentId;
-            selectStudent(studentId);
         }
-        
-        // Send message button
-        if (target.matches('.send-message-btn, #chat-send, [data-action="send-message"]')) {
-            sendMessage();
-        }
-        
-        // Add/edit task button
-        if (target.matches('.add-task-btn, #add-task, [data-action="add-task"]')) {
-            openTaskPopup();
-        }
-        
-        // Close task popup button
-        if (target.matches('.close-task-popup-btn, #close-task-popup, [data-action="close-task-popup"]')) {
-            closeTaskPopup();
-        }
-        
-        // Submit task button
-        if (target.matches('.submit-task-btn, #submit-task, [data-action="submit-task"]')) {
-            submitTask();
-        }
-        
-        // Toggle completed tasks button
-        if (target.matches('.toggle-completed-btn, #toggle-completed, [data-action="toggle-completed"]')) {
-            toggleCompletedTasks();
-        }
-        
-        // Edit task icon
-        if (target.matches('.edit-icon')) {
-            const taskId = target.closest('.workflow-item').dataset.taskId;
-            openTaskPopup(taskId);
-        }
-        
-        // Accept pending request
-        if (target.matches('.accept-btn')) {
-            const professionalId = target.closest('.pending-item').dataset.professionalId;
-            acceptRequest(professionalId);
-        }
-        
-        // Delete pending request
-        if (target.matches('.delete-btn')) {
-            const professionalId = target.closest('.pending-item').dataset.professionalId;
-            deleteRequest(professionalId);
-        }
-    });
-
-    // Status change (delegated to workflow-list)
-    if (elements.workflowList) {
-        elements.workflowList.addEventListener('change', (e) => {
-            if (e.target.matches('.status-select')) {
-                const taskId = e.target.closest('.workflow-item').dataset.taskId;
-                updateStatus(taskId, e.target.value);
+    
+        // Delete connection request
+        async function deleteRequest({ professionalId }) {
+            try {
+                const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
+                const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
+    
+                await remove(studentConnectionRef);
+                await remove(professionalConnectionRef);
+    
+                loadConnections();
+                loadPendingRequests();
+            } catch (error) {
+                console.error("Error deleting request:", error);
+                alert("Failed to delete request.");
             }
-        });
-    }
-
-    // Chat input on enter key
-    if (elements.chatInput) {
-        elements.chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-    }
-}
-
-// Load connections
-async function loadConnections() {
-    if (!elements.connectionsList) return;
-
-    elements.connectionsList.innerHTML = '';
-    try {
-        const connectionsRef = ref(db, `users/${userId}/connections`);
-        const snapshot = await get(connectionsRef);
-        if (snapshot.exists()) {
-            const connections = snapshot.val();
-            let hasConnections = false;
-            
-            for (const studentId in connections) {
-                if (connections[studentId].status === "connected") {
-                    hasConnections = true;
-                    const userRef = ref(db, `users/${studentId}`);
-                    const userSnapshot = await get(userRef);
-                    const userName = userSnapshot.exists() && userSnapshot.val().name ? userSnapshot.val().name : "Unnamed";
-
-                    const chatId = [userId, studentId].sort().join("+");
-                    const chatRef = ref(db, `chats/${chatId}/messages`);
-                    let lastMessage = "No messages yet";
-                    const chatSnapshot = await get(chatRef);
-                    if (chatSnapshot.exists()) {
-                        const messages = Object.values(chatSnapshot.val());
-                        lastMessage = messages[messages.length - 1].content || "No messages yet";
-                    }
-
-                    const userItem = document.createElement('div');
-                    userItem.className = 'user-item';
-                    userItem.dataset.studentId = studentId;
-                    userItem.innerHTML = `
-                        <img src="../assets/avatar/1.jpeg" alt="${userName}" class="profile-pic">
-                        <div class="user-info">
-                            <div class="name">${userName}</div>
-                            <div class="last-message">${lastMessage}</div>
-                        </div>
-                    `;
-                    elements.connectionsList.appendChild(userItem);
-                }
-            }
-            
-            if (!hasConnections) {
-                elements.connectionsList.innerHTML = '<p>No connected students found.</p>';
-            }
-        } else {
-            elements.connectionsList.innerHTML = '<p>No connected students found.</p>';
         }
-    } catch (error) {
-        console.error("Error loading connections:", error);
-        elements.connectionsList.innerHTML = '<p>Error loading connections.</p>';
-    }
-}
-
-// Load pending requests
-async function loadPendingRequests() {
-    if (!elements.pendingRequestsList) return;
-
-    elements.pendingRequestsList.innerHTML = '';
-    try {
-        const connectionsRef = ref(db, `users/${userId}/connections`);
-        const snapshot = await get(connectionsRef);
-        if (snapshot.exists()) {
-            const connections = snapshot.val();
-            let hasPending = false;
-            
-            for (const professionalId in connections) {
-                if (connections[professionalId].status === "pending") {
-                    hasPending = true;
-                    const userRef = ref(db, `users/${professionalId}`);
-                    const userSnapshot = await get(userRef);
-                    const userName = userSnapshot.exists() && userSnapshot.val().name ? userSnapshot.val().name : "Unnamed";
-
-                    const pendingItem = document.createElement('div');
-                    pendingItem.className = 'pending-item';
-                    pendingItem.dataset.professionalId = professionalId;
-                    pendingItem.innerHTML = `
-                        <div class="user-info">
-                            <img src="../assets/avatar/1.jpeg" alt="${userName}" class="profile-pic">
-                            <div class="name">${userName}</div>
-                        </div>
-                        <div class="actions">
-                            <button class="delete-btn">Delete</button>
-                        </div>
-                    `;
-                    elements.pendingRequestsList.appendChild(pendingItem);
-                }
-            }
-            
-            if (!hasPending) {
-                elements.pendingRequestsList.innerHTML = '<p>No pending requests.</p>';
-            }
-        } else {
-            elements.pendingRequestsList.innerHTML = '<p>No pending requests.</p>';
+    
+        // Select student
+        function selectStudent(studentId) {
+            selectedStudentId = studentId;
+            document.querySelectorAll('.user-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.studentId === studentId);
+            });
+            if (elements.chatArea) elements.chatArea.style.display = 'block';
+            if (elements.workflowArea) elements.workflowArea.style.display = 'block';
+            loadChatHeader();
+            loadChat();
+            loadWorkflows();
+            loadCompletedTasks();
         }
-    } catch (error) {
-        console.error("Error loading pending requests:", error);
-        elements.pendingRequestsList.innerHTML = '<p>Error loading pending requests.</p>';
-    }
-}
-
-// Accept connection request
-async function acceptRequest(professionalId) {
-    try {
-        const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
-        const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
-        
-        await update(studentConnectionRef, { status: "connected" });
-        await update(professionalConnectionRef, { status: "connected" });
-        
-        loadConnections();
-        loadPendingRequests();
-    } catch (error) {
-        console.error("Error accepting request:", error);
-        alert("Failed to accept request.");
-    }
-}
-
-// Delete connection request
-async function deleteRequest(professionalId) {
-    try {
-        const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
-        const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
-        
-        await remove(studentConnectionRef);
-        await remove(professionalConnectionRef);
-        
-        loadConnections();
-        loadPendingRequests();
-    } catch (error) {
-        console.error("Error deleting request:", error);
-        alert("Failed to delete request.");
-    }
-}
-
-// Select student
-function selectStudent(studentId) {
-    selectedStudentId = studentId;
-    document.querySelectorAll('.user-item').forEach(item => {
-        item.classList.toggle('active', item.dataset.studentId === studentId);
-    });
-    if (elements.chatArea) elements.chatArea.style.display = 'block';
-    if (elements.workflowArea) elements.workflowArea.style.display = 'block';
-    loadChatHeader();
-    loadChat();
-    loadWorkflows();
-    loadCompletedTasks();
-}
-
-// Load chat header
-async function loadChatHeader() {
-    if (!elements.chatHeader) return;
-
-    try {
-        const userRef = ref(db, `users/${selectedStudentId}`);
-        const snapshot = await get(userRef);
-        const user = snapshot.exists() ? snapshot.val() : { name: "Unnamed", title: "" };
-        elements.chatHeader.innerHTML = `
-            <div class="name">${user.name}</div>
-            <div class="title">${user.title || ""}</div>
-        `;
-    } catch (error) {
-        console.error("Error loading chat header:", error);
-        elements.chatHeader.innerHTML = '<div class="name">Unnamed</div><div class="title"></div>';
-    }
-}
-
-// Load chat messages
-function loadChat() {
-    if (!elements.chatMessages) return;
-
-    elements.chatMessages.innerHTML = '<div class="message">Loading messages...</div>';
-
-    if (selectedStudentId) {
-        const chatId = [userId, selectedStudentId].sort().join("+");
-        const chatRef = ref(db, `chats/${chatId}/messages`);
-
-        onValue(chatRef, (snapshot) => {
-            elements.chatMessages.innerHTML = '';
-            if (snapshot.exists()) {
-                const messages = Object.entries(snapshot.val())
-                    .map(([id, msg]) => ({id, ...msg}))
-                    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-                
-                messages.forEach(msg => {
-                    const isSent = msg.senderId === userId;
-                    const senderName = msg.senderId === userId ? "You" : msg.senderName || "Unnamed";
-                    const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    const date = new Date(msg.timestamp).toLocaleDateString();
-                    
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
-                    messageDiv.innerHTML = `
-                        <div class="message-header">
-                            <img src="../assets/avatar/1.jpeg" alt="${senderName}" class="profile-pic">
-                            <div class="name">${senderName}</div>
-                            <div class="time">${date} ${time}</div>
-                        </div>
-                        <div class="content">${msg.content}</div>
-                        <div class="read-status">${msg.read ? 'Read' : 'Sent'}</div>
-                    `;
-                    elements.chatMessages.appendChild(messageDiv);
-                });
-                
-                // Scroll to the bottom
-                elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
-                
-                // Mark received messages as read
-                messages.forEach(msg => {
-                    if (msg.senderId !== userId && !msg.read) {
-                        update(ref(db, `chats/${chatId}/messages/${msg.id}`), { read: true });
+    
+        // Load chat header
+        async function loadChatHeader() {
+            if (!elements.chatHeader) return;
+    
+            try {
+                // Ensure studentData is available
+                const students = await fetchStudentData();
+                const student = students.find(s => s.id === selectedStudentId) || {};
+                const userName = student.personal?.name || "Unnamed";
+                const userTitle = student.education?.branch || "";
+                // Use profilePic from JSON if available, else fallback
+                const profilePic = student.personal?.profilePic 
+                    ? student.personal.profilePic 
+                    : student.personal?.linkedin 
+                        ? `https://via.placeholder.com/40?text=${userName[0]}` 
+                        : "../assets/avatar/1.png";
+    
+                elements.chatHeader.innerHTML = `
+                    <img src="${profilePic}" alt="${userName}" class="profile-pic">
+                    <div class="name">${userName}</div>
+                    <div class="title">${userTitle}</div>
+                `;
+            } catch (error) {
+                console.error("Error loading chat header:", error);
+                elements.chatHeader.innerHTML = '<div class="name">Unnamed</div><div class="title"></div>';
+            }
+        }
+    
+        // Load chat messages
+        function loadChat() {
+            if (!elements.chatMessages) return;
+    
+            elements.chatMessages.innerHTML = '<div class="message">Loading messages...</div>';
+    
+            if (selectedStudentId) {
+                const chatId = [userId, selectedStudentId].sort().join("+");
+                const chatRef = ref(db, `chats/${chatId}/messages`);
+    
+                onValue(chatRef, (snapshot) => {
+                    elements.chatMessages.innerHTML = '';
+                    if (snapshot.exists()) {
+                        const messages = Object.entries(snapshot.val())
+                            .map(([id, msg]) => ({ id, ...msg }))
+                            .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    
+                        messages.forEach(msg => {
+                            const isSent = msg.senderId === userId;
+                            const senderName = msg.senderId === userId ? "You" : msg.senderName || "Unnamed";
+                            const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            const date = new Date(msg.timestamp).toLocaleDateString();
+    
+                            const messageDiv = document.createElement('div');
+                            messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
+                            messageDiv.innerHTML = `
+                                <div class="message-header">
+                                    <img src="../assets/avatar/1.png" alt="${senderName}" class="profile-pic">
+                                    <div class="name">${senderName}</div>
+                                    <div class="time">${date} ${time}</div>
+                                </div>
+                                <div class="content">${msg.content}</div>
+                                <div class="read-status">${msg.read ? 'Seen' : 'Sent'}</div>
+                            `;
+                            elements.chatMessages.appendChild(messageDiv);
+                        });
+    
+                        elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+    
+                        messages.forEach(msg => {
+                            if (msg.senderId !== userId && !msg.read) {
+                                update(ref(db, `chats/${chatId}/messages/${msg.id}`), { read: true });
+                            }
+                        });
+                    } else {
+                        elements.chatMessages.innerHTML = '<div class="message">No messages yet</div>';
                     }
                 });
-            } else {
-                elements.chatMessages.innerHTML = '<div class="message">No messages yet</div>';
             }
-        });
-    }
-}
-
-// Send message
-async function sendMessage() {
-    if (!elements.chatInput) return;
-
-    const content = elements.chatInput.value.trim();
-    if (!content || !selectedStudentId) return;
-
-    const chatId = [userId, selectedStudentId].sort().join("+");
-    const messageRef = ref(db, `chats/${chatId}/messages`);
-
-    try {
-        const userRef = ref(db, `users/${userId}`);
-        const userSnapshot = await get(userRef);
-        const senderName = userSnapshot.exists() && userSnapshot.val().name ? userSnapshot.val().name : "Unnamed";
-
-        const newMessage = {
-            senderId: userId,
-            senderName,
-            content,
-            timestamp: new Date().toISOString(),
-            read: false
-        };
-
-        await push(messageRef, newMessage);
-        elements.chatInput.value = '';
-    } catch (error) {
-        console.error("Error sending message:", error);
-        alert("Failed to send message.");
-    }
-}
-
-// Open task popup
-async function openTaskPopup(taskId = null) {
-    if (!elements.taskPopup || !elements.popupTitle || !elements.taskTitle ||
-        !elements.taskDescription || !elements.taskDeadline || !elements.taskFile ||
-        !elements.taskPayment) return;
-
-    if (taskId) {
-        editingTaskId = taskId;
-        elements.popupTitle.textContent = 'Edit Task';
-        const taskRef = ref(db, `tasks/${taskId}`);
-        try {
-            const snapshot = await get(taskRef);
-            if (snapshot.exists()) {
-                const task = snapshot.val();
-                elements.taskTitle.value = task.title || '';
-                elements.taskDescription.value = task.description || '';
-                elements.taskDeadline.value = task.deadline || '';
-                elements.taskPayment.value = task.payment || '';
+        }
+    
+        // Send message
+        async function sendMessage() {
+            if (!elements.chatInput) return;
+    
+            const content = elements.chatInput.value.trim();
+            if (!content || !selectedStudentId) return;
+    
+            const chatId = [userId, selectedStudentId].sort().join("+");
+            const messageRef = ref(db, `chats/${chatId}/messages`);
+    
+            try {
+                const userRef = ref(db, `users/${userId}`);
+                const userSnapshot = await get(userRef);
+                const senderName = userSnapshot.exists() && userSnapshot.val().name ? userSnapshot.val().name : "Unnamed";
+    
+                const newMessage = {
+                    senderId: userId,
+                    senderName,
+                    content,
+                    timestamp: new Date().toISOString(),
+                    read: false
+                };
+    
+                await push(messageRef, newMessage);
+                elements.chatInput.value = '';
+            } catch (error) {
+                console.error("Error sending message:", error);
+                alert("Failed to send message.");
+            }
+        }
+    
+        // Open task popup
+        async function openTaskPopup(taskId = null) {
+            if (!elements.taskPopup || !elements.popupTitle || !elements.taskTitle ||
+                !elements.taskDescription || !elements.taskDeadline || !elements.taskFile ||
+                !elements.taskPayment) return;
+    
+            if (taskId) {
+                editingTaskId = taskId;
+                elements.popupTitle.textContent = 'Edit Task';
+                const taskRef = ref(db, `tasks/${taskId}`);
+                try {
+                    const snapshot = await get(taskRef);
+                    if (snapshot.exists()) {
+                        const task = snapshot.val();
+                        elements.taskTitle.value = task.title || '';
+                        elements.taskDescription.value = task.description || '';
+                        elements.taskDeadline.value = task.deadline || '';
+                        elements.taskPayment.value = task.payment || '';
+                        elements.taskFile.value = '';
+                    }
+                } catch (error) {
+                    console.error("Error loading task:", error);
+                    alert("Failed to load task details.");
+                }
+            } else {
+                editingTaskId = null;
+                elements.popupTitle.textContent = 'Add New Task';
+                elements.taskTitle.value = '';
+                elements.taskDescription.value = '';
+                elements.taskDeadline.value = '';
+                elements.taskPayment.value = '';
                 elements.taskFile.value = '';
             }
-        } catch (error) {
-            console.error("Error loading task:", error);
-            alert("Failed to load task details.");
+    
+            elements.taskPopup.classList.add('active');
         }
-    } else {
-        editingTaskId = null;
-        elements.popupTitle.textContent = 'Add New Task';
-        elements.taskTitle.value = '';
-        elements.taskDescription.value = '';
-        elements.taskDeadline.value = '';
-        elements.taskPayment.value = '';
-        elements.taskFile.value = '';
-    }
-
-    elements.taskPopup.classList.add('active');
-}
-
-// Close task popup
-function closeTaskPopup() {
-    if (elements.taskPopup) {
-        elements.taskPopup.classList.remove('active');
-    }
-}
-
-// Submit task
-async function submitTask() {
-    const title = elements.taskTitle?.value.trim();
-    const description = elements.taskDescription?.value.trim();
-    const deadline = elements.taskDeadline?.value;
-    const file = elements.taskFile?.files[0] ? elements.taskFile.files[0].name : null;
-    const payment = parseFloat(elements.taskPayment?.value) || 0;
-
-    if (title && description && deadline && selectedStudentId) {
-        try {
-            const newTask = {
-                professionalId: userId,
-                studentId: selectedStudentId,
-                title,
-                description,
-                deadline,
-                status: 'pending',
-                document: file,
-                payment,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-
-            if (editingTaskId) {
-                const taskRef = ref(db, `tasks/${editingTaskId}`);
-                await update(taskRef, {
-                    ...newTask,
+    
+        // Close task popup
+        function closeTaskPopup() {
+            if (elements.taskPopup) {
+                elements.taskPopup.classList.remove('active');
+            }
+        }
+    
+        // Submit task
+        async function submitTask() {
+            const title = elements.taskTitle?.value.trim();
+            const description = elements.taskDescription?.value.trim();
+            const deadline = elements.taskDeadline?.value;
+            const file = elements.taskFile?.files[0] ? elements.taskFile.files[0].name : null;
+            const payment = parseFloat(elements.taskPayment?.value) || 0;
+    
+            if (title && description && deadline && selectedStudentId) {
+                try {
+                    const newTask = {
+                        professionalId: userId,
+                        studentId: selectedStudentId,
+                        title,
+                        description,
+                        deadline,
+                        status: 'pending',
+                        document: file,
+                        payment,
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    };
+    
+                    if (editingTaskId) {
+                        const taskRef = ref(db, `tasks/${editingTaskId}`);
+                        await update(taskRef, {
+                            ...newTask,
+                            updatedAt: new Date().toISOString()
+                        });
+                    } else {
+                        const taskRef = ref(db, `tasks`);
+                        const newTaskRef = push(taskRef);
+                        await set(newTaskRef, newTask);
+                    }
+    
+                    loadWorkflows();
+                    closeTaskPopup();
+                } catch (error) {
+                    console.error("Error submitting task:", error);
+                    alert("Failed to submit task.");
+                }
+            } else {
+                alert('Please fill all required fields (Task Name, Description, and Deadline).');
+            }
+        }
+    
+        // Load workflows
+        function loadWorkflows() {
+            if (!elements.workflowList) return;
+    
+    
+            if (selectedStudentId) {
+                const tasksRef = ref(db, `tasks`);
+                onValue(tasksRef, (snapshot) => {
+                    elements.workflowList.innerHTML = '';
+                    let hasTasks = false;
+                    if (snapshot.exists()) {
+                        const tasks = snapshot.val();
+                        for (const taskId in tasks) {
+                            const task = tasks[taskId];
+                            if (task.professionalId === userId && task.studentId === selectedStudentId && task.status !== 'completed') {
+                                hasTasks = true;
+                                const workflowItem = document.createElement('div');
+                                workflowItem.className = 'workflow-item';
+                                workflowItem.dataset.taskId = taskId;
+                                workflowItem.innerHTML = `
+                                    <i class="fas fa-edit edit-icon"></i>
+                                    <h4>${task.title}</h4>
+                                    <p>${task.description}</p>
+                                    <div class="deadline-container">
+                                        <div class="deadline-slider" style="width: ${calculateDeadlineProgress(task.deadline)}%; background: ${getDeadlineColor(task.deadline)};"></div>
+                                        <span class="days-left">${calculateDaysLeft(task.deadline)} days left</span>
+                                    </div>
+                                    <select class="status-select">
+                                        <option value="pending" ${task.status === "pending" ? "selected" : ""}>Pending</option>
+                                        <option value="in progress" ${task.status === "in progress" ? "selected" : ""}>In Progress</option>
+                                        <option value="completed" ${task.status === "completed" ? "selected" : ""}>Completed</option>
+                                    </select>
+                                    <i class="fas fa-file-alt file-icon" title="${task.document || 'No file'}"></i>
+                                `;
+                                elements.workflowList.appendChild(workflowItem);
+                            }
+                        }
+                    }
+                    if (!hasTasks) {
+                        elements.workflowList.innerHTML = '<p>No tasks found.</p>';
+                    }
+                });
+            }
+        }
+    
+        // Load completed tasks
+        function loadCompletedTasks() {
+            if (!elements.completedTasksList) return;
+    
+            elements.completedTasksList.innerHTML = '';
+    
+            if (selectedStudentId) {
+                const tasksRef = ref(db, `tasks`);
+                onValue(tasksRef, (snapshot) => {
+                    elements.completedTasksList.innerHTML = '';
+                    let hasCompletedTasks = false;
+                    if (snapshot.exists()) {
+                        const tasks = snapshot.val();
+                        for (const taskId in tasks) {
+                            const task = tasks[taskId];
+                            if (task.professionalId === userId && task.studentId === selectedStudentId && task.status === 'completed') {
+                                hasCompletedTasks = true;
+                                const completedItem = document.createElement('div');
+                                completedItem.className = 'workflow-item';
+                                completedItem.innerHTML = `
+                                    <span class="status-label completed">Completed</span>
+                                    <h4>${task.title}</h4>
+                                    <p>${task.description}</p>
+                                    <div class="deadline-container">
+                                        <div class="deadline-slider" style="width: 100%; background: #4CAF50;"></div>
+                                        <span class="days-left">Completed</span>
+                                    </div>
+                                    <i class="fas fa-file-alt file-icon" title="${task.document || 'No file'}"></i>
+                                `;
+                                elements.completedTasksList.appendChild(completedItem);
+                            }
+                        }
+                    }
+                    if (!hasCompletedTasks) {
+                        elements.completedTasksList.innerHTML = '<p>No completed tasks found.</p>';
+                    }
+                });
+            }
+        }
+    
+        // Toggle completed tasks visibility
+        function toggleCompletedTasks() {
+            if (elements.completedTasksList && document.querySelector('.completed-tasks .toggle-icon')) {
+                elements.completedTasksList.classList.toggle('active');
+                document.querySelector('.completed-tasks .toggle-icon').classList.toggle('active');
+            }
+        }
+    
+        // Update task status
+        async function updateStatus({ taskId, status }) {
+            try {
+                const taskRef = ref(db, `tasks/${taskId}`);
+                await update(taskRef, { 
+                    status,
                     updatedAt: new Date().toISOString()
                 });
-            } else {
-                const taskRef = ref(db, `tasks`);
-                const newTaskRef = push(taskRef);
-                await set(newTaskRef, newTask);
+                loadWorkflows();
+                loadCompletedTasks();
+            } catch (error) {
+                console.error("Error updating task status:", error);
+                alert("Failed to update task status.");
             }
-
-            loadWorkflows();
-            closeTaskPopup();
-        } catch (error) {
-            console.error("Error submitting task:", error);
-            alert("Failed to submit task.");
         }
-    } else {
-        alert('Please fill all required fields (Task Name, Description, and Deadline).');
-    }
-}
-
-// Load workflows
-function loadWorkflows() {
-    if (!elements.workflowList) return;
-
-    elements.workflowList.innerHTML = '<p>Loading tasks...</p>';
-
-    if (selectedStudentId) {
-        const tasksRef = ref(db, `tasks`);
-        onValue(tasksRef, (snapshot) => {
-            elements.workflowList.innerHTML = '';
-            let hasTasks = false;
-            if (snapshot.exists()) {
-                const tasks = snapshot.val();
-                for (const taskId in tasks) {
-                    const task = tasks[taskId];
-                    if (task.professionalId === userId && task.studentId === selectedStudentId && task.status !== 'completed') {
-                        hasTasks = true;
-                        const workflowItem = document.createElement('div');
-                        workflowItem.className = 'workflow-item';
-                        workflowItem.dataset.taskId = taskId;
-                        workflowItem.innerHTML = `
-                            <i class="fas fa-edit edit-icon"></i>
-                            <h4>${task.title}</h4>
-                            <p>${task.description}</p>
-                            <div class="deadline-container">
-                                <div class="deadline-slider" style="width: ${calculateDeadlineProgress(task.deadline)}%; background: ${getDeadlineColor(task.deadline)};"></div>
-                                <span class="days-left">${calculateDaysLeft(task.deadline)} days left</span>
-                            </div>
-                            <select class="status-select">
-                                <option value="pending" ${task.status === "pending" ? "selected" : ""}>Pending</option>
-                                <option value="in progress" ${task.status === "in progress" ? "selected" : ""}>In Progress</option>
-                                <option value="completed" ${task.status === "completed" ? "selected" : ""}>Completed</option>
-                            </select>
-                            <i class="fas fa-file-alt file-icon" title="${task.document || 'No file'}"></i>
-                        `;
-                        elements.workflowList.appendChild(workflowItem);
-                    }
-                }
-            }
-            if (!hasTasks) {
-                elements.workflowList.innerHTML = '<p>No tasks found.</p>';
-            }
-        });
-    }
-}
-
-// Load completed tasks
-function loadCompletedTasks() {
-    if (!elements.completedTasksList) return;
-
-    elements.completedTasksList.innerHTML = '';
-
-    if (selectedStudentId) {
-        const tasksRef = ref(db, `tasks`);
-        onValue(tasksRef, (snapshot) => {
-            elements.completedTasksList.innerHTML = '';
-            let hasCompletedTasks = false;
-            if (snapshot.exists()) {
-                const tasks = snapshot.val();
-                for (const taskId in tasks) {
-                    const task = tasks[taskId];
-                    if (task.professionalId === userId && task.studentId === selectedStudentId && task.status === 'completed') {
-                        hasCompletedTasks = true;
-                        const completedItem = document.createElement('div');
-                        completedItem.className = 'workflow-item';
-                        completedItem.innerHTML = `
-                            <span class="status-label completed">Completed</span>
-                            <h4>${task.title}</h4>
-                            <p>${task.description}</p>
-                            <div class="deadline-container">
-                                <div class="deadline-slider" style="width: 100%; background: #4CAF50;"></div>
-                                <span class="days-left">Completed</span>
-                            </div>
-                            <i class="fas fa-file-alt file-icon" title="${task.document || 'No file'}"></i>
-                        `;
-                        elements.completedTasksList.appendChild(completedItem);
-                    }
-                }
-            }
-            if (!hasCompletedTasks) {
-                elements.completedTasksList.innerHTML = '<p>No completed tasks found.</p>';
-            }
-        });
-    }
-}
-
-// Toggle completed tasks visibility
-function toggleCompletedTasks() {
-    if (elements.completedTasksList && document.querySelector('.completed-tasks .toggle-icon')) {
-        elements.completedTasksList.classList.toggle('active');
-        document.querySelector('.completed-tasks .toggle-icon').classList.toggle('active');
-    }
-}
-
-// Update task status
-async function updateStatus(taskId, status) {
-    try {
-        const taskRef = ref(db, `tasks/${taskId}`);
-        await update(taskRef, { 
-            status,
-            updatedAt: new Date().toISOString()
-        });
-        loadWorkflows();
-        loadCompletedTasks();
-    } catch (error) {
-        console.error("Error updating task status:", error);
-        alert("Failed to update task status.");
-    }
-}
-
-// Calculate days left until deadline
-function calculateDaysLeft(deadline) {
-    const now = new Date();
-    const deadlineDate = new Date(deadline);
-    const diffTime = deadlineDate - now;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays > 0 ? diffDays : 0;
-}
-
-// Calculate deadline progress percentage
-function calculateDeadlineProgress(deadline) {
-    const now = new Date();
-    const deadlineDate = new Date(deadline);
-    const diffTime = deadlineDate - now;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    if (diffDays <= 0) return 0;
-    if (diffDays >= 30) return 100;
+        // Calculate days left until deadline
+        function calculateDaysLeft(deadline) {
+            const now = new Date();
+            const deadlineDate = new Date(deadline);
+            const diffTime = deadlineDate - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays > 0 ? diffDays : 0;
+        }
     
-    return Math.round((diffDays / 30) * 100);
-}
-
-// Get color for deadline progress
-function getDeadlineColor(deadline) {
-    const daysLeft = calculateDaysLeft(deadline);
+        // Calculate deadline progress percentage
+        function calculateDeadlineProgress(deadline) {
+            const now = new Date();
+            const deadlineDate = new Date(deadline);
+            const diffTime = deadlineDate - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    if (daysLeft <= 3) return '#FF5252'; // Red for urgent
-    if (daysLeft <= 7) return '#FFC107'; // Yellow for warning
-    return '#4CAF50'; // Green for good
-}
-
-// Make functions accessible globally
-window.sendMessage = sendMessage;
-window.openTaskPopup = openTaskPopup;
-window.closeTaskPopup = closeTaskPopup;
-window.submitTask = submitTask;
-window.toggleCompletedTasks = toggleCompletedTasks;
-window.selectStudent = selectStudent;
-window.updateStatus = updateStatus;
-window.acceptRequest = acceptRequest;
-window.deleteRequest = deleteRequest;
-
-// Initialize application
-init();
-
-     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93125ed0fda0bd0d',t:'MTc0NDc5Mjc0Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></html>
+            if (diffDays <= 0) return 0;
+            if (diffDays >= 30) return 100;
+    
+            return Math.round((diffDays / 30) * 100);
+        }
+    
+        // Get color for deadline progress
+        function getDeadlineColor(deadline) {
+            const daysLeft = calculateDaysLeft(deadline);
+    
+            if (daysLeft <= 3) return '#FF5252';
+            if (daysLeft <= 7) return '#FFC107';
+            return '#4CAF50';
+        }
+    
+        // Make functions accessible globally
+        window.sendMessage = sendMessage;
+        window.openTaskPopup = openTaskPopup;
+        window.closeTaskPopup = closeTaskPopup;
+        window.submitTask = submitTask;
+        window.toggleCompletedTasks = toggleCompletedTasks;
+        window.selectStudent = selectStudent;
+        window.updateStatus = updateStatus;
+        window.acceptRequest = acceptRequest;
+        window.deleteRequest = deleteRequest;
+        window.confirmAction = confirmAction;
+        window.closeConfirmation = closeConfirmation;
+    
+        // Initialize application
+        init();
+    </script>
+</body>
+</html>
