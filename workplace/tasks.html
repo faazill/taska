@@ -114,6 +114,62 @@
         .user-item.active .user-info .last-message { 
             color: #1a1a1a; 
         }
+        .pending-requests { 
+            margin: 1rem; 
+            padding: 0.5rem; 
+            border-top: 1px solid #e0e0e0; 
+        }
+        .pending-requests h3 { 
+            font-size: 1.2rem; 
+            color: #1a1a1a; 
+            padding: 1rem 0; 
+            margin: 0; 
+            border-bottom: 1px solid #e0e0e0; 
+        }
+        .pending-item { 
+            display: flex; 
+            align-items: center; 
+            padding: 0.75rem 1rem; 
+            margin: 0.25rem 0; 
+            background: #fff; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px; 
+            justify-content: space-between; 
+        }
+        .pending-item .user-info { 
+            display: flex; 
+            align-items: center; 
+        }
+        .pending-item .user-info .name { 
+            font-size: 0.95rem; 
+            color: #1a1a1a; 
+        }
+        .pending-item .actions { 
+            display: flex; 
+            gap: 0.5rem; 
+        }
+        .pending-item .actions button { 
+            padding: 0.5rem 1rem; 
+            border: none; 
+            border-radius: 5px; 
+            font-size: 0.85rem; 
+            cursor: pointer; 
+            transition: background 0.3s; 
+        }
+        .pending-item .actions .accept-btn { 
+            background: #4CAF50; 
+            color: #fff; 
+        }
+        .pending-item .actions .accept-btn:hover { 
+            background: #45a049; 
+        }
+        .pending-item .actions .delete-btn { 
+            background: #FF5252; 
+            color: #fff; 
+        }
+        .pending-item .actions .delete-btn:hover { 
+            background: #e04848; 
+        }
         .chat-area { 
             width: 42%; 
             background: #fff; 
@@ -543,10 +599,9 @@
 </head>
 <body>
     <nav class="navbar">
-        <div class="logo">Taska Elite - Professional</div>
+        <div class="logo">Taska Elite</div>
         <ul class="nav-menu">
-            <li><a href="explore.html">Explore</a></li>
-            <li><a href="connections.html">Connections</a></li>
+            
             <li><a href="tasks.html" class="active">Tasks</a></li>
             <li><a href="profile.html">Profile</a></li>
             <li><a href="../index.html">Logout</a></li>
@@ -556,8 +611,12 @@
 
     <div class="dashboard-content">
         <div class="sidebar-left">
-            <h3>Connected Students</h3>
+            <h3>Connections</h3>
             <div id="connections-list"></div>
+            <div class="pending-requests">
+                <h3>Pending Requests</h3>
+                <div id="pending-requests-list"></div>
+            </div>
         </div>
         <div class="chat-area" id="chat-area">
             <div class="chat-header" id="chat-header"></div>
@@ -616,7 +675,7 @@
 
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getDatabase, ref, get, push, set, onValue, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+import { getDatabase, ref, get, push, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
 // Firebase configuration
@@ -644,6 +703,7 @@ let editingTaskId = null;
 // DOM Elements
 const elements = {
     connectionsList: document.getElementById('connections-list'),
+    pendingRequestsList: document.getElementById('pending-requests-list'),
     chatArea: document.getElementById('chat-area'),
     chatHeader: document.getElementById('chat-header'),
     chatMessages: document.getElementById('chat-messages'),
@@ -669,6 +729,7 @@ function init() {
             if (user) {
                 userId = user.uid;
                 loadConnections();
+                loadPendingRequests();
                 loadCompletedTasks();
             } else {
                 console.error("User not authenticated");
@@ -726,6 +787,18 @@ function setupEventListeners() {
         if (target.matches('.edit-icon')) {
             const taskId = target.closest('.workflow-item').dataset.taskId;
             openTaskPopup(taskId);
+        }
+        
+        // Accept pending request
+        if (target.matches('.accept-btn')) {
+            const professionalId = target.closest('.pending-item').dataset.professionalId;
+            acceptRequest(professionalId);
+        }
+        
+        // Delete pending request
+        if (target.matches('.delete-btn')) {
+            const professionalId = target.closest('.pending-item').dataset.professionalId;
+            deleteRequest(professionalId);
         }
     });
 
@@ -801,6 +874,88 @@ async function loadConnections() {
     } catch (error) {
         console.error("Error loading connections:", error);
         elements.connectionsList.innerHTML = '<p>Error loading connections.</p>';
+    }
+}
+
+// Load pending requests
+async function loadPendingRequests() {
+    if (!elements.pendingRequestsList) return;
+
+    elements.pendingRequestsList.innerHTML = '';
+    try {
+        const connectionsRef = ref(db, `users/${userId}/connections`);
+        const snapshot = await get(connectionsRef);
+        if (snapshot.exists()) {
+            const connections = snapshot.val();
+            let hasPending = false;
+            
+            for (const professionalId in connections) {
+                if (connections[professionalId].status === "pending") {
+                    hasPending = true;
+                    const userRef = ref(db, `users/${professionalId}`);
+                    const userSnapshot = await get(userRef);
+                    const userName = userSnapshot.exists() && userSnapshot.val().name ? userSnapshot.val().name : "Unnamed";
+
+                    const pendingItem = document.createElement('div');
+                    pendingItem.className = 'pending-item';
+                    pendingItem.dataset.professionalId = professionalId;
+                    pendingItem.innerHTML = `
+                        <div class="user-info">
+                            <img src="../assets/avatar/1.jpeg" alt="${userName}" class="profile-pic">
+                            <div class="name">${userName}</div>
+                        </div>
+                        <div class="actions">
+                            <button class="accept-btn">Accept</button>
+                            <button class="delete-btn">Delete</button>
+                        </div>
+                    `;
+                    elements.pendingRequestsList.appendChild(pendingItem);
+                }
+            }
+            
+            if (!hasPending) {
+                elements.pendingRequestsList.innerHTML = '<p>No pending requests.</p>';
+            }
+        } else {
+            elements.pendingRequestsList.innerHTML = '<p>No pending requests.</p>';
+        }
+    } catch (error) {
+        console.error("Error loading pending requests:", error);
+        elements.pendingRequestsList.innerHTML = '<p>Error loading pending requests.</p>';
+    }
+}
+
+// Accept connection request
+async function acceptRequest(professionalId) {
+    try {
+        const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
+        const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
+        
+        await update(studentConnectionRef, { status: "connected" });
+        await update(professionalConnectionRef, { status: "connected" });
+        
+        loadConnections();
+        loadPendingRequests();
+    } catch (error) {
+        console.error("Error accepting request:", error);
+        alert("Failed to accept request.");
+    }
+}
+
+// Delete connection request
+async function deleteRequest(professionalId) {
+    try {
+        const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
+        const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
+        
+        await remove(studentConnectionRef);
+        await remove(professionalConnectionRef);
+        
+        loadConnections();
+        loadPendingRequests();
+    } catch (error) {
+        console.error("Error deleting request:", error);
+        alert("Failed to delete request.");
     }
 }
 
@@ -1159,10 +1314,12 @@ window.submitTask = submitTask;
 window.toggleCompletedTasks = toggleCompletedTasks;
 window.selectStudent = selectStudent;
 window.updateStatus = updateStatus;
+window.acceptRequest = acceptRequest;
+window.deleteRequest = deleteRequest;
 
 // Initialize application
 init();
 
      </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93125ed08ddec01d',t:'MTc0NDc5Mjc0Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

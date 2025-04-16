@@ -367,6 +367,7 @@
         <a href="../index.html"><div class="logo">Taska Elite</div></a>
         <ul class="nav-menu">
             <li><a href="explore.html" class="active">Explore</a></li>
+            <li><a href="tasks.html">Tasks</a></li>
             <li><a href="profile.html">Account</a></li>
         </ul>
         <div class="hamburger">☰</div>
@@ -630,6 +631,15 @@
                 
                 // Store the connection under the user's connections
                 database.ref(`users/${userId}/connections/${studentId}`).set({
+                    timestamp: timestamp,
+                    status: "pending"
+                }).then(() => {
+                    console.log("Connection stored successfully");
+                }).catch((error) => {
+                    console.error("Error storing connection:", error);
+                });
+
+                database.ref(`users/${studentId}/connections/${userId}`).set({
                     timestamp: timestamp,
                     status: "pending"
                 }).then(() => {
