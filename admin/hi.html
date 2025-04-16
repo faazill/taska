@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firebase Root Write Test</title>
+</head>
+<body>
+  <h2>✅ Writing "hi" to Firebase Root...</h2>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
+      authDomain: "taska-45011.firebaseapp.com",
+      databaseURL: "https://taska-45011-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "taska-45011",
+      storageBucket: "taska-45011.appspot.com",
+      messagingSenderId: "205487498813",
+      appId: "1:205487498813:web:0de2c9eab567482781ec54",
+      measurementId: "G-G0G1F6GQ9B"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // ✅ Write "hi" at the root of the database
+    set(ref(db), "hi")
+      .then(() => {
+        console.log("✅ Successfully wrote 'hi' to root");
+      })
+      .catch((error) => {
+        console.error("❌ Error writing to Firebase:", error);
+      });
+  </script>
+</body>
+</html>

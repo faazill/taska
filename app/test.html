@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage and track tasks with Taska’s workflow, connecting professionals with elite students from IITs, NITs, and IIITs.">
+    <title>Taska | Workflow</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: #fafaf5;
+            color: #37474F;
+            line-height: 1.8;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 6%;
+            background: #ffffff;
+            border-bottom: 1px solid #B0BEC5;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo {
+            font-size: 1.7rem;
+            font-weight: 400;
+            color: #0c2720;
+            letter-spacing: 0px;
+        }
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            gap: 2.5rem;
+        }
+        .nav-menu li a {
+            text-decoration: none;
+            color: #01090d;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .nav-menu li a:hover {
+            color: #26A69A;
+        }
+        .workflow-section {
+            padding: 4rem 6%;
+            background: #fafaf5;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .workflow-section h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #26A69A;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .task-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .task-filters button {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 50px;
+            border: 2px solid #26A69A;
+            background: transparent;
+            color: #26A69A;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .task-filters button.active,
+        .task-filters button:hover {
+            background: #26A69A;
+            color: #ffffff;
+        }
+        .task-form {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid #B0BEC5;
+            margin-bottom: 2rem;
+            display: none;
+        }
+        .task-form.active {
+            display: block;
+        }
+        .task-form input,
+        .task-form select,
+        .task-form textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border: 1px solid #B0BEC5;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .task-form button {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            background: #26A69A;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .task-form button:hover {
+            background: #1d8379;
+        }
+        .task-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .task-card {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid #B0BEC5;
+            transition: transform 0.3s ease;
+        }
+        .task-card:hover {
+            transform: scale(1.02);
+        }
+        .task-card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #37474F;
+            margin-bottom: 0.5rem;
+        }
+        .task-card p {
+            font-size: 1rem;
+            color: #78909C;
+            margin-bottom: 0.5rem;
+        }
+        .task-card select {
+            padding: 0.5rem;
+            border: 1px solid #B0BEC5;
+            border-radius: 5px;
+            font-size: 1rem;
+            color: #37474F;
+        }
+        .task-card select.todo {
+            background: #ff6b6b;
+            color: #ffffff;
+        }
+        .task-card select.in-progress {
+            background: #ffb703;
+            color: #ffffff;
+        }
+        .task-card select.completed {
+            background: #26A69A;
+            color: #ffffff;
+        }
+        .whatsapp-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #25D366;
+            color: #ffffff;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        .whatsapp-button:hover {
+            background: #20b956;
+            transform: scale(1.05);
+        }
+        .whatsapp-button i {
+            font-size: 1.5rem;
+        }
+        footer {
+            background: #ffffff;
+            color: #78909C;
+            text-align: center;
+            padding: 2rem 6%;
+            border-top: 1px solid #B0BEC5;
+        }
+        .footer-links a {
+            color: #78909C;
+            margin: 0 1rem;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: #26A69A;
+        }
+        @media (max-width: 768px) {
+            .workflow-section h1 {
+                font-size: 2rem;
+            }
+            .task-filters {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            .task-board {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Taska Elite</div>
+        <ul class="nav-menu">
+            <li><a href="#" id="auth-link">Login</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="workflow-section">
+            <h1>Task Workflow</h1>
+            <div class="task-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="todo">To-Do</button>
+                <button class="filter-btn" data-filter="in-progress">In Progress</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+            </div>
+
+            <div class="task-form" id="task-form">
+                <h2>Add New Task</h2>
+                <input type="text" id="task-title" placeholder="Task Title" required>
+                <textarea id="task-description" placeholder="Task Description" required></textarea>
+                <select id="task-assignee" required>
+                    <option value="" disabled selected>Select Assignee</option>
+                    <!-- Populated dynamically via JS -->
+                </select>
+                <input type="date" id="task-deadline" required>
+                <button onclick="addTask()">Create Task</button>
+            </div>
+
+            <div class="task-board" id="task-board">
+                <!-- Task cards populated dynamically -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Taska. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="">Privacy Policy</a>
+            <a href="">Terms & Conditions</a>
+            <a href="">Contact Us</a>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/919266124039?text=Hello%20Taska,%20I%20would%20like%20to%20know%20more%20about%20your%20services!" class="whatsapp-button" target="_blank">
+        <i class="fab fa-whatsapp"></i> Message Us
+    </a>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, doc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+
+        // Firebase configuration (replace with your config)
+        const firebaseConfig = {
+            // Your Firebase config here
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Check user role and setup page
+        document.addEventListener('DOMContentLoaded', async () => {
+            const userRole = localStorage.getItem('userRole');
+            const authLink = document.getElementById('auth-link');
+            const taskForm = document.getElementById('task-form');
+
+            if (userRole === 'professional') {
+                authLink.textContent = 'Go to Account';
+                authLink.href = 'professional/explore.html';
+                taskForm.classList.add('active'); // Show form for professionals
+                await populateAssignees();
+            } else if (userRole === 'student') {
+                authLink.textContent = 'Go to Account';
+                authLink.href = 'student/dashboard.html';
+            } else {
+                authLink.textContent = 'Login';
+                authLink.href = 'login.html';
+            }
+
+            loadTasks(userRole);
+            setupFilters();
+        });
+
+        // Populate assignee dropdown with students
+        async function populateAssignees() {
+            const assigneeSelect = document.getElementById('task-assignee');
+            const studentsSnapshot = await getDocs(collection(db, 'users'));
+            studentsSnapshot.forEach(doc => {
+                const user = doc.data();
+                if (user.role === 'student') {
+                    const option = document.createElement('option');
+                    option.value = doc.id;
+                    option.textContent = user.name || 'Student';
+                    assigneeSelect.appendChild(option);
+                }
+            });
+        }
+
+        // Add new task
+        window.addTask = async () => {
+            const title = document.getElementById('task-title').value;
+            const description = document.getElementById('task-description').value;
+            const assignee = document.getElementById('task-assignee').value;
+            const deadline = document.getElementById('task-deadline').value;
+
+            if (!title || !description || !assignee || !deadline) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            await addDoc(collection(db, 'tasks'), {
+                title,
+                description,
+                status: 'todo',
+                assignee,
+                deadline,
+                createdBy: auth.currentUser.uid,
+                createdAt: new Date().toISOString()
+            });
+
+            document.getElementById('task-form').reset();
+            loadTasks(localStorage.getItem('userRole'));
+        };
+
+        // Load tasks
+        async function loadTasks(userRole) {
+            const taskBoard = document.getElementById('task-board');
+            taskBoard.innerHTML = '';
+            const tasksSnapshot = await getDocs(collection(db, 'tasks'));
+
+            tasksSnapshot.forEach(doc => {
+                const task = doc.data();
+                if (userRole === 'professional' && task.createdBy === auth.currentUser.uid ||
+                    userRole === 'student' && task.assignee === auth.currentUser.uid) {
+                    const taskCard = document.createElement('div');
+                    taskCard.classList.add('task-card');
+                    taskCard.innerHTML = `
+                        <h3>${task.title}</h3>
+                        <p>${task.description}</p>
+                        <p><strong>Deadline:</strong> ${task.deadline}</p>
+                        <select onchange="updateTaskStatus('${doc.id}', this.value)" class="${task.status}">
+                            <option value="todo" ${task.status === 'todo' ? 'selected' : ''}>To-Do</option>
+                            <option value="in-progress" ${task.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+                            <option value="completed" ${task.status === 'completed' ? 'selected' : ''}>Completed</option>
+                        </select>
+                    `;
+                    taskBoard.appendChild(taskCard);
+                }
+            });
+        }
+
+        // Update task status
+        window.updateTaskStatus = async (taskId, status) => {
+            await updateDoc(doc(db, 'tasks', taskId), { status });
+            loadTasks(localStorage.getItem('userRole'));
+        };
+
+        // Setup filter buttons
+        function setupFilters() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    const filter = button.dataset.filter;
+                    filterTasks(filter);
+                });
+            });
+        }
+
+        // Filter tasks
+        async function filterTasks(filter) {
+            const taskBoard = document.getElementById('task-board');
+            taskBoard.innerHTML = '';
+            const userRole = localStorage.getItem('userRole');
+            const tasksSnapshot = await getDocs(collection(db, 'tasks'));
+
+            tasksSnapshot.forEach(doc => {
+                const task = doc.data();
+                if ((userRole === 'professional' && task.createdBy === auth.currentUser.uid ||
+                     userRole === 'student' && task.assignee === auth.currentUser.uid) &&
+                    (filter === 'all' || task.status === filter)) {
+                    const taskCard = document.createElement('div');
+                    taskCard.classList.add('task-card');
+                    taskCard.innerHTML = `
+                        <h3>${task.title}</h3>
+                        <p>${task.description}</p>
+                        <p><strong>Deadline:</strong> ${task.deadline}</p>
+                        <select onchange="updateTaskStatus('${doc.id}', this.value)" class="${task.status}">
+                            <option value="todo" ${task.status === 'todo' ? 'selected' : ''}>To-Do</option>
+                            <option value="in-progress" ${task.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+                            <option value="completed" ${task.status === 'completed' ? 'selected' : ''}>Completed</option>
+                        </select>
+                    `;
+                    taskBoard.appendChild(taskCard);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
