@@ -10,13 +10,312 @@
   <link rel="stylesheet" href="../css/update-profile.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body { 
+      background: #ffffff; 
+      min-height: 100vh; 
+      color: #2c3e50; 
+      padding-top: 8px; 
+      padding-bottom: 80px; 
+    }
+    .navbar { 
+      background: #fff; 
+      padding: 1rem; 
+      position: fixed; 
+      top: 0; 
+      width: 100%; 
+      z-index: 1000; 
+      border-bottom: 1px solid #e0e0e0; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+    }
+    .navbar .logo { 
+      font-size: 1.5rem; 
+      color: #2c3e50; 
+    }
+    .navbar .nav-menu { 
+      display: flex; 
+      gap: 1.5rem; 
+      list-style: none; 
+    }
+    .navbar .nav-menu li a { 
+      color: #2c3e50; 
+      text-decoration: none; 
+      font-size: 1rem; 
+      transition: color 0.3s; 
+    }
+    .navbar .nav-menu li a.active { 
+      color: #3498db; 
+    }
+    .navbar .hamburger { 
+      display: none; 
+      font-size: 1.5rem; 
+      cursor: pointer; 
+      color: #2c3e50; 
+    }
+    .dashboard-content { 
+      padding: 2rem; 
+      display: grid; 
+      place-items: center; 
+    }
+    .update-section { 
+      background: #ffffff; 
+      border: 1px solid #e0e0e0; 
+      border-radius: 10px; 
+      width: 100%; 
+      max-width: 700px; 
+      padding: 2rem; 
+      display: grid; 
+      gap: 1.5rem; 
+    }
+    .update-section h1 { 
+      font-size: 2rem; 
+      color: #2c3e50; 
+      text-align: center; 
+      text-transform: uppercase; 
+    }
+    .update-form { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 1.5rem; 
+    }
+    .form-group { 
+      width: 100%; 
+    }
+    .form-group label { 
+      font-weight: 500; 
+      color: #2c3e50; 
+      margin-bottom: 0.3rem; 
+      display: block; 
+      font-size: 0.9rem; 
+    }
+    .form-group label span.required { 
+      color: #e74c3c; 
+    }
+    .custom-input, select.custom-input { 
+      width: 100%; 
+      padding: 0.8rem; 
+      border: 1px solid #d1d5db; 
+      border-radius: 6px; 
+      background: #f9fafb; 
+      color: #2c3e50; 
+      font-size: 0.9rem; 
+      transition: border-color 0.3s ease; 
+    }
+    .custom-input:focus, select.custom-input:focus { 
+      border-color: #3498db; 
+      outline: none; 
+    }
+    .custom-input[readonly] { 
+      background: #e5e7eb; 
+      color: #6b7280; 
+    }
+    textarea.custom-input { 
+      min-height: 100px; 
+      resize: vertical; 
+    }
+    .form-actions { 
+      display: flex; 
+      justify-content: center; 
+      gap: 1rem; 
+      margin-top: 1.5rem; 
+    }
+    .cta-button { 
+      padding: 0.8rem 2rem; 
+      background: #3498db; 
+      color: #ffffff; 
+      border: none; 
+      border-radius: 6px; 
+      font-size: 0.9rem; 
+      cursor: pointer; 
+    }
+    .cta-button:hover { 
+      background: #2980b9; 
+    }
+    .cancel-btn { 
+      background: #e5e7eb; 
+      color: #2c3e50; 
+    }
+    .cancel-btn:hover { 
+      background: #d1d5db; 
+    }
+    footer { 
+      background: #ffffff; 
+      padding: 1rem; 
+      text-align: center; 
+      color: #6b7280; 
+      position: fixed; 
+      bottom: 0; 
+      left: 0; 
+      right: 0; 
+      border-top: 1px solid #e0e0e0; 
+    }
+    footer a { 
+      color: #3498db; 
+      text-decoration: none; 
+    }
+    footer a:hover { 
+      color: #2980b9; 
+    }
+
+    /* Profile Image Styles */
+    .profile-image-section { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 1rem; 
+      margin-bottom: 1.5rem; 
+    }
+    .profile-preview { 
+      width: 100px; 
+      height: 100px; 
+      border-radius: 50%; 
+      overflow: hidden; 
+      cursor: pointer; 
+    }
+    .profile-preview img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover; 
+    }
+    .profile-upload-btn { 
+      padding: 0.5rem 1rem; 
+      background: #3498db; 
+      color: #ffffff; 
+      border: none; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-size: 0.9rem; 
+    }
+    .profile-upload-btn:hover { 
+      background: #2980b9; 
+    }
+
+    /* Cropper Modal */
+    .cropper-modal { 
+      display: none; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background: rgba(0,0,0,0.85); 
+      z-index: 10000; 
+      align-items: center; 
+      justify-content: center; 
+      opacity: 1; 
+    }
+    .cropper-container { 
+      background: #ffffff; 
+      border-radius: 8px; 
+      padding: 1.5rem; 
+      width: 90%; 
+      max-width: 500px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 1rem; 
+    }
+    .cropper-image-wrapper { 
+      width: 100%; 
+      height: 400px; 
+      overflow: hidden; 
+      position: relative; 
+    }
+    .cropper-image-wrapper img { 
+      max-width: 100%; 
+      max-height: 100%; 
+      width: 100%; 
+      height: 100%; 
+      object-fit: contain; 
+      display: block; 
+    }
+    .cropper-controls { 
+      display: flex; 
+      gap: 0.5rem; 
+      justify-content: center; 
+      flex-wrap: wrap; 
+    }
+    .cropper-btn { 
+      padding: 0.5rem 1rem; 
+      border: none; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-size: 0.9rem; 
+      background: #f3f4f6; 
+      color: #2c3e50; 
+      transition: background 0.3s ease; 
+    }
+    .cropper-btn:hover { 
+      background: #e5e7eb; 
+    }
+    .cropper-btn.save { 
+      background: #3498db; 
+      color: #ffffff; 
+    }
+    .cropper-btn.save:hover { 
+      background: #2980b9; 
+    }
+    .cropper-btn.cancel { 
+      background: #e5e7eb; 
+      color: #2c3e50; 
+    }
+    .cropper-btn.cancel:hover { 
+      background: #d1d5db; 
+    }
+    .cropper-btn.zoom-in, .cropper-btn.zoom-out, .cropper-btn.rotate { 
+      padding: 0.5rem; 
+      background: #f3f4f6; 
+      color: #2c3e50; 
+    }
+    .cropper-btn.zoom-in:hover, .cropper-btn.zoom-out:hover, .cropper-btn.rotate:hover { 
+      background: #e5e7eb; 
+    }
+
+    @media (max-width: 768px) {
+      .navbar .nav-menu { 
+        display: none; 
+        position: absolute; 
+        top: 60px; 
+        right: 1rem; 
+        background: #ffffff; 
+        flex-direction: column; 
+        padding: 1rem; 
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+      }
+      .navbar .nav-menu.active { 
+        display: flex; 
+      }
+      .navbar .hamburger { 
+        display: block; 
+      }
+      .update-section { 
+        padding: 1.5rem; 
+      }
+      .update-section h1 { 
+        font-size: 1.5rem; 
+      }
+      .custom-input, select.custom-input { 
+        padding: 1rem; 
+        font-size: 1rem; 
+      }
+      .form-actions { 
+        flex-direction: column; 
+        gap: 0.8rem; 
+      }
+      .cropper-container { 
+        padding: 1rem; 
+      }
+    }
+  </style>
 </head>
 <body>
   <nav class="navbar">
     <div class="logo">Taska Elite</div>
     <div class="hamburger">☰</div>
     <ul class="nav-menu">
-      
       <li><a href="profile.html">Profile</a></li>
     </ul>
   </nav>
@@ -24,27 +323,51 @@
   <main class="dashboard-content">
     <section class="update-section">
       <h1>Update Profile</h1>
-      <br>
       <form id="update-profile-form" class="update-form">
+        <!-- Profile Image Upload -->
+        <div class="form-group profile-image-section">
+          <label for="profile-image">Profile Image <span class="required">*</span></label>
+          <div class="profile-preview" onclick="document.getElementById('profile-image').click()">
+            <img id="profile-image-preview" src="../assets/avatar/1.png" alt="Profile Preview">
+          </div>
+          <input type="file" id="profile-image" accept="image/*" style="display: none;" required>
+          <button type="button" class="profile-upload-btn" onclick="document.getElementById('profile-image').click()">Choose Image</button>
+        </div>
+
+        <!-- Personal Information -->
         <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" class="custom-input" placeholder="Enter Name">
+          <label for="name">Name <span class="required">*</span></label>
+          <input type="text" id="name" class="custom-input" placeholder="Enter Name" required>
         </div>
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" class="custom-input" placeholder="Enter Email" readonly>
+          <label for="email">Email <span class="required">*</span></label>
+          <input type="email" id="email" class="custom-input" placeholder="Enter Email" readonly required>
         </div>
         <div class="form-group">
-          <label for="phone">Phone</label>
-          <input type="tel" id="phone" class="custom-input" placeholder="Enter Phone">
+          <label for="phone">Phone <span class="required">*</span></label>
+          <input type="tel" id="phone" class="custom-input" placeholder="Enter Phone" required>
         </div>
+        <div class="form-group">
+          <label for="location">Location <span class="required">*</span></label>
+          <input type="text" id="location" class="custom-input" placeholder="Enter Location" required>
+        </div>
+        <div class="form-group">
+          <label for="bio">Bio <span class="required">*</span> <small>Tell us about yourself to boost your chances!</small></label>
+          <textarea id="bio" class="custom-input" placeholder="Write in your own words, avoid using AI tools. Keeping it natural and personal helps you stand out." required></textarea>
+        </div>
+
+        <!-- Professional Information -->
         <div class="form-group">
           <label for="company">Company</label>
           <input type="text" id="company" class="custom-input" placeholder="Enter Company">
         </div>
         <div class="form-group">
-          <label for="experience">Experience</label>
-          <select id="experience" class="custom-input">
+          <label for="jobRole">Job Role <span class="required">*</span></label>
+          <input type="text" id="jobRole" class="custom-input" placeholder="Enter Job Role" required>
+        </div>
+        <div class="form-group">
+          <label for="experience">Experience <span class="required">*</span></label>
+          <select id="experience" class="custom-input" required>
             <option value="" disabled selected>Select Experience</option>
             <option value="Fresher">Fresher</option>
             <option value="Junior">Junior</option>
@@ -53,14 +376,8 @@
             <option value="Experienced">Experienced</option>
           </select>
         </div>
-        <div class="form-group">
-          <label for="location">Location</label>
-          <input type="text" id="location" class="custom-input" placeholder="Enter Location">
-        </div>
-        <div class="form-group">
-          <label for="jobRole">Job Role</label>
-          <input type="text" id="jobRole" class="custom-input" placeholder="Enter Job Role">
-        </div>
+
+        <!-- Educational Information -->
         <div class="form-group">
           <label for="college">College</label>
           <input type="text" id="college" class="custom-input" placeholder="Enter College">
@@ -73,10 +390,8 @@
           <label for="areaOfStudy">Area of Study</label>
           <input type="text" id="areaOfStudy" class="custom-input" placeholder="Enter Field">
         </div>
-        <div class="form-group">
-          <label for="bio">Bio</label>
-          <textarea id="bio" class="custom-input" placeholder="Tell us about yourself..."></textarea>
-        </div>
+
+        <!-- Form Actions -->
         <div class="form-actions">
           <button type="submit" class="cta-button">Save</button>
           <button type="button" class="cta-button cancel-btn" onclick="window.location.href='profile.html'">Cancel</button>
@@ -85,13 +400,31 @@
     </section>
   </main>
 
+  <!-- Cropper Modal -->
+  <div class="cropper-modal" id="cropper-modal">
+    <div class="cropper-container">
+      <div class="cropper-image-wrapper">
+        <img id="cropper-image" src="" alt="Image to crop">
+      </div>
+      <div class="cropper-controls">
+        <button type="button" class="cropper-btn zoom-in"><i class="fas fa-search-plus"></i></button>
+        <button type="button" class="cropper-btn zoom-out"><i class="fas fa-search-minus"></i></button>
+        <button type="button" class="cropper-btn rotate"><i class="fas fa-redo"></i></button>
+        <button type="button" class="cropper-btn save">Save</button>
+        <button type="button" class="cropper-btn cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <footer>
     <p>© 2025 Taska Elite | <a href="#" class="privacy-policy">Privacy Policy</a></p>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-    import { getDatabase, ref, get, set } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+    import { getDatabase, ref, get, set, push } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
@@ -105,21 +438,124 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
-
+    const storage = getStorage(app);
     const userId = localStorage.getItem('userId');
+
     if (!userId) {
       alert("Please log in or sign up first.");
       window.location.href = '../login.html';
     }
 
-    document.getElementById('email').value = localStorage.getItem('userEmail') || '';
+    let cropper;
+    const profileImageInput = document.getElementById('profile-image');
+    const profileImagePreview = document.getElementById('profile-image-preview');
+    const cropperModal = document.getElementById('cropper-modal');
+    const cropperImage = document.getElementById('cropper-image');
+    const zoomInBtn = document.querySelector('.cropper-btn.zoom-in');
+    const zoomOutBtn = document.querySelector('.cropper-btn.zoom-out');
+    const rotateBtn = document.querySelector('.cropper-btn.rotate');
+    const saveBtn = document.querySelector('.cropper-btn.save');
+    const cancelBtn = document.querySelector('.cropper-btn.cancel');
 
-    function loadProfileData() {
+    profileImageInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          cropperImage.src = event.target.result;
+          cropperModal.style.display = 'flex';
+          if (cropper) cropper.destroy();
+          cropper = new Cropper(cropperImage, {
+            aspectRatio: 1,
+            viewMode: 1,
+            autoCropArea: 0.8,
+            responsive: true,
+            background: false,
+            modal: true,
+            zIndex: 5200
+          });
+          document.body.style.overflow = 'hidden';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    zoomInBtn.addEventListener('click', () => cropper.zoom(0.1));
+    zoomOutBtn.addEventListener('click', () => cropper.zoom(-0.1));
+    rotateBtn.addEventListener('click', () => cropper.rotate(90));
+    cancelBtn.addEventListener('click', () => {
+      cropperModal.style.display = 'none';
+      cropper.destroy();
+      profileImageInput.value = '';
+      document.body.style.overflow = 'auto';
+    });
+
+    saveBtn.addEventListener('click', async () => {
+      const canvas = cropper.getCroppedCanvas({
+        width: 200,
+        height: 200,
+        imageSmoothingQuality: 'high'
+      });
+      canvas.toBlob(async (blob) => {
+        try {
+          // Convert to WebP
+          const webpBlob = await new Promise((resolve) => {
+            const img = new Image();
+            img.src = canvas.toDataURL('image/webp', 0.8);
+            img.onload = () => {
+              const tempCanvas = document.createElement('canvas');
+              tempCanvas.width = img.width;
+              tempCanvas.height = img.height;
+              tempCanvas.getContext('2d').drawImage(img, 0, 0);
+              tempCanvas.toBlob(resolve, 'image/webp', 0.8);
+            };
+          });
+
+          // Upload to Firebase Storage
+          const storagePath = `profile/${userId}.webp`;
+          const imageRef = storageRef(storage, storagePath);
+          await uploadBytes(imageRef, webpBlob);
+          const downloadURL = await getDownloadURL(imageRef);
+
+          // Update preview
+          profileImagePreview.src = downloadURL;
+
+          // Store verification data
+          const verificationRef = ref(database, `verification/${userId}`);
+          await push(verificationRef, {
+            field: 'profileImage',
+            value: downloadURL,
+            timestamp: Date.now(),
+            status: 'pending'
+          });
+
+          cropperModal.style.display = 'none';
+          cropper.destroy();
+          profileImageInput.value = '';
+          document.body.style.overflow = 'auto';
+        } catch (error) {
+          alert("Failed to upload image: " + error.message);
+        }
+      }, 'image/webp', 0.8);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const hamburger = document.querySelector('.hamburger');
+      const navMenu = document.querySelector('.nav-menu');
+      hamburger.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+      });
+    });
+
+    let originalData = {};
+    async function loadProfileData() {
       const userRef = ref(database, `professionalslist/${userId}`);
-      get(userRef).then((snapshot) => {
+      try {
+        const snapshot = await get(userRef);
         const data = snapshot.val() || {};
+        originalData = data;
         document.getElementById('name').value = data.name || '';
-        document.getElementById('email').value = data.email || '';
+        document.getElementById('email').value = data.email || localStorage.getItem('userEmail') || '';
         document.getElementById('phone').value = data.phone || '';
         document.getElementById('company').value = data.company || '';
         document.getElementById('experience').value = data.experience || '';
@@ -129,37 +565,85 @@
         document.getElementById('degree').value = data.degree || '';
         document.getElementById('areaOfStudy').value = data.areaOfStudy || '';
         document.getElementById('bio').value = data.bio || '';
-      }).catch((error) => {
-        alert("Failed to load profile data: " + error.message);
-      });
+        profileImagePreview.src = data.profileImage || '../assets/avatar/1.png';
+      } catch (error) {
+        console.error("Failed to load profile data: ", error);
+      }
     }
 
-    document.getElementById('update-profile-form').addEventListener('submit', (e) => {
+    document.getElementById('update-profile-form').addEventListener('submit', async (e) => {
       e.preventDefault();
+
       const updatedData = {
-        email: document.getElementById('email').value,
-        name: document.getElementById('name').value,
-        phone: document.getElementById('phone').value,
-        company: document.getElementById('company').value,
+        profileImage: profileImagePreview.src,
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        company: document.getElementById('company').value.trim(),
         experience: document.getElementById('experience').value,
-        location: document.getElementById('location').value,
-        jobRole: document.getElementById('jobRole').value,
-        college: document.getElementById('college').value,
-        degree: document.getElementById('degree').value,
-        areaOfStudy: document.getElementById('areaOfStudy').value,
-        bio: document.getElementById('bio').value,
+        location: document.getElementById('location').value.trim(),
+        jobRole: document.getElementById('jobRole').value.trim(),
+        college: document.getElementById('college').value.trim(),
+        degree: document.getElementById('degree').value.trim(),
+        areaOfStudy: document.getElementById('areaOfStudy').value.trim(),
+        bio: document.getElementById('bio').value.trim(),
         isVisible: true
       };
 
-      const userRef = ref(database, `professionalslist/${userId}`);
-      set(userRef, updatedData)
-        .then(() => {
-          alert("Profile updated successfully!");
-          window.location.href = 'profile.html';
-        })
-        .catch((error) => {
-          alert("Failed to update profile: " + error.message);
-        });
+      // Detect changed fields
+      const changedFields = [];
+      if (updatedData.profileImage !== (originalData.profileImage || '../assets/avatar/1.png')) {
+        changedFields.push({ field: 'profileImage', value: updatedData.profileImage, timestamp: Date.now(), status: 'pending' });
+      }
+      if (updatedData.name !== (originalData.name || '')) {
+        changedFields.push({ field: 'name', value: updatedData.name, timestamp: Date.now(), status: 'pending' });
+      }
+      if (updatedData.phone !== (originalData.phone || '')) {
+        changedFields.push({ field: 'phone', value: updatedData.phone, timestamp: Date.now(), status: 'pending' });
+      }
+      if (updatedData.company !== (originalData.company || '')) {
+        changedFields.push({ field: 'company', value: updatedData.company, timestamp: Date.now(), status: 'pending' });
+      }
+      if (updatedData.experience !== (originalData.experience || '')) {
+        changedFields.push({ field: 'experience', value: updatedData.experience, timestamp: Date.now(), status: 'pending' });
+      }
+      if (updatedData.location !== (originalData.location || '')) {
+        changedFields.push({ field: 'location', value: updatedData.location, timestamp: Date.now(), status: 'pending' });
+      }
+      if (updatedData.jobRole !== (originalData.jobRole || '')) {
+        changedFields.push({ field: 'jobRole', value: updatedData.jobRole, timestamp: Date.now(), status: 'pending' });
+      }
+      if (updatedData.college !== (originalData.college || '')) {
+        changedFields.push({ field: 'college', value: updatedData.college, timestamp: Date.now(), status: 'pending' });
+      }
+      if (updatedData.degree !== (originalData.degree || '')) {
+        changedFields.push({ field: 'degree', value: updatedData.degree, timestamp: Date.now(), status: 'pending' });
+      }
+      if (updatedData.areaOfStudy !== (originalData.areaOfStudy || '')) {
+        changedFields.push({ field: 'areaOfStudy', value: updatedData.areaOfStudy, timestamp: Date.now(), status: 'pending' });
+      }
+      if (updatedData.bio !== (originalData.bio || '')) {
+        changedFields.push({ field: 'bio', value: updatedData.bio, timestamp: Date.now(), status: 'pending' });
+      }
+
+      try {
+        // Store updated data
+        const userRef = ref(database, `professionalslist/${userId}`);
+        await set(userRef, updatedData);
+
+        // Store only changed fields for verification
+        if (changedFields.length > 0) {
+          const verificationRef = ref(database, `verification/${userId}`);
+          for (const field of changedFields) {
+            await push(verificationRef, field);
+          }
+        }
+
+        alert("Your data will be updated after verification.");
+        window.location.href = 'profile.html';
+      } catch (error) {
+        alert("Failed to update profile: " + error.message);
+      }
     });
 
     window.onload = loadProfileData;
