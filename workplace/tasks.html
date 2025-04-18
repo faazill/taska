@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taska Elite - Professional Tasks</title>
+    <title>Taska Elite - Student Tasks</title>
     <link rel="stylesheet" href="css/tasks.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/global.css">
@@ -26,8 +26,6 @@
             <h3>Connections</h3>
             <div id="connections-list"></div>
             <div class="pending-requests">
-                <h3>Pending Requests</h3>
-                <div id="pending-requests-list"></div>
             </div>
         </div>
         <div class="chat-area" id="chat-area">
@@ -55,6 +53,41 @@
         </div>
     </div>
 
+    <div class="task-popup" id="task-popup">
+        <div class="header">
+            <h3 id="popup-title">View Task</h3>
+            <button onclick="closeTaskPopup()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="form-group">
+            <label for="task-title">Task Name</label>
+            <input type="text" id="task-title" placeholder="Enter task name" readonly>
+        </div>
+        <div class="form-group">
+            <label for="task-description">Description</label>
+            <textarea id="task-description" placeholder="Enter description" rows="4" readonly></textarea>
+        </div>
+        <div class="form-group">
+            <label for="task-deadline">Deadline</label>
+            <input type="date" id="task-deadline" readonly>
+        </div>
+        <div class="form-group">
+            <label for="task-file">Attached Files</label>
+            <input type="file" id="task-file" multiple>
+            <div class="upload-progress" id="task-upload-progress">
+                <div class="upload-progress-bar" id="task-upload-progress-bar"></div>
+            </div>
+            <div id="task-file-list" class="file-list"></div>
+        </div>
+        <div class="form-group">
+            <label for="task-payment">Cash Payment (Coins)</label>
+            <input type="number" id="task-payment" placeholder="Enter amount" min="0" readonly>
+        </div>
+        <div class="actions">
+            <button class="cancel-btn" onclick="closeTaskPopup()">Close</button>
+            <button class="submit-btn" onclick="confirmAction('submitTask', 'Submit Files', 'Are you sure you want to submit these files for the task?')">Submit Files</button>
+        </div>
+    </div>
+
     <div class="confirmation-dialog" id="confirmation-dialog">
         <div class="dialog-box">
             <h3 id="dialog-title"></h3>
@@ -79,7 +112,7 @@
             authDomain: "taska-45011.firebaseapp.com",
             databaseURL: "https://taska-45011-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "taska-45011",
-            storageBucket: "gs://taska-45011.firebasestorage.app",
+            storageBucket: "taska-45011.appspot.com",
             messagingSenderId: "205487498813",
             appId: "1:205487498813:web:0de2c9eab567482781ec54",
             measurementId: "G-G0G1F6GQ9B"
@@ -95,6 +128,7 @@
         let editingTaskId = null;
         let professionalData = null;
         let currentUserProfile = null;
+        let uploadedTaskFiles = [];
 
         const elements = {
             connectionsList: document.getElementById('connections-list'),
@@ -117,16 +151,19 @@
             dialogTitle: document.getElementById('dialog-title'),
             dialogMessage: document.getElementById('dialog-message'),
             confirmButton: document.getElementById('confirm-button'),
+            messageDing: document.getElementById('message-ding'),
             fileInput: document.getElementById('file-input'),
+            taskFileList: document.getElementById('task-file-list'),
             uploadProgress: document.getElementById('upload-progress'),
             uploadProgressBar: document.getElementById('upload-progress-bar'),
-            messageDing: document.getElementById('message-ding')
+            taskUploadProgress: document.getElementById('task-upload-progress'),
+            taskUploadProgressBar: document.getElementById('task-upload-progress-bar')
         };
 
         async function fetchProfessionalData() {
             if (professionalData) return professionalData;
             try {
-                const response = await fetch('../professional/manualprofessionallist.json');
+                const response = await fetch('../professional/manualstudentlist.json');
                 if (!response.ok) throw new Error(`Failed to fetch professional data: ${response.statusText}`);
                 professionalData = await response.json();
                 professionalData = professionalData.map((professional, index) => ({
@@ -143,14 +180,35 @@
         async function fetchCurrentUserProfile() {
             if (currentUserProfile) return currentUserProfile;
             try {
-                const userRef = ref(db, `users/${userId}`);
-                const snapshot = await get(userRef);
-                currentUserProfile = snapshot.exists() ? snapshot.val() : { name: "Unnamed" };
-                currentUserProfile.profilePic = currentUserProfile.profilePic || "../assets/avatar/1.png";
+                const students = await fetchStudentData();
+                const user = students.find(s => s.id === userId) || {};
+                currentUserProfile = {
+                    name: user.personal?.name || "Unnamed",
+                    profilePic: user.personal?.profilePic 
+                        ? user.personal.profilePic 
+                        : user.personal?.linkedin 
+                            ? `https://via.placeholder.com/40?text=${user.personal?.name?.[0] || 'U'}`
+                            : "../assets/avatar/1.png"
+                };
                 return currentUserProfile;
             } catch (error) {
                 console.error('Error fetching current user profile:', error);
                 return { name: "Unnamed", profilePic: "../assets/avatar/1.png" };
+            }
+        }
+
+        async function fetchStudentData() {
+            try {
+                const response = await fetch('../professional/manualstudentlist.json');
+                if (!response.ok) throw new Error(`Failed to fetch student data: ${response.statusText}`);
+                const data = await response.json();
+                return data.map((student, index) => ({
+                    ...student,
+                    id: student.id || `student_${index}`
+                }));
+            } catch (error) {
+                console.error('Error fetching student data:', error);
+                return [];
             }
         }
 
@@ -188,7 +246,6 @@
                         userId = user.uid;
                         fetchCurrentUserProfile().then(() => {
                             loadConnections();
-                            loadPendingRequests();
                             loadCompletedTasks();
                         });
                     } else {
@@ -208,17 +265,9 @@
 
             document.addEventListener('click', (e) => {
                 const target = e.target;
-                if (target.closest('.user-item') && !target.closest('.pending-item')) {
+                if (target.closest('.user-item')) {
                     const professionalId = target.closest('.user-item').dataset.professionalId;
                     selectProfessional(professionalId);
-                }
-                if (target.matches('.accept-btn')) {
-                    const professionalId = target.closest('.pending-item').dataset.professionalId;
-                    confirmAction('acceptRequest', 'Accept Request', 'Are you sure you want to accept this connection request?', { professionalId });
-                }
-                if (target.matches('.delete-btn')) {
-                    const professionalId = target.closest('.pending-item').dataset.professionalId;
-                    confirmAction('deleteRequest', 'Delete Request', 'Are you sure you want to delete this connection request?', { professionalId });
                 }
                 if (target.matches('.edit-icon')) {
                     const taskId = target.closest('.workflow-item').dataset.taskId;
@@ -261,58 +310,74 @@
                     }
                 });
             }
+
+            if (elements.taskFile) {
+                elements.taskFile.addEventListener('change', async () => {
+                    uploadedTaskFiles = [];
+                    elements.taskFileList.innerHTML = '';
+                    const files = Array.from(elements.taskFile.files);
+                    for (const file of files) {
+                        await uploadTaskFile(file);
+                    }
+                });
+            }
         }
 
-        async function sendFileMessage(file) {
-            if (!selectedProfessionalId) return;
-            const chatId = [userId, selectedProfessionalId].sort().join("+");
-            const messageRef = ref(db, `chats/${chatId}/messages`);
+        async function uploadTaskFile(file) {
             try {
-                const storagePath = `chats/${chatId}/${Date.now()}_${file.name}`;
+                const storagePath = `tasks/temp/${Date.now()}_${file.name}`;
                 const fileRef = storageRef(storage, storagePath);
                 const uploadTask = uploadBytesResumable(fileRef, file);
 
-                elements.uploadProgress.classList.add('active');
-                elements.uploadProgressBar.style.width = '0%';
+                elements.taskUploadProgress.classList.add('active');
+                elements.taskUploadProgressBar.style.width = '0%';
 
                 uploadTask.on('state_changed',
                     (snapshot) => {
                         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        elements.uploadProgressBar.style.width = `${progress}%`;
+                        elements.taskUploadProgressBar.style.width = `${progress}%`;
                     },
                     (error) => {
-                        console.error('Error uploading file:', error);
-                        elements.uploadProgress.classList.remove('active');
+                        console.error('Error uploading task file:', error);
+                        elements.taskUploadProgress.classList.remove('active');
                         alert('Failed to upload file.');
                     },
                     async () => {
                         const fileUrl = await getDownloadURL(fileRef);
-                        const currentUser = await fetchCurrentUserProfile();
-                        const newMessage = {
-                            senderId: userId,
-                            senderName: currentUser.name,
-                            file: {
-                                name: file.name,
-                                url: fileUrl,
-                                type: file.type,
-                                size: file.size
-                            },
-                            timestamp: new Date().toISOString(),
-                            read: false
-                        };
-                        await push(messageRef, newMessage);
-                        elements.uploadProgress.classList.remove('active');
-                        if (elements.messageDing) {
-                            elements.messageDing.play().catch(error => console.error("Error playing ding sound:", error));
-                        }
+                        uploadedTaskFiles.push({
+                            name: file.name,
+                            url: fileUrl,
+                            type: file.type
+                        });
+
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'task-file-item';
+                        fileItem.innerHTML = `
+                            <i class="${getFileIconClass(file.type)}"></i>
+                            <span>${file.name}</span>
+                            <i class="fas fa-times remove-file" onclick="removeTaskFile('${file.name}')"></i>
+                        `;
+                        elements.taskFileList.appendChild(fileItem);
+
+                        elements.taskUploadProgress.classList.remove('active');
                     }
                 );
             } catch (error) {
-                console.error("Error initiating file upload:", error);
-                elements.uploadProgress.classList.remove('active');
+                console.error('Error initiating task file upload:', error);
+                elements.taskUploadProgress.classList.remove('active');
                 alert('Failed to upload file.');
             }
         }
+
+        window.removeTaskFile = function(fileName) {
+            uploadedTaskFiles = uploadedTaskFiles.filter(file => file.name !== fileName);
+            const fileItems = elements.taskFileList.querySelectorAll('.task-file-item');
+            fileItems.forEach(item => {
+                if (item.querySelector('span').textContent === fileName) {
+                    item.remove();
+                }
+            });
+        };
 
         async function loadConnections() {
             if (!elements.connectionsList) return;
@@ -332,7 +397,7 @@
                             const profilePic = professional.personal?.profilePic 
                                 ? professional.personal.profilePic 
                                 : professional.personal?.linkedin 
-                                    ? `https://via.placeholder.com/40?text=${userName[0]}` 
+                                    ? `https://via.placeholder.com/40?text=${userName[0]}`
                                     : "../assets/avatar/1.png";
                             const chatId = [userId, professionalId].sort().join("+");
                             const chatRef = ref(db, `chats/${chatId}/messages`);
@@ -371,97 +436,7 @@
             }
         }
 
-        async function loadPendingRequests() {
-            if (!elements.pendingRequestsList) return;
-            try {
-                const connectionsRef = ref(db, `users/${userId}/connections`);
-                const snapshot = await get(connectionsRef);
-                if (snapshot.exists()) {
-                    const connections = snapshot.val();
-                    let hasPending = false;
-                    const professionals = await fetchProfessionalData();
-                    elements.pendingRequestsList.innerHTML = '';
-                    for (const professionalId in connections) {
-                        if (connections[professionalId].status === "pending") {
-                            hasPending = true;
-                            const professional = professionals.find(p => p.id === professionalId) || {};
-                            const userName = professional.personal?.name || "Unnamed";
-                            const profilePic = professional.personal?.profilePic 
-                                ? professional.personal.profilePic 
-                                : professional.personal?.linkedin 
-                                    ? `https://via.placeholder.com/40?text=${userName[0]}` 
-                                    : "../assets/avatar/1.png";
-                            const pendingItem = document.createElement('div');
-                            pendingItem.className = 'pending-item user-item';
-                            pendingItem.dataset.professionalId = professionalId;
-                            pendingItem.innerHTML = `
-                                <div class="user-info">
-                                    <img src="${profilePic}" alt="${userName}" class="profile-pic">
-                                    <div class="name">${userName}</div>
-                                </div>
-                                <div class="actions">
-                                    <button class="accept REPRESENTATIVE-btn">Accept</button>
-                                    <button class="delete-btn">Delete</button>
-                                </div>
-                            `;
-                            elements.pendingRequestsList.appendChild(pendingItem);
-                        }
-                    }
-                    if (!hasPending) {
-                        document.querySelector('.pending-requests').style.display = 'none';
-                    } else {
-                        document.querySelector('.pending-requests').style.display = 'block';
-                    }
-                } else {
-                    elements.pendingRequestsList.innerHTML = '<p>No pending requests.</p>';
-                }
-            } catch (error) {
-                console.error("Error loading pending requests:", error);
-                elements.pendingRequestsList.innerHTML = '<p>Error loading pending requests.</p>';
-            }
-        }
-
-        async function acceptRequest({ professionalId }) {
-            try {
-                const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
-                const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
-                await update(studentConnectionRef, { status: "connected" });
-                await update(professionalConnectionRef, { status: "connected" });
-                loadConnections();
-                loadPendingRequests();
-            } catch (error) {
-                console.error("Error accepting request:", error);
-                alert("Failed to accept request.");
-            }
-        }
-
-        async function deleteRequest({ professionalId }) {
-            try {
-                const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
-                const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
-                await remove(studentConnectionRef);
-                await remove(professionalConnectionRef);
-                loadConnections();
-                loadPendingRequests();
-            } catch (error) {
-                console.error("Error deleting request:", error);
-                alert("Failed to delete request.");
-            }
-        }
-
-        async function deleteTask({ taskId }) {
-            try {
-                const taskRef = ref(db, `tasks/${taskId}`);
-                await remove(taskRef);
-                loadWorkflows();
-                loadCompletedTasks();
-            } catch (error) {
-                console.error("Error deleting task:", error);
-                alert("Failed to delete task.");
-            }
-        }
-
-        function selectProfessional(professionalId) {
+        async function selectProfessional(professionalId) {
             selectedProfessionalId = professionalId;
             document.querySelectorAll('.user-item').forEach(item => {
                 item.classList.toggle('active', item.dataset.professionalId === professionalId);
@@ -480,20 +455,32 @@
                 const professionals = await fetchProfessionalData();
                 const professional = professionals.find(p => p.id === selectedProfessionalId) || {};
                 const userName = professional.personal?.name || "Unnamed";
-                const userTitle = professional.professional?.title || "";
+                const userTitle = professional.education?.branch || "";
                 const profilePic = professional.personal?.profilePic 
                     ? professional.personal.profilePic 
                     : professional.personal?.linkedin 
-                        ? `https://via.placeholder.com/40?text=${userName[0]}` 
+                        ? `https://via.placeholder.com/40?text=${userName[0]}`
                         : "../assets/avatar/1.png";
                 elements.chatHeader.innerHTML = `
-                    <img src="${profilePic}" alt="${userName}" class="profile-pic">
-                    <div class="name">${userName}</div>
-                    <div class="title">${userTitle}</div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img src="${profilePic}" alt="${userName}" class="profile-pic">
+                        <div>
+                            <div class="name">${userName}</div>
+                            <div class="title">${userTitle}</div>
+                        </div>
+                    </div>
                 `;
             } catch (error) {
                 console.error("Error loading chat header:", error);
-                elements.chatHeader.innerHTML = '<div class="name">Unnamed</div><div class="title"></div>';
+                elements.chatHeader.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img src="../assets/avatar/1.png" alt="Unnamed" class="profile-pic">
+                        <div>
+                            <div class="name">Unnamed</div>
+                            <div class="title"></div>
+                        </div>
+                    </div>
+                `;
             }
         }
 
@@ -611,13 +598,68 @@
             }
         }
 
+        async function sendFileMessage(file) {
+            if (!selectedProfessionalId) return;
+            const chatId = [userId, selectedProfessionalId].sort().join("+");
+            const messageRef = ref(db, `chats/${chatId}/messages`);
+            try {
+                const storagePath = `chats/${chatId}/${Date.now()}_${file.name}`;
+                const fileRef = storageRef(storage, storagePath);
+                const uploadTask = uploadBytesResumable(fileRef, file);
+
+                elements.uploadProgress.classList.add('active');
+                elements.uploadProgressBar.style.width = '0%';
+
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        elements.uploadProgressBar.style.width = `${progress}%`;
+                    },
+                    (error) => {
+                        console.error('Error uploading file:', error);
+                        elements.uploadProgress.classList.remove('active');
+                        alert('Failed to upload file.');
+                    },
+                    async () => {
+                        const fileUrl = await getDownloadURL(fileRef);
+                        const currentUser = await fetchCurrentUserProfile();
+                        const newMessage = {
+                            senderId: userId,
+                            senderName: currentUser.name,
+                            file: {
+                                name: file.name,
+                                url: fileUrl,
+                                type: file.type,
+                                size: file.size
+                            },
+                            timestamp: new Date().toISOString(),
+                            read: false
+                        };
+                        await push(messageRef, newMessage);
+                        elements.uploadProgress.classList.remove('active');
+                        if (elements.messageDing) {
+                            elements.messageDing.play().catch(error => console.error("Error playing ding sound:", error));
+                        }
+                    }
+                );
+            } catch (error) {
+                console.error("Error initiating file upload:", error);
+                elements.uploadProgress.classList.remove('active');
+                alert("Failed to upload file.");
+            }
+        }
+
         async function openTaskPopup(taskId = null) {
             if (!elements.taskPopup || !elements.popupTitle || !elements.taskTitle ||
                 !elements.taskDescription || !elements.taskDeadline || !elements.taskFile ||
                 !elements.taskPayment) return;
+
+            uploadedTaskFiles = [];
+            elements.taskFileList.innerHTML = '';
+
             if (taskId) {
                 editingTaskId = taskId;
-                elements.popupTitle.textContent = 'Edit Task';
+                elements.popupTitle.textContent = 'View Task';
                 const taskRef = ref(db, `tasks/${taskId}`);
                 try {
                     const snapshot = await get(taskRef);
@@ -628,157 +670,153 @@
                         elements.taskDeadline.value = task.deadline || '';
                         elements.taskPayment.value = task.payment || '';
                         elements.taskFile.value = '';
+                        if (task.files) {
+                            uploadedTaskFiles = Object.values(task.files);
+                            uploadedTaskFiles.forEach(file => {
+                                const fileItem = document.createElement('div');
+                                fileItem.className = 'task-file-item';
+                                fileItem.innerHTML = `
+                                    <a href="${file.url}" download="${file.name}" target="_blank">
+                                        <i class="${getFileIconClass(file.type)}"></i>
+                                        <span>${file.name}</span>
+                                    </a>
+                                `;
+                                elements.taskFileList.appendChild(fileItem);
+                            });
+                        }
                     }
                 } catch (error) {
                     console.error("Error loading task:", error);
                     alert("Failed to load task details.");
                 }
-            } else {
-                editingTaskId = null;
-                elements.popupTitle.textContent = 'Add New Task';
-                elements.taskTitle.value = '';
-                elements.taskDescription.value = '';
-                elements.taskDeadline.value = '';
-                elements.taskPayment.value = '';
-                elements.taskFile.value = '';
             }
+
             elements.taskPopup.classList.add('active');
         }
 
         function closeTaskPopup() {
             if (elements.taskPopup) {
                 elements.taskPopup.classList.remove('active');
+                uploadedTaskFiles = [];
+                elements.taskFileList.innerHTML = '';
             }
         }
 
         async function submitTask() {
-            const title = elements.taskTitle?.value.trim();
-            const description = elements.taskDescription?.value.trim();
-            const deadline = elements.taskDeadline?.value;
-            const payment = parseFloat(elements.taskPayment?.value) || 0;
-            if (title && description && deadline && selectedProfessionalId) {
-                try {
-                    const newTask = {
-                        professionalId: selectedProfessionalId,
-                        studentId: userId,
-                        title,
-                        description,
-                        deadline,
-                        status: 'pending',
-                        payment,
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    };
-                    if (editingTaskId) {
-                        const taskRef = ref(db, `tasks/${editingTaskId}`);
-                        await update(taskRef, {
-                            ...newTask,
-                            updatedAt: new Date().toISOString()
-                        });
-                    } else {
-                        const taskRef = ref(db, `tasks`);
-                        const newTaskRef = push(taskRef);
-                        await set(newTaskRef, newTask);
-                    }
-                    loadWorkflows();
-                    closeTaskPopup();
-                } catch (error) {
-                    console.error("Error submitting task:", error);
-                    alert("Failed to submit task.");
-                }
-            } else {
-                alert('Please fill all required fields (Task Name, Description, and Deadline).');
+            if (!editingTaskId || !selectedProfessionalId) return;
+
+            try {
+                const filesObj = uploadedTaskFiles.reduce((acc, file, index) => ({
+                    ...acc,
+                    [index]: file
+                }), {});
+
+                const taskRef = ref(db, `tasks/${editingTaskId}`);
+                await update(taskRef, {
+                    files: filesObj,
+                    updatedAt: new Date().toISOString()
+                });
+
+                loadWorkflows();
+                closeTaskPopup();
+            } catch (error) {
+                console.error("Error submitting task files:", error);
+                alert("Failed to submit task files.");
             }
         }
 
         function loadWorkflows() {
             if (!elements.workflowList) return;
-            const tasksRef = ref(db, `tasks`);
-            onValue(tasksRef, (snapshot) => {
-                elements.workflowList.innerHTML = '';
-                let hasTasks = false;
-                if (snapshot.exists()) {
-                    const tasks = snapshot.val();
-                    for (const taskId in tasks) {
-                        const task = tasks[taskId];
-                        if (task.studentId === userId && task.status !== 'completed') {
-                            hasTasks = true;
-                            const workflowItem = document.createElement('div');
-                            workflowItem.className = 'workflow-item';
-                            workflowItem.dataset.taskId = taskId;
-                            let fileIcons = '';
-                            if (task.files) {
-                                fileIcons = Object.values(task.files).map(file => `
-                                    <a href="${file.url}" download="${file.name}" class="file-icon-container" title="${file.name}">
-                                        <i class="${getFileIconClass(file.type)} file-icon"></i>
-                                    </a>
-                                `).join('');
+            if (selectedProfessionalId) {
+                const tasksRef = ref(db, `tasks`);
+                onValue(tasksRef, (snapshot) => {
+                    elements.workflowList.innerHTML = '';
+                    let hasTasks = false;
+                    if (snapshot.exists()) {
+                        const tasks = snapshot.val();
+                        for (const taskId in tasks) {
+                            const task = tasks[taskId];
+                            if (task.studentId === userId && task.professionalId === selectedProfessionalId && task.status !== 'completed') {
+                                hasTasks = true;
+                                const workflowItem = document.createElement('div');
+                                workflowItem.className = 'workflow-item';
+                                workflowItem.dataset.taskId = taskId;
+                                let fileIcons = '';
+                                if (task.files) {
+                                    fileIcons = Object.values(task.files).map(file => `
+                                        <a href="${file.url}" download="${file.name}" class="file-icon-container" title="${file.name}">
+                                            <i class="${getFileIconClass(file.type)} file-icon"></i>
+                                        </a>
+                                    `).join('');
+                                }
+                                workflowItem.innerHTML = `
+                                    <i class="fas fa-eye edit-icon"></i>
+                                    <h4>${task.title}</h4>
+                                    <p>${task.description}</p>
+                                    <div class="deadline-container">
+                                        <div class="deadline-slider" style="width: ${calculateDeadlineProgress(task.deadline)}%; background: ${getDeadlineColor(task.deadline)};"></div>
+                                        <span class="days-left">${calculateDaysLeft(task.deadline)} days left</span>
+                                    </div>
+                                    <select class="status-select">
+                                        <option value="pending" ${task.status === "pending" ? "selected" : ""}>Pending</option>
+                                        <option value="in progress" ${task.status === "in progress" ? "selected" : ""}>In Progress</option>
+                                        <option value="completed" ${task.status === "completed" ? "selected" : ""}>Completed</option>
+                                    </select>
+                                    <div class="file-icons">${fileIcons}</div>
+                                `;
+                                elements.workflowList.appendChild(workflowItem);
                             }
-                            workflowItem.innerHTML = `
-                                <i class="fas fa-edit edit-icon"></i>
-                                <h4>${task.title}</h4>
-                                <p>${task.description}</p>
-                                <div class="deadline-container">
-                                    <div class="deadline-slider" style="width: ${calculateDeadlineProgress(task.deadline)}%; background: ${getDeadlineColor(task.deadline)};"></div>
-                                    <span class="days-left">${calculateDaysLeft(task.deadline)} days left</span>
-                                </div>
-                                <select class="status-select">
-                                    <option value="pending" ${task.status === "pending" ? "selected" : ""}>Pending</option>
-                                    <option value="in progress" ${task.status === "in progress" ? "selected" : ""}>In Progress</option>
-                                    <option value="completed" ${task.status === "completed" ? "selected" : ""}>Completed</option>
-                                </select>
-                                <div class="file-icons">${fileIcons}</div>
-                            `;
-                            elements.workflowList.appendChild(workflowItem);
                         }
                     }
-                }
-                if (!hasTasks) {
-                    elements.workflowList.innerHTML = '<p>No tasks found.</p>';
-                }
-            });
+                    if (!hasTasks) {
+                        elements.workflowList.innerHTML = '<p>No tasks found.</p>';
+                    }
+                });
+            }
         }
 
         function loadCompletedTasks() {
             if (!elements.completedTasksList) return;
             elements.completedTasksList.innerHTML = '';
-            const tasksRef = ref(db, `tasks`);
-            onValue(tasksRef, (snapshot) => {
-                elements.completedTasksList.innerHTML = '';
-                let hasCompletedTasks = false;
-                if (snapshot.exists()) {
-                    const tasks = snapshot.val();
-                    for (const taskId in tasks) {
-                        const task = tasks[taskId];
-                        if (task.studentId === userId && task.status === 'completed') {
-                            hasCompletedTasks = true;
-                            const completedItem = document.createElement('div');
-                            completedItem.className = 'workflow-item completed';
-                            completedItem.dataset.taskId = taskId;
-                            let fileIcons = '';
-                            if (task.files) {
-                                fileIcons = Object.values(task.files).map(file => `
-                                    <a href="${file.url}" download="${file.name}" class="file-icon-container" title="${file.name}">
-                                        <i class="${getFileIconClass(file.type)} file-icon"></i>
-                                    </a>
-                                `).join('');
+            if (selectedProfessionalId) {
+                const tasksRef = ref(db, `tasks`);
+                onValue(tasksRef, (snapshot) => {
+                    elements.completedTasksList.innerHTML = '';
+                    let hasCompletedTasks = false;
+                    if (snapshot.exists()) {
+                        const tasks = snapshot.val();
+                        for (const taskId in tasks) {
+                            const task = tasks[taskId];
+                            if (task.studentId === userId && task.professionalId === selectedProfessionalId && task.status === 'completed') {
+                                hasCompletedTasks = true;
+                                const completedItem = document.createElement('div');
+                                completedItem.className = 'workflow-item completed';
+                                completedItem.dataset.taskId = taskId;
+                                let fileIcons = '';
+                                if (task.files) {
+                                    fileIcons = Object.values(task.files).map(file => `
+                                        <a href="${file.url}" download="${file.name}" class="file-icon-container" title="${file.name}">
+                                            <i class="${getFileIconClass(file.type)} file-icon"></i>
+                                        </a>
+                                    `).join('');
+                                }
+                                completedItem.innerHTML = `
+                                    <span class="status-label completed">Completed</span>
+                                    <h4>${task.title}</h4>
+                                    <p>${task.description}</p>
+                                    <div class="deadline-container"></div>
+                                    <div class="file-icons">${fileIcons}</div>
+                                    <i class="fas fa-trash delete-icon"></i>
+                                `;
+                                elements.completedTasksList.appendChild(completedItem);
                             }
-                            completedItem.innerHTML = `
-                                <i class="fas fa-trash delete-icon"></i>
-                                <span class="status-label completed">Completed</span>
-                                <h4>${task.title}</h4>
-                                <p>${task.description}</p>
-                                <div class="deadline-container"></div>
-                                <div class="file-icons">${fileIcons}</div>
-                            `;
-                            elements.completedTasksList.appendChild(completedItem);
                         }
                     }
-                }
-                if (!hasCompletedTasks) {
-                    elements.completedTasksList.innerHTML = '<p>No completed tasks found.</p>';
-                }
-            });
+                    if (!hasCompletedTasks) {
+                        elements.completedTasksList.innerHTML = '<p>No completed tasks found.</p>';
+                    }
+                });
+            }
         }
 
         function toggleCompletedTasks() {
@@ -800,6 +838,18 @@
             } catch (error) {
                 console.error("Error updating task status:", error);
                 alert("Failed to update task status.");
+            }
+        }
+
+        async function deleteTask({ taskId }) {
+            try {
+                const taskRef = ref(db, `tasks/${taskId}`);
+                await remove(taskRef);
+                loadWorkflows();
+                loadCompletedTasks();
+            } catch (error) {
+                console.error("Error deleting task:", error);
+                alert("Failed to delete task.");
             }
         }
 
@@ -836,13 +886,9 @@
         window.toggleCompletedTasks = toggleCompletedTasks;
         window.selectProfessional = selectProfessional;
         window.updateStatus = updateStatus;
-        window.acceptRequest = acceptRequest;
-        window.deleteRequest = deleteRequest;
         window.deleteTask = deleteTask;
         window.confirmAction = confirmAction;
         window.closeConfirmation = closeConfirmation;
 
         init();
     </script>
-</body>
-</html>
