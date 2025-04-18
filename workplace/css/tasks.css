@@ -1,0 +1,779 @@
+body { 
+    background: #f8f9fa; 
+    font-family: 'Poppins', sans-serif; 
+    margin: 0; 
+    padding: 0; 
+    height: 100vh; 
+    overflow: hidden; 
+    display: flex; 
+    flex-direction: column; 
+}
+.navbar { 
+    background: #fff; 
+    padding: 1rem 2rem; 
+    position: fixed; 
+    top: 0; 
+    width: 100%; 
+    z-index: 1000; 
+    border-bottom: 1px solid #e0e0e0; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+}
+.navbar .logo { 
+    font-size: 1.5rem; 
+    color: #1a1a1a; 
+}
+.navbar .nav-menu { 
+    display: flex; 
+    gap: 1.5rem; 
+    list-style: none; 
+}
+.navbar .nav-menu li a { 
+    color: #1a1a1a; 
+    text-decoration: none; 
+    font-size: 1rem; 
+    transition: color 0.3s; 
+}
+.navbar .nav-menu li a.active { 
+    color: #0000ff; 
+}
+.navbar .hamburger { 
+    display: none; 
+    font-size: 1.5rem; 
+    cursor: pointer; 
+    color: #1a1a1a; 
+}
+.dashboard-content { 
+    display: flex; 
+    flex: 1; 
+    margin-top: 3rem; 
+    height: calc(100vh - 60px); 
+}
+.sidebar-left { 
+    width: 30%; 
+    background: #fff; 
+    border-right: 1px solid #e0e0e0; 
+    overflow-y: auto; 
+    min-width: 200px; 
+    max-width: 400px; 
+}
+.sidebar-left h3 { 
+    font-size: 1.2rem; 
+    color: #1a1a1a; 
+    padding: 1rem; 
+    margin: 0; 
+    border-bottom: 1px solid #e0e0e0; 
+}
+.user-item { 
+    display: flex; 
+    align-items: center; 
+    padding: 0.75rem 1rem; 
+    margin: 0.25rem 0; 
+    cursor: pointer; 
+    transition: background 0.3s; 
+    position: relative;
+}
+.user-item:hover { 
+    background: #f1f3f5; 
+}
+.user-item .profile-pic { 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    margin-right: 0.75rem; 
+    object-fit: cover; 
+}
+.user-item .user-info { 
+    color: #1a1a1a; 
+    flex: 1;
+}
+.user-item .user-info .name { 
+    font-size: 0.95rem; 
+    margin-bottom: 0.1rem; 
+}
+.user-item .user-info .last-message { 
+    font-size: 0.85rem; 
+    color: #6c757d; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.user-item.active { 
+    background: #f1f3f5; 
+}
+.user-item.active .user-info .name,
+.user-item.active .user-info .last-message { 
+    color: #1a1a1a; 
+}
+.user-item .unread-dot {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    width: 8px;
+    height: 8px;
+    background: #FF5252;
+    border-radius: 50%;
+    transform: translateY(-50%);
+}
+.pending-requests { 
+    margin: 1rem; 
+    padding: 0.5rem; 
+    border-top: 1px solid #e0e0e0; 
+}
+.pending-requests h3 { 
+    font-size: 1.2rem; 
+    color: #1a1a1a; 
+    padding: 1rem 0; 
+    margin: 0; 
+    border-bottom: 1px solid #e0e0e0; 
+}
+.pending-item { 
+    display: flex; 
+    align-items: center; 
+    padding: 0.75rem 1rem; 
+    margin: 0.25rem 0; 
+    background: #fff; 
+    border-radius: 8px; 
+    justify-content: space-between; 
+    transition: background 0.3s;
+}
+.pending-item:hover {
+    background: #f1f3f5;
+}
+.pending-item .user-info { 
+    display: flex; 
+    align-items: center; 
+}
+.pending-item .user-info .name { 
+    font-size: 0.95rem; 
+    color: #1a1a1a; 
+}
+.pending-item .actions { 
+    display: flex; 
+    gap: 0.5rem; 
+}
+.pending-item .actions button { 
+    padding: 0.5rem 1rem; 
+    border: none; 
+    border-radius: 5px; 
+    font-size: 0.85rem; 
+    cursor: pointer; 
+    transition: background 0.3s; 
+}
+.pending-item .actions .accept-btn { 
+    background: #4CAF50; 
+    color: #fff; 
+}
+.pending-item .actions .accept-btn:hover { 
+    background: #45a049; 
+}
+.pending-item .actions .delete-btn { 
+    background: #FF5252; 
+    color: #fff; 
+}
+.pending-item .actions .delete-btn:hover { 
+    background: #e04848; 
+}
+.chat-area { 
+    width: 42%; 
+    background: #fff; 
+    border-right: 1px solid #e0e0e0; 
+    overflow-y: auto; 
+    min-width: 200px; 
+    max-width: 600px; 
+    display: none; 
+    position: relative; 
+}
+.chat-header { 
+    padding: 1rem; 
+    border-bottom: 1px solid #e0e0e0; 
+    background: #fff; 
+    position: sticky; 
+    top: 0; 
+    z-index: 10; 
+    display: flex; 
+    align-items: center; 
+    gap: 1rem; 
+}
+.chat-header .profile-pic { 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+}
+.chat-header .name { 
+    font-size: 1rem; 
+    font-weight: 600; 
+    color: #1a1a1a; 
+}
+.chat-header .title { 
+    font-size: 0.85rem; 
+    color: #6c757d; 
+}
+.messages { 
+    height: calc(100% - 120px); 
+    padding: 1rem; 
+    overflow-y: auto; 
+}
+.message { 
+    padding: 0.5rem 1rem; 
+    margin-bottom: 1rem; 
+    background: #f8f9fa; 
+    border-radius: 12px; 
+    max-width: 80%; 
+    color: #1a1a1a; 
+    font-size: 0.9rem; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+}
+.message.sent { 
+    margin-left: auto; 
+    background: #fff; 
+    border: 1px solid #e0e0e0; 
+}
+.message.received { 
+    background: #f8f9fa; 
+}
+.message.file-message {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: #f1f3f5;
+    border-radius: 12px;
+    max-width: 80%;
+}
+.message.file-message .file-icon {
+    font-size: 1.5rem;
+    color: #4CAF50;
+}
+.message.file-message .file-info {
+    flex: 1;
+}
+.message.file-message .file-name {
+    font-size: 0.9rem;
+    color: #1a1a1a;
+    font-weight: 500;
+}
+.message.file-message .file-size {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+.message .message-header { 
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 0.5rem; 
+}
+.message .message-header .profile-pic { 
+    width: 30px; 
+    height: 30px; 
+    border-radius: 50%; 
+    margin-right: 0.5rem; 
+    object-fit: cover; 
+}
+.message .message-header .name { 
+    font-size: 0.85rem; 
+    font-weight: 500; 
+    color: #1a1a1a; 
+}
+.message .message-header .time { 
+    font-size: 0.75rem; 
+    color: #6c757d; 
+    margin-left: auto; 
+}
+.message .read-status {
+    font-size: 0.75rem;
+    color: #6c757d;
+    font-style: italic;
+    margin-top: 0.25rem;
+    opacity: 0.7;
+}
+.chat-input { 
+    width: 100%;
+    background: #fff;
+    padding: 0.75rem;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+    position: sticky; 
+    bottom: 0;
+}
+.chat-input .input-container {
+    flex: 1;
+    position: relative;
+    background: #f8f9fa;
+    border-radius: 25px;
+    border: 1px solid #e0e0e0;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+.chat-input .input-container:hover,
+.chat-input .input-container:focus-within {
+    border-color: #4CAF50;
+    background: #fff;
+}
+.chat-input .input-container textarea {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 1.25rem;
+    border: none;
+    background: transparent;
+    color: #1a1a1a;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+    resize: none;
+    outline: none;
+    line-height: 1.4;
+    max-height: 100px;
+    overflow-y: auto;
+}
+.chat-input .input-container textarea::placeholder {
+    color: #6c757d;
+    opacity: 0.7;
+}
+.chat-input .file-input-label {
+    position: absolute;
+    right: 2.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+    color: #6c757d;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+.chat-input .file-input-label:hover {
+    color: #4CAF50;
+}
+.chat-input .file-input {
+    display: none;
+}
+.chat-input button { 
+    background: none; 
+    border: none; 
+    cursor: pointer; 
+    font-size: 1.2rem; 
+    color: #6c757d; 
+    transition: color 0.3s; 
+}
+.chat-input button:hover { 
+    color: #4CAF50; 
+}
+.upload-progress {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+    display: none;
+}
+.upload-progress.active {
+    display: block;
+}
+.upload-progress-bar {
+    height: 100%;
+    background: #4CAF50;
+    width: 0;
+    transition: width 0.3s ease;
+}
+.sidebar-right { 
+    width: 30%; 
+    background: #fff; 
+    overflow-y: auto; 
+    min-width: 200px; 
+    max-width: 400px; 
+    display: none; 
+    position: relative;
+}
+.sidebar-right h3 { 
+    font-size: 1.2rem; 
+    color: #1a1a1a; 
+    padding: 1rem; 
+    margin: 0; 
+    border-bottom: 1px solid #e0e0e0; 
+}
+.workflow-item { 
+    background: #fff; 
+    border: 1px solid #e0e0e0; 
+    border-radius: 12px; 
+    padding: 1rem; 
+    margin: 0.5rem 1rem; 
+    position: relative; 
+}
+.workflow-item.completed {
+    background: #e9ecef;
+    opacity: 0.75;
+}
+.workflow-item h4 { 
+    color: #1a1a1a; 
+    font-size: 1rem; 
+    margin-bottom: 0.5rem; 
+}
+.workflow-item p { 
+    color: #6c757d; 
+    font-size: 0.85rem; 
+    margin: 0.25rem 0; 
+}
+.workflow-item .status-label {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 5px;
+    font-size: 0.75rem;
+}
+.workflow-item .status-label.completed {
+    background: #4CAF50;
+    color: white;
+}
+.workflow-item .status-label.pending {
+    background: #FFC107;
+    color: white;
+}
+.workflow-item .status-label.in-progress {
+    background: #2196F3;
+    color: white;
+}
+.workflow-item .deadline-container {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 0;
+}
+.workflow-item .deadline-slider {
+    height: 5px;
+    background: #4CAF50;
+    border-radius: 5px;
+    transition: width 0.3s;
+}
+.workflow-item .days-left {
+    margin-left: 0.5rem;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+.workflow-item .status-select { 
+    padding: 0.25rem; 
+    border: 1px solid #e0e0e0; 
+    border-radius: 5px; 
+    color: #1a1a1a; 
+    font-size: 0.85rem; 
+    background: #f8f9fa; 
+    margin-top: 0.5rem; 
+}
+.workflow-item .file-icons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+.workflow-item .file-icon-container {
+    position: relative;
+    cursor: pointer;
+}
+.workflow-item .file-icon {
+    font-size: 1rem;
+    color: #6c757d;
+}
+.workflow-item .file-icon:hover {
+    color: #4CAF50;
+}
+.workflow-item .file-icon-container:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a1a;
+    color: #fff;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 10;
+}
+.workflow-item .edit-icon { 
+    position: absolute; 
+    top: 0.5rem; 
+    right: 0.5rem; 
+    font-size: 0.9rem; 
+    color: #6c757d; 
+    cursor: pointer; 
+    transition: color 0.3s; 
+}
+.workflow-item .edit-icon:hover { 
+    color: #1a1a1a; 
+}
+.workflow-item .delete-icon {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    font-size: 0.9rem;
+    color: #6c757d;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+.workflow-item .delete-icon:hover {
+    color: #FF5252;
+}
+.completed-tasks { 
+    margin: 1rem; 
+    padding: 0.5rem; 
+    border-top: 1px solid #e0e0e0; 
+}
+.completed-tasks h4 { 
+    color: #1a1a1a; 
+    font-size: 1rem; 
+    cursor: pointer; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+.completed-tasks .toggle-icon { 
+    transition: transform 0.3s; 
+}
+.completed-tasks .toggle-icon.active { 
+    transform: rotate(180deg); 
+}
+.completed-tasks-list { 
+    display: none; 
+    margin-top: 0.5rem; 
+}
+.completed-tasks-list.active { 
+    display: block; 
+}
+.task-popup {
+    position: fixed;
+    top: 0;
+    right: -30%;
+    width: 30%;
+    height: 100%;
+    background: #ffffff;
+    z-index: 1001;
+    padding: 2rem;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+    transition: right 0.3s ease-in-out;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+.task-popup.active {
+    right: 0;
+}
+.task-popup .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.task-popup .header h3 {
+    font-size: 1.5rem;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+.task-popup .header button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #6c757d;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+.task-popup .header button:hover {
+    color: #1a1a1a;
+}
+.task-popup .form-group {
+    margin-bottom: 1rem;
+}
+.task-popup .form-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: #1a1a1a;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+.task-popup .form-group input,
+.task-popup .form-group textarea,
+.task-popup .form-group input[type="number"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: #fafafa;
+    transition: border-color 0.3s;
+}
+.task-popup .form-group input:focus,
+.task-popup .form-group textarea:focus,
+.task-popup .form-group input[type="number"]:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+.task-popup .form-group input[type="date"] {
+    padding: 0.75rem;
+    cursor: pointer;
+    background: #fafafa url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%236c757d"><path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 14V2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5.5-7h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm0 3h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-2.5 0h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1 0-1zm0-3h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1 0-1z"/></svg>') no-repeat right 0.75rem center;
+    background-size: 16px;
+}
+.task-popup .form-group input[type="file"] {
+    padding: 0.5rem;
+    border: none;
+    background: #fafafa;
+}
+.task-popup .form-group input[type="file"]::file-selector-button {
+    padding: 0.5rem 1rem;
+    background: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.task-popup .form-group input[type="file"]::file-selector-button:hover {
+    background: #45a049;
+}
+.task-popup .actions {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+.task-popup .actions button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.task-popup .actions .cancel-btn {
+    background: #e0e0e0;
+    color: #1a1a1a;
+}
+.task-popup .actions .cancel-btn:hover {
+    background: #d3d3d3;
+}
+.task-popup .actions .submit-btn {
+    background: #4CAF50;
+    color: #fff;
+}
+.task-popup .actions .submit-btn:hover {
+    background: #45a049;
+}
+.confirmation-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1002;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+.confirmation-dialog.active {
+    opacity: 1;
+    visibility: visible;
+}
+.confirmation-dialog .dialog-box {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transform: translateY(-50px);
+    transition: transform 0.3s ease;
+}
+.confirmation-dialog.active .dialog-box {
+    transform: translateY(0);
+}
+.confirmation-dialog h3 {
+    font-size: 1.2rem;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+}
+.confirmation-dialog p {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+}
+.confirmation-dialog .dialog-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+.confirmation-dialog .dialog-actions button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.confirmation-dialog .dialog-actions .cancel {
+    background: #e0e0e0;
+    color: #1a1a1a;
+}
+.confirmation-dialog .dialog-actions .cancel:hover {
+    background: #d3d3d3;
+}
+.confirmation-dialog .dialog-actions .confirm {
+    background: #4CAF50;
+    color: #fff;
+}
+.confirmation-dialog .dialog-actions .confirm:hover {
+    background: #45a049;
+}
+.confirmation-dialog .dialog-actions .delete {
+    background: #FF5252;
+    color: #fff;
+}
+.confirmation-dialog .dialog-actions .delete:hover {
+    background: #e04848;
+}
+@media (max-width: 768px) {
+    .dashboard-content { 
+        flex-direction: column; 
+        height: auto; 
+    }
+    .sidebar-left, .chat-area, .sidebar-right { 
+        width: 100%; 
+        min-width: 0; 
+        max-width: none; 
+        border: none; 
+        border-bottom: 1px solid #e0e0e0; 
+    }
+    .chat-input { 
+        width: 100%; 
+        position: relative; 
+        bottom: auto; 
+    }
+    .navbar .nav-menu { 
+        display: none; 
+        position: absolute; 
+        top: 60px; 
+        left: 0; 
+        right: 0; 
+        background: #fff; 
+        flex-direction: column; 
+        padding: 1rem; 
+        border-top: 1px solid #e0e0e0; 
+    }
+    .navbar .nav-menu.active { 
+        display: flex; 
+    }
+    .navbar .hamburger { 
+        display: block; 
+    }
+    .task-popup {
+        width: 100%;
+        right: -100%;
+    }
+}

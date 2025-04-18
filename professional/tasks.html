@@ -4,781 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taska Elite - Professional Tasks</title>
+    <link rel="stylesheet" href="css/tasks.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body { 
-            background: #f8f9fa; 
-            font-family: 'Poppins', sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            height: 100vh; 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-        }
-        .navbar { 
-            background: #fff; 
-            padding: 1rem 2rem; 
-            position: fixed; 
-            top: 0; 
-            width: 100%; 
-            z-index: 1000; 
-            border-bottom: 1px solid #e0e0e0; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-        }
-        .navbar .logo { 
-            font-size: 1.5rem; 
-            color: #1a1a1a; 
-        }
-        .navbar .nav-menu { 
-            display: flex; 
-            gap: 1.5rem; 
-            list-style: none; 
-        }
-        .navbar .nav-menu li a { 
-            color: #1a1a1a; 
-            text-decoration: none; 
-            font-size: 1rem; 
-            transition: color 0.3s; 
-        }
-        .navbar .nav-menu li a.active { 
-            color: #0000ff; 
-        }
-        .navbar .hamburger { 
-            display: none; 
-            font-size: 1.5rem; 
-            cursor: pointer; 
-            color: #1a1a1a; 
-        }
-        .dashboard-content { 
-            display: flex; 
-            flex: 1; 
-            margin-top: 3rem; 
-            height: calc(100vh - 60px); 
-        }
-        .sidebar-left { 
-            width: 30%; 
-            background: #fff; 
-            border-right: 1px solid #e0e0e0; 
-            overflow-y: auto; 
-            min-width: 200px; 
-            max-width: 400px; 
-        }
-        .sidebar-left h3 { 
-            font-size: 1.2rem; 
-            color: #1a1a1a; 
-            padding: 1rem; 
-            margin: 0; 
-            border-bottom: 1px solid #e0e0e0; 
-        }
-        .user-item { 
-            display: flex; 
-            align-items: center; 
-            padding: 0.75rem 1rem; 
-            margin: 0.25rem 0; 
-            cursor: pointer; 
-            transition: background 0.3s; 
-            position: relative;
-        }
-        .user-item:hover { 
-            background: #f1f3f5; 
-        }
-        .user-item .profile-pic { 
-            width: 40px; 
-            height: 40px; 
-            border-radius: 50%; 
-            margin-right: 0.75rem; 
-            object-fit: cover; 
-        }
-        .user-item .user-info { 
-            color: #1a1a1a; 
-            flex: 1;
-        }
-        .user-item .user-info .name { 
-            font-size: 0.95rem; 
-            margin-bottom: 0.1rem; 
-        }
-        .user-item .user-info .last-message { 
-            font-size: 0.85rem; 
-            color: #6c757d; 
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .user-item.active { 
-            background: #f1f3f5; 
-        }
-        .user-item.active .user-info .name,
-        .user-item.active .user-info .last-message { 
-            color: #1a1a1a; 
-        }
-        .user-item .unread-dot {
-            position: absolute;
-            top: 50%;
-            right: 1rem;
-            width: 8px;
-            height: 8px;
-            background: #FF5252;
-            border-radius: 50%;
-            transform: translateY(-50%);
-        }
-        .pending-requests { 
-            margin: 1rem; 
-            padding: 0.5rem; 
-            border-top: 1px solid #e0e0e0; 
-        }
-        .pending-requests h3 { 
-            font-size: 1.2rem; 
-            color: #1a1a1a; 
-            padding: 1rem 0; 
-            margin: 0; 
-            border-bottom: 1px solid #e0e0e0; 
-        }
-        .pending-item { 
-            display: flex; 
-            align-items: center; 
-            padding: 0.75rem 1rem; 
-            margin: 0.25rem 0; 
-            background: #fff; 
-            border-radius: 8px; 
-            justify-content: space-between; 
-            transition: background 0.3s;
-        }
-        .pending-item:hover {
-            background: #f1f3f5;
-        }
-        .pending-item .user-info { 
-            display: flex; 
-            align-items: center; 
-        }
-        .pending-item .user-info .name { 
-            font-size: 0.95rem; 
-            color: #1a1a1a; 
-        }
-        .pending-item .actions { 
-            display: flex; 
-            gap: 0.5rem; 
-        }
-        .pending-item .actions button { 
-            padding: 0.5rem 1rem; 
-            border: none; 
-            border-radius: 5px; 
-            font-size: 0.85rem; 
-            cursor: pointer; 
-            transition: background 0.3s; 
-        }
-        .pending-item .actions .accept-btn { 
-            background: #4CAF50; 
-            color: #fff; 
-        }
-        .pending-item .actions .accept-btn:hover { 
-            background: #45a049; 
-        }
-        .pending-item .actions .delete-btn { 
-            background: #FF5252; 
-            color: #fff; 
-        }
-        .pending-item .actions .delete-btn:hover { 
-            background: #e04848; 
-        }
-        .chat-area { 
-            width: 42%; 
-            background: #fff; 
-            border-right: 1px solid #e0e0e0; 
-            overflow-y: auto; 
-            min-width: 200px; 
-            max-width: 600px; 
-            display: none; 
-            position: relative; 
-        }
-        .chat-header { 
-            padding: 1rem; 
-            border-bottom: 1px solid #e0e0e0; 
-            background: #fff; 
-            position: sticky; 
-            top: 0; 
-            z-index: 10; 
-            display: flex; 
-            align-items: center; 
-            gap: 1rem; 
-            justify-content: space-between;
-        }
-        .chat-header .profile-pic { 
-            width: 40px; 
-            height: 40px; 
-            border-radius: 50%; 
-            object-fit: cover; 
-        }
-        .chat-header .name { 
-            font-size: 1rem; 
-            font-weight: 600; 
-            color: #1a1a1a; 
-        }
-        .chat-header .title { 
-            font-size: 0.85rem; 
-            color: #6c757d; 
-        }
-        .chat-header .menu {
-            position: relative;
-            cursor: pointer;
-        }
-        .chat-header .menu-icon {
-            font-size: 1.2rem;
-            color: #6c757d;
-        }
-        .chat-header .menu-icon:hover {
-            color: #1a1a1a;
-        }
-        .chat-header .menu-dropdown {
-            display: none;
-            position: absolute;
-            top: 2rem;
-            right: 0;
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            z-index: 20;
-        }
-        .chat-header .menu-dropdown.active {
-            display: block;
-        }
-        .chat-header .menu-dropdown button {
-            display: block;
-            width: 100%;
-            padding: 0.5rem 1rem;
-            background: none;
-            border: none;
-            text-align: left;
-            font-size: 0.9rem;
-            color: #1a1a1a;
-            cursor: pointer;
-        }
-        .chat-header .menu-dropdown button:hover {
-            background: #f1f3f5;
-        }
-        .messages { 
-            height: calc(100% - 120px); 
-            padding: 1rem; 
-            overflow-y: auto; 
-        }
-        .message { 
-            padding: 0.5rem 1rem; 
-            margin-bottom: 1rem; 
-            background: #f8f9fa; 
-            border-radius: 12px; 
-            max-width: 80%; 
-            color: #1a1a1a; 
-            font-size: 0.9rem; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
-        }
-        .message.sent { 
-            margin-left: auto; 
-            background: #fff; 
-            border: 1px solid #e0e0e0; 
-        }
-        .message.received { 
-            background: #f8f9fa; 
-        }
-        .message .message-header { 
-            display: flex; 
-            align-items: center; 
-            margin-bottom: 0.5rem; 
-        }
-        .message .message-header .profile-pic { 
-            width: 30px; 
-            height: 30px; 
-            border-radius: 50%; 
-            margin-right: 0.5rem; 
-            object-fit: cover; 
-        }
-        .message .message-header .name { 
-            font-size: 0.85rem; 
-            font-weight: 500; 
-            color: #1a1a1a; 
-        }
-        .message .message-header .time { 
-            font-size: 0.75rem; 
-            color: #6c757d; 
-            margin-left: auto; 
-        }
-        .message .read-status {
-            font-size: 0.75rem;
-            color: #6c757d;
-            font-style: italic;
-            margin-top: 0.25rem;
-            opacity: 0.7;
-        }
-        .chat-input { 
-            width: 100%;
-            background: #fff;
-            padding: 0.75rem;
-            border-top: 1px solid #e0e0e0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
-            position: sticky; 
-            bottom: 0;
-        }
-        .chat-input .input-container {
-            flex: 1;
-            position: relative;
-            background: #f8f9fa;
-            border-radius: 25px;
-            border: 1px solid #e0e0e0;
-            transition: border-color 0.3s, background-color 0.3s;
-        }
-        .chat-input .input-container:hover,
-        .chat-input .input-container:focus-within {
-            border-color: #4CAF50;
-            background: #fff;
-        }
-        .chat-input .input-container textarea {
-            width: 100%;
-            padding: 0.75rem 2.5rem 0.75rem 1.25rem;
-            border: none;
-            background: transparent;
-            color: #1a1a1a;
-            font-size: 0.95rem;
-            font-family: 'Poppins', sans-serif;
-            resize: none;
-            outline: none;
-            line-height: 1.4;
-            max-height: 100px;
-            overflow-y: auto;
-        }
-        .chat-input .input-container textarea::placeholder {
-            color: #6c757d;
-            opacity: 0.7;
-        }
-        .chat-input .file-input-label {
-            position: absolute;
-            right: 2.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.1rem;
-            color: #6c757d;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .chat-input .file-input-label:hover {
-            color: #4CAF50;
-        }
-        .chat-input .file-input {
-            display: none;
-        }
-        .chat-input button { 
-            background: none; 
-            border: none; 
-            cursor: pointer; 
-            font-size: 1.2rem; 
-            color: #6c757d; 
-            transition: color 0.3s; 
-        }
-        .chat-input button:hover { 
-            color: #4CAF50; 
-        }
-        .sidebar-right { 
-            width: 30%; 
-            background: #fff; 
-            overflow-y: auto; 
-            min-width: 200px; 
-            max-width: 400px; 
-            display: none; 
-            position: relative;
-        }
-        .sidebar-right h3 { 
-            font-size: 1.2rem; 
-            color: #1a1a1a; 
-            padding: 1rem; 
-            margin: 0; 
-            border-bottom: 1px solid #e0e0e0; 
-        }
-        .sidebar-right .add-task-btn { 
-            display: block; 
-            width: 80%; 
-            margin: 1rem auto; 
-            padding: 0.5rem 1rem; 
-            background: #fff; 
-            color: #1a1a1a; 
-            border: 1px solid #1a1a1a; 
-            border-radius: 25px; 
-            cursor: pointer; 
-            font-size: 0.9rem; 
-            font-weight: 500; 
-            transition: all 0.3s; 
-        }
-        .sidebar-right .add-task-btn:hover { 
-            background: #1a1a1a; 
-            color: #fff; 
-        }
-        .workflow-item { 
-            background: #fff; 
-            border: 1px solid #e0e0e0; 
-            border-radius: 12px; 
-            padding: 1rem; 
-            margin: 0.5rem 1rem; 
-            position: relative; 
-        }
-        .workflow-item.completed {
-            background: #e9ecef;
-            opacity: 0.75;
-        }
-        .workflow-item h4 { 
-            color: #1a1a1a; 
-            font-size: 1rem; 
-            margin-bottom: 0.5rem; 
-        }
-        .workflow-item p { 
-            color: #6c757d; 
-            font-size: 0.85rem; 
-            margin: 0.25rem 0; 
-        }
-        .workflow-item .status-label {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 5px;
-            font-size: 0.75rem;
-        }
-        .workflow-item .status-label.completed {
-            background: #4CAF50;
-            color: white;
-        }
-        .workflow-item .status-label.pending {
-            background: #FFC107;
-            color: white;
-        }
-        .workflow-item .status-label.in-progress {
-            background: #2196F3;
-            color: white;
-        }
-        .workflow-item .deadline-container {
-            display: flex;
-            align-items: center;
-            margin: 0.5rem 0;
-        }
-        .workflow-item .deadline-slider {
-            height: 5px;
-            background: #4CAF50;
-            border-radius: 5px;
-            transition: width 0.3s;
-        }
-        .workflow-item .days-left {
-            margin-left: 0.5rem;
-            font-size: 0.85rem;
-            color: #6c757d;
-        }
-        .workflow-item .status-select { 
-            padding: 0.25rem; 
-            border: 1px solid #e0e0e0; 
-            border-radius: 5px; 
-            color: #1a1a1a; 
-            font-size: 0.85rem; 
-            background: #f8f9fa; 
-            margin-top: 0.5rem; 
-        }
-        .workflow-item .file-icon { 
-            font-size: 1rem; 
-            color: #6c757d; 
-            margin-top: 0.5rem; 
-            cursor: pointer; 
-        }
-        .workflow-item .edit-icon { 
-            position: absolute; 
-            top: 0.5rem; 
-            right: 0.5rem; 
-            font-size: 0.9rem; 
-            color: #6c757d; 
-            cursor: pointer; 
-            transition: color 0.3s; 
-        }
-        .workflow-item .edit-icon:hover { 
-            color: #1a1a1a; 
-        }
-        .workflow-item .delete-icon {
-            position: absolute;
-            bottom: 1rem;
-            right: 1rem;
-            font-size: 0.9rem;
-            color: #6c757d;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .workflow-item .delete-icon:hover {
-            color: #FF5252;
-        }
-        .completed-tasks { 
-            margin: 1rem; 
-            padding: 0.5rem; 
-            border-top: 1px solid #e0e0e0; 
-        }
-        .completed-tasks h4 { 
-            color: #1a1a1a; 
-            font-size: 1rem; 
-            cursor: pointer; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-        .completed-tasks .toggle-icon { 
-            transition: transform 0.3s; 
-        }
-        .completed-tasks .toggle-icon.active { 
-            transform: rotate(180deg); 
-        }
-        .completed-tasks-list { 
-            display: none; 
-            margin-top: 0.5rem; 
-        }
-        .completed-tasks-list.active { 
-            display: block; 
-        }
-        .task-popup {
-            position: fixed;
-            top: 0;
-            right: -30%;
-            width: 30%;
-            height: 100%;
-            background: #ffffff;
-            z-index: 1001;
-            padding: 2rem;
-            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
-            transition: right 0.3s ease-in-out;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        .task-popup.active {
-            right: 0;
-        }
-        .task-popup .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        .task-popup .header h3 {
-            font-size: 1.5rem;
-            color: #1a1a1a;
-            font-weight: 600;
-        }
-        .task-popup .header button {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            color: #6c757d;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .task-popup .header button:hover {
-            color: #1a1a1a;
-        }
-        .task-popup .form-group {
-            margin-bottom: 1rem;
-        }
-        .task-popup .form-group label {
-            display: block;
-            font-size: 0.9rem;
-            color: #1a1a1a;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-        .task-popup .form-group input,
-        .task-popup .form-group textarea,
-        .task-popup .form-group input[type="number"] {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            background: #fafafa;
-            transition: border-color 0.3s;
-        }
-        .task-popup .form-group input:focus,
-        .task-popup .form-group textarea:focus,
-        .task-popup .form-group input[type="number"]:focus {
-            border-color: #4CAF50;
-            outline: none;
-        }
-        .task-popup .form-group input[type="date"] {
-            padding: 0.75rem;
-            cursor: pointer;
-            background: #fafafa url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%236c757d"><path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 14V2a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1zm5.5-7h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm0 3h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-2.5 0h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1 0-1zm0-3h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1 0-1z"/></svg>') no-repeat right 0.75rem center;
-            background-size: 16px;
-        }
-        .task-popup .form-group input[type="file"] {
-            padding: 0.5rem;
-            border: none;
-            background: #fafafa;
-        }
-        .task-popup .form-group input[type="file"]::file-selector-button {
-            padding: 0.5rem 1rem;
-            background: #4CAF50;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .task-popup .form-group input[type="file"]::file-selector-button:hover {
-            background: #45a049;
-        }
-        .task-popup .actions {
-            margin-top: auto;
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-        }
-        .task-popup .actions button {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .task-popup .actions .cancel-btn {
-            background: #e0e0e0;
-            color: #1a1a1a;
-        }
-        .task-popup .actions .cancel-btn:hover {
-            background: #d3d3d3;
-        }
-        .task-popup .actions .submit-btn {
-            background: #4CAF50;
-            color: #fff;
-        }
-        .task-popup .actions .submit-btn:hover {
-            background: #45a049;
-        }
-        .confirmation-dialog {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1002;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        .confirmation-dialog.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .confirmation-dialog .dialog-box {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 12px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transform: translateY(-50px);
-            transition: transform 0.3s ease;
-        }
-        .confirmation-dialog.active .dialog-box {
-            transform: translateY(0);
-        }
-        .confirmation-dialog h3 {
-            font-size: 1.2rem;
-            color: #1a1a1a;
-            margin-bottom: 1rem;
-        }
-        .confirmation-dialog p {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-bottom: 1.5rem;
-        }
-        .confirmation-dialog .dialog-actions {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-        }
-        .confirmation-dialog .dialog-actions button {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .confirmation-dialog .dialog-actions .cancel {
-            background: #e0e0e0;
-            color: #1a1a1a;
-        }
-        .confirmation-dialog .dialog-actions .cancel:hover {
-            background: #d3d3d3;
-        }
-        .confirmation-dialog .dialog-actions .confirm {
-            background: #4CAF50;
-            color: #fff;
-        }
-        .confirmation-dialog .dialog-actions .confirm:hover {
-            background: #45a049;
-        }
-        .confirmation-dialog .dialog-actions .delete {
-            background: #FF5252;
-            color: #fff;
-        }
-        .confirmation-dialog .dialog-actions .delete:hover {
-            background: #e04848;
-        }
-        @media (max-width: 768px) {
-            .dashboard-content { 
-                flex-direction: column; 
-                height: auto; 
-            }
-            .sidebar-left, .chat-area, .sidebar-right { 
-                width: 100%; 
-                min-width: 0; 
-                max-width: none; 
-                border: none; 
-                border-bottom: 1px solid #e0e0e0; 
-            }
-            .chat-input { 
-                width: 100%; 
-                position: relative; 
-                bottom: auto; 
-            }
-            .navbar .nav-menu { 
-                display: none; 
-                position: absolute; 
-                top: 60px; 
-                left: 0; 
-                right: 0; 
-                background: #fff; 
-                flex-direction: column; 
-                padding: 1rem; 
-                border-top: 1px solid #e0e0e0; 
-            }
-            .navbar .nav-menu.active { 
-                display: flex; 
-            }
-            .navbar .hamburger { 
-                display: block; 
-            }
-            .task-popup {
-                width: 100%;
-                right: -100%;
-            }
-        }
-    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -805,6 +36,9 @@
             <div class="messages" id="chat-messages"></div>
             <div class="chat-input">
                 <div class="input-container">
+                    <div class="upload-progress" id="upload-progress">
+                        <div class="upload-progress-bar" id="upload-progress-bar"></div>
+                    </div>
                     <textarea id="chat-input" placeholder="Type a message..." rows="1"></textarea>
                     <label for="file-input" class="file-input-label"><i class="fas fa-paperclip"></i></label>
                     <input type="file" id="file-input" class="file-input">
@@ -843,6 +77,10 @@
         <div class="form-group">
             <label for="task-file">Attach Files</label>
             <input type="file" id="task-file" multiple>
+            <div class="upload-progress" id="task-upload-progress">
+                <div class="upload-progress-bar" id="task-upload-progress-bar"></div>
+            </div>
+            <div id="task-file-list" class="file-list"></div>
         </div>
         <div class="form-group">
             <label for="task-payment" style="display: none;">Cash Payment (USD)</label>
@@ -868,12 +106,11 @@
     <audio id="message-ding" src="../assets/ding.mp3"></audio>
 
     <script type="module">
-        // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getDatabase, ref, get, push, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
         import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-    
-        // Firebase configuration
+        import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
             authDomain: "taska-45011.firebaseapp.com",
@@ -884,20 +121,19 @@
             appId: "1:205487498813:web:0de2c9eab567482781ec54",
             measurementId: "G-G0G1F6GQ9B"
         };
-    
-        // Initialize Firebase
+
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const auth = getAuth(app);
-    
-        // Global variables
+        const storage = getStorage(app);
+
         let userId = null;
         let selectedStudentId = null;
         let editingTaskId = null;
         let studentData = null;
         let currentUserProfile = null;
-    
-        // DOM Elements
+        let uploadedTaskFiles = [];
+
         const elements = {
             connectionsList: document.getElementById('connections-list'),
             pendingRequestsList: document.getElementById('pending-requests-list'),
@@ -920,18 +156,19 @@
             dialogMessage: document.getElementById('dialog-message'),
             confirmButton: document.getElementById('confirm-button'),
             messageDing: document.getElementById('message-ding'),
-            fileInput: document.getElementById('file-input')
+            fileInput: document.getElementById('file-input'),
+            taskFileList: document.getElementById('task-file-list'),
+            uploadProgress: document.getElementById('upload-progress'),
+            uploadProgressBar: document.getElementById('upload-progress-bar'),
+            taskUploadProgress: document.getElementById('task-upload-progress'),
+            taskUploadProgressBar: document.getElementById('task-upload-progress-bar')
         };
-    
-        // Fetch student and user data from local JSON file
+
         async function fetchStudentData() {
             if (studentData) return studentData;
-    
             try {
                 const response = await fetch('manualstudentlist.json');
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch student data: ${response.statusText}`);
-                }
+                if (!response.ok) throw new Error(`Failed to fetch student data: ${response.statusText}`);
                 studentData = await response.json();
                 studentData = studentData.map((student, index) => ({
                     ...student,
@@ -943,11 +180,9 @@
                 return [];
             }
         }
-    
-        // Fetch current user's profile
+
         async function fetchCurrentUserProfile() {
             if (currentUserProfile) return currentUserProfile;
-    
             try {
                 const students = await fetchStudentData();
                 const user = students.find(s => s.id === userId) || {};
@@ -965,27 +200,32 @@
                 return { name: "Unnamed", profilePic: "../assets/avatar/1.png" };
             }
         }
-    
-        // Confirmation dialog handler
+
         function confirmAction(action, title, message, actionParams = {}) {
             elements.dialogTitle.textContent = title;
             elements.dialogMessage.textContent = message;
             elements.confirmationDialog.classList.add('active');
-    
             elements.confirmButton.textContent = title.includes('Delete') ? 'Delete' : 'Confirm';
             elements.confirmButton.className = title.includes('Delete') ? 'delete' : 'confirm';
-    
             elements.confirmButton.onclick = () => {
                 window[action](actionParams);
                 closeConfirmation();
             };
         }
-    
+
         function closeConfirmation() {
             elements.confirmationDialog.classList.remove('active');
         }
-    
-        // Initialize application
+
+        function getFileIconClass(type) {
+            if (type.includes('pdf')) return 'fas fa-file-pdf';
+            if (type.includes('image')) return 'fas fa-file-image';
+            if (type.includes('video')) return 'fas fa-file-video';
+            if (type.includes('excel') || type.includes('spreadsheet')) return 'fas fa-file-excel';
+            if (type.includes('word') || type.includes('doc')) return 'fas fa-file-word';
+            return 'fas fa-file';
+        }
+
         async function init() {
             document.addEventListener('DOMContentLoaded', async () => {
                 await fetchStudentData();
@@ -1005,48 +245,40 @@
                 });
             });
         }
-    
-        // Setup event listeners
+
         function setupEventListeners() {
             const hamburger = document.querySelector('.navbar .hamburger');
             const navMenu = document.querySelector('.navbar .nav-menu');
             if (hamburger && navMenu) {
                 hamburger.addEventListener('click', () => navMenu.classList.toggle('active'));
             }
-    
+
             document.addEventListener('click', (e) => {
                 const target = e.target;
-    
                 if (target.closest('.user-item') && !target.closest('.pending-item')) {
                     const studentId = target.closest('.user-item').dataset.studentId;
                     selectStudent(studentId);
                 }
-    
                 if (target.matches('.accept-btn')) {
                     const professionalId = target.closest('.pending-item').dataset.professionalId;
                     confirmAction('acceptRequest', 'Accept Request', 'Are you sure you want to accept this connection request?', { professionalId });
                 }
-    
                 if (target.matches('.delete-btn')) {
                     const professionalId = target.closest('.pending-item').dataset.professionalId;
                     confirmAction('deleteRequest', 'Delete Request', 'Are you sure you want to delete this connection request?', { professionalId });
                 }
-    
                 if (target.matches('.edit-icon')) {
                     const taskId = target.closest('.workflow-item').dataset.taskId;
                     openTaskPopup(taskId);
                 }
-    
                 if (target.matches('.delete-icon')) {
                     const taskId = target.closest('.workflow-item').dataset.taskId;
                     confirmAction('deleteTask', 'Delete Task', 'Are you sure you want to delete this task?', { taskId });
                 }
-    
                 if (target.matches('.menu-icon')) {
                     const dropdown = target.closest('.menu').querySelector('.menu-dropdown');
                     dropdown.classList.toggle('active');
                 }
-    
                 if (target.matches('.menu-dropdown button')) {
                     const action = target.dataset.action;
                     if (action === 'deleteConnection') {
@@ -1054,7 +286,7 @@
                     }
                 }
             });
-    
+
             if (elements.workflowList) {
                 elements.workflowList.addEventListener('change', (e) => {
                     if (e.target.matches('.status-select')) {
@@ -1064,7 +296,7 @@
                     }
                 });
             }
-    
+
             if (elements.chatInput) {
                 elements.chatInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
@@ -1072,22 +304,32 @@
                         sendMessage();
                     }
                 });
-                // Auto-resize textarea
                 elements.chatInput.addEventListener('input', () => {
                     elements.chatInput.style.height = 'auto';
                     elements.chatInput.style.height = `${Math.min(elements.chatInput.scrollHeight, 100)}px`;
                 });
             }
-    
+
             if (elements.fileInput) {
-                elements.fileInput.addEventListener('change', () => {
+                elements.fileInput.addEventListener('change', async () => {
                     if (elements.fileInput.files.length > 0) {
-                        console.log('File selected:', elements.fileInput.files[0].name);
-                        // Implement file upload logic here if needed
+                        await sendFileMessage(elements.fileInput.files[0]);
+                        elements.fileInput.value = '';
                     }
                 });
             }
-    
+
+            if (elements.taskFile) {
+                elements.taskFile.addEventListener('change', async () => {
+                    uploadedTaskFiles = [];
+                    elements.taskFileList.innerHTML = '';
+                    const files = Array.from(elements.taskFile.files);
+                    for (const file of files) {
+                        await uploadTaskFile(file);
+                    }
+                });
+            }
+
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('.menu')) {
                     document.querySelectorAll('.menu-dropdown.active').forEach(dropdown => {
@@ -1096,20 +338,72 @@
                 }
             });
         }
-    
-        // Load connections
+
+        async function uploadTaskFile(file) {
+            try {
+                const storagePath = `tasks/temp/${Date.now()}_${file.name}`;
+                const fileRef = storageRef(storage, storagePath);
+                const uploadTask = uploadBytesResumable(fileRef, file);
+
+                elements.taskUploadProgress.classList.add('active');
+                elements.taskUploadProgressBar.style.width = '0%';
+
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        elements.taskUploadProgressBar.style.width = `${progress}%`;
+                    },
+                    (error) => {
+                        console.error('Error uploading task file:', error);
+                        elements.taskUploadProgress.classList.remove('active');
+                        alert('Failed to upload file.');
+                    },
+                    async () => {
+                        const fileUrl = await getDownloadURL(fileRef);
+                        uploadedTaskFiles.push({
+                            name: file.name,
+                            url: fileUrl,
+                            type: file.type
+                        });
+
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'task-file-item';
+                        fileItem.innerHTML = `
+                            <i class="${getFileIconClass(file.type)}"></i>
+                            <span>${file.name}</span>
+                            <i class="fas fa-times remove-file" onclick="removeTaskFile('${file.name}')"></i>
+                        `;
+                        elements.taskFileList.appendChild(fileItem);
+
+                        elements.taskUploadProgress.classList.remove('active');
+                    }
+                );
+            } catch (error) {
+                console.error('Error initiating task file upload:', error);
+                elements.taskUploadProgress.classList.remove('active');
+                alert('Failed to upload file.');
+            }
+        }
+
+        window.removeTaskFile = function(fileName) {
+            uploadedTaskFiles = uploadedTaskFiles.filter(file => file.name !== fileName);
+            const fileItems = elements.taskFileList.querySelectorAll('.task-file-item');
+            fileItems.forEach(item => {
+                if (item.querySelector('span').textContent === fileName) {
+                    item.remove();
+                }
+            });
+        };
+
         async function loadConnections() {
             if (!elements.connectionsList) return;
-    
             try {
                 const connectionsRef = ref(db, `users/${userId}/connections`);
                 const snapshot = await get(connectionsRef);
                 if (snapshot.exists()) {
                     const connections = snapshot.val();
                     let hasConnections = false;
-    
                     const students = await fetchStudentData();
-    
                     elements.connectionsList.innerHTML = '';
                     for (const studentId in connections) {
                         if (connections[studentId].status === "connected") {
@@ -1121,7 +415,6 @@
                                 : student.personal?.linkedin 
                                     ? `https://via.placeholder.com/40?text=${userName[0]}`
                                     : "../assets/avatar/1.png";
-    
                             const chatId = [userId, studentId].sort().join("+");
                             const chatRef = ref(db, `chats/${chatId}/messages`);
                             let lastMessage = "No messages yet";
@@ -1129,10 +422,10 @@
                             const chatSnapshot = await get(chatRef);
                             if (chatSnapshot.exists()) {
                                 const messages = Object.values(chatSnapshot.val());
-                                lastMessage = messages[messages.length - 1].content || "No messages yet";
+                                const lastMsg = messages[messages.length - 1];
+                                lastMessage = lastMsg.file ? `[File] ${lastMsg.file.name}` : lastMsg.content || "No messages yet";
                                 hasUnread = messages.some(msg => msg.senderId !== userId && !msg.read);
                             }
-    
                             const userItem = document.createElement('div');
                             userItem.className = 'user-item';
                             userItem.dataset.studentId = studentId;
@@ -1147,10 +440,8 @@
                             elements.connectionsList.appendChild(userItem);
                         }
                     }
-    
                     if (!hasConnections) {
                         elements.connectionsList.innerHTML = '<p>No connected students found.</p>';
-
                     }
                 } else {
                     elements.connectionsList.innerHTML = '<p>No connected students found.</p>';
@@ -1160,20 +451,16 @@
                 elements.connectionsList.innerHTML = '<p>Error loading connections.</p>';
             }
         }
-    
-        // Load pending requests
+
         async function loadPendingRequests() {
             if (!elements.pendingRequestsList) return;
-    
             try {
                 const connectionsRef = ref(db, `users/${userId}/connections`);
                 const snapshot = await get(connectionsRef);
                 if (snapshot.exists()) {
                     const connections = snapshot.val();
                     let hasPending = false;
-    
                     const students = await fetchStudentData();
-    
                     elements.pendingRequestsList.innerHTML = '';
                     for (const professionalId in connections) {
                         if (connections[professionalId].status === "pending") {
@@ -1185,7 +472,6 @@
                                 : student.personal?.linkedin 
                                     ? `https://via.placeholder.com/40?text=${userName[0]}`
                                     : "../assets/avatar/1.png";
-    
                             const pendingItem = document.createElement('div');
                             pendingItem.className = 'pending-item user-item';
                             pendingItem.dataset.professionalId = professionalId;
@@ -1201,12 +487,11 @@
                             elements.pendingRequestsList.appendChild(pendingItem);
                         }
                     }
-    
-                   if (!hasPending) {
-                            document.querySelector('.pending-requests').style.display = 'none';
-                        } else {
-                            document.querySelector('.pending-requests').style.display = 'block';
-                        }
+                    if (!hasPending) {
+                        document.querySelector('.pending-requests').style.display = 'none';
+                    } else {
+                        document.querySelector('.pending-requests').style.display = 'block';
+                    }
                 } else {
                     elements.pendingRequestsList.innerHTML = '<p>No pending requests.</p>';
                 }
@@ -1215,16 +500,13 @@
                 elements.pendingRequestsList.innerHTML = '<p>Error loading pending requests.</p>';
             }
         }
-    
-        // Accept connection request
+
         async function acceptRequest({ professionalId }) {
             try {
                 const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
                 const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
-    
                 await update(studentConnectionRef, { status: "connected" });
                 await update(professionalConnectionRef, { status: "connected" });
-    
                 loadConnections();
                 loadPendingRequests();
             } catch (error) {
@@ -1232,16 +514,14 @@
                 alert("Failed to accept request.");
             }
         }
-    
-        // Delete connection request
+
         async function deleteRequest({ professionalId }) {
             try {
                 const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
                 const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
-    
                 await remove(studentConnectionRef);
                 await remove(professionalConnectionRef);
-                window.location.reload()
+                window.location.reload();
                 loadConnections();
                 loadPendingRequests();
             } catch (error) {
@@ -1249,16 +529,13 @@
                 alert("Failed to delete request.");
             }
         }
-    
-        // Delete connection
+
         async function deleteConnection({ studentId }) {
             try {
                 const studentConnectionRef = ref(db, `users/${userId}/connections/${studentId}`);
                 const professionalConnectionRef = ref(db, `users/${studentId}/connections/${userId}`);
-    
                 await remove(studentConnectionRef);
                 await remove(professionalConnectionRef);
-    
                 loadConnections();
                 loadPendingRequests();
                 elements.chatArea.style.display = 'none';
@@ -1269,8 +546,7 @@
                 alert("Failed to delete connection.");
             }
         }
-    
-        // Delete task
+
         async function deleteTask({ taskId }) {
             try {
                 const taskRef = ref(db, `tasks/${taskId}`);
@@ -1282,8 +558,7 @@
                 alert("Failed to delete task.");
             }
         }
-    
-        // Select student
+
         function selectStudent(studentId) {
             selectedStudentId = studentId;
             document.querySelectorAll('.user-item').forEach(item => {
@@ -1296,11 +571,9 @@
             loadWorkflows();
             loadCompletedTasks();
         }
-    
-        // Load chat header
+
         async function loadChatHeader() {
             if (!elements.chatHeader) return;
-    
             try {
                 const students = await fetchStudentData();
                 const student = students.find(s => s.id === selectedStudentId) || {};
@@ -1311,7 +584,6 @@
                     : student.personal?.linkedin 
                         ? `https://via.placeholder.com/40?text=${userName[0]}`
                         : "../assets/avatar/1.png";
-    
                 elements.chatHeader.innerHTML = `
                     <div style="display: flex; align-items: center; gap: 1rem;">
                         <img src="${profilePic}" alt="${userName}" class="profile-pic">
@@ -1346,15 +618,13 @@
                 `;
             }
         }
-    
-        // Format message timestamp
+
         function formatMessageDate(timestamp) {
             const now = new Date();
             const messageDate = new Date(timestamp);
             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
             const messageDay = new Date(messageDate.getFullYear(), messageDate.getMonth(), messageDate.getDate());
-    
             if (messageDay.getTime() === today.getTime()) {
                 return 'Today';
             } else if (messageDay.getTime() === yesterday.getTime()) {
@@ -1363,29 +633,22 @@
                 return messageDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             }
         }
-    
-        // Load chat messages
+
         async function loadChat() {
             if (!elements.chatMessages) return;
-    
             elements.chatMessages.innerHTML = '<div class="message">Loading messages...</div>';
-    
             if (selectedStudentId) {
                 const chatId = [userId, selectedStudentId].sort().join("+");
                 const chatRef = ref(db, `chats/${chatId}/messages`);
-    
                 const currentUser = await fetchCurrentUserProfile();
-    
                 onValue(chatRef, async (snapshot) => {
                     elements.chatMessages.innerHTML = '';
                     if (snapshot.exists()) {
                         const messages = Object.entries(snapshot.val())
                             .map(([id, msg]) => ({ id, ...msg }))
                             .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-    
                         const students = await fetchStudentData();
                         const student = students.find(s => s.id === selectedStudentId) || {};
-    
                         messages.forEach(msg => {
                             const isSent = msg.senderId === userId;
                             const senderName = isSent ? currentUser.name : (student.personal?.name || "Unnamed");
@@ -1398,23 +661,39 @@
                                         : "../assets/avatar/1.png";
                             const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                             const date = formatMessageDate(msg.timestamp);
-    
                             const messageDiv = document.createElement('div');
-                            messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
-                            messageDiv.innerHTML = `
-                                <div class="message-header">
-                                    <img src="${profilePic}" alt="${senderName}" class="profile-pic">
-                                    <div class="name">${senderName}</div>
-                                    <div class="time">${date} ${time}</div>
-                                </div>
-                                <div class="content">${msg.content}</div>
-                                <div class="read-status">${msg.read ? 'Seen' : 'Sent'}</div>
-                            `;
+                            messageDiv.className = `message ${isSent ? 'sent' : 'received'} ${msg.file ? 'file-message' : ''}`;
+                            if (msg.file) {
+                                const fileSize = msg.file.size ? (msg.file.size / 1024).toFixed(2) + ' KB' : 'Unknown size';
+                                messageDiv.innerHTML = `
+                                    <div class="message-header">
+                                        <img src="${profilePic}" alt="${senderName}" class="profile-pic">
+                                        <div class="name">${senderName}</div>
+                                        <div class="time">${date} ${time}</div>
+                                    </div>
+                                    <a href="${msg.file.url}" download="${msg.file.name}" target="_blank">
+                                        <div class="file-info">
+                                            <i class="${getFileIconClass(msg.file.type)} file-icon"></i>
+                                            <div class="file-name">${msg.file.name}</div>
+                                            <div class="file-size">${fileSize}</div>
+                                        </div>
+                                    </a>
+                                    <div class="read-status">${msg.read ? 'Seen' : 'Sent'}</div>
+                                `;
+                            } else {
+                                messageDiv.innerHTML = `
+                                    <div class="message-header">
+                                        <img src="${profilePic}" alt="${senderName}" class="profile-pic">
+                                        <div class="name">${senderName}</div>
+                                        <div class="time">${date} ${time}</div>
+                                    </div>
+                                    <div class="content">${msg.content}</div>
+                                    <div class="read-status">${msg.read ? 'Seen' : 'Sent'}</div>
+                                `;
+                            }
                             elements.chatMessages.appendChild(messageDiv);
                         });
-    
                         elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
-    
                         messages.forEach(msg => {
                             if (msg.senderId !== userId && !msg.read) {
                                 update(ref(db, `chats/${chatId}/messages/${msg.id}`), { read: true });
@@ -1426,17 +705,13 @@
                 });
             }
         }
-    
-        // Send message
+
         async function sendMessage() {
             if (!elements.chatInput) return;
-    
             const content = elements.chatInput.value.trim();
             if (!content || !selectedStudentId) return;
-    
             const chatId = [userId, selectedStudentId].sort().join("+");
             const messageRef = ref(db, `chats/${chatId}/messages`);
-    
             try {
                 const currentUser = await fetchCurrentUserProfile();
                 const newMessage = {
@@ -1446,7 +721,6 @@
                     timestamp: new Date().toISOString(),
                     read: false
                 };
-    
                 await push(messageRef, newMessage);
                 elements.chatInput.value = '';
                 elements.chatInput.style.height = 'auto';
@@ -1458,13 +732,66 @@
                 alert("Failed to send message.");
             }
         }
-    
-        // Open task popup
+
+        async function sendFileMessage(file) {
+            if (!selectedStudentId) return;
+            const chatId = [userId, selectedStudentId].sort().join("+");
+            const messageRef = ref(db, `chats/${chatId}/messages`);
+            try {
+                const storagePath = `chats/${chatId}/${Date.now()}_${file.name}`;
+                const fileRef = storageRef(storage, storagePath);
+                const uploadTask = uploadBytesResumable(fileRef, file);
+
+                elements.uploadProgress.classList.add('active');
+                elements.uploadProgressBar.style.width = '0%';
+
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        elements.uploadProgressBar.style.width = `${progress}%`;
+                    },
+                    (error) => {
+                        console.error('Error uploading file:', error);
+                        elements.uploadProgress.classList.remove('active');
+                        alert('Failed to upload file.');
+                    },
+                    async () => {
+                        const fileUrl = await getDownloadURL(fileRef);
+                        const currentUser = await fetchCurrentUserProfile();
+                        const newMessage = {
+                            senderId: userId,
+                            senderName: currentUser.name,
+                            file: {
+                                name: file.name,
+                                url: fileUrl,
+                                type: file.type,
+                                size: file.size
+                            },
+                            timestamp: new Date().toISOString(),
+                            read: false
+                        };
+                        await push(messageRef, newMessage);
+                        elements.uploadProgress.classList.remove('active');
+                        if (elements.messageDing) {
+                            elements.messageDing.play().catch(error => console.error("Error playing ding sound:", error));
+                        }
+                    }
+                );
+            } catch (error) {
+                console.error("Error initiating file upload:", error);
+                elements.uploadProgress.classList.remove('active');
+                alert("Failed to upload file.");
+            }
+        }
+
         async function openTaskPopup(taskId = null) {
             if (!elements.taskPopup || !elements.popupTitle || !elements.taskTitle ||
                 !elements.taskDescription || !elements.taskDeadline || !elements.taskFile ||
                 !elements.taskPayment) return;
-    
+
+            uploadedTaskFiles = [];
+            elements.taskFileList.innerHTML = '';
+
             if (taskId) {
                 editingTaskId = taskId;
                 elements.popupTitle.textContent = 'Edit Task';
@@ -1478,6 +805,19 @@
                         elements.taskDeadline.value = task.deadline || '';
                         elements.taskPayment.value = task.payment || '';
                         elements.taskFile.value = '';
+                        if (task.files) {
+                            uploadedTaskFiles = Object.values(task.files);
+                            uploadedTaskFiles.forEach(file => {
+                                const fileItem = document.createElement('div');
+                                fileItem.className = 'task-file-item';
+                                fileItem.innerHTML = `
+                                    <i class="${getFileIconClass(file.type)}"></i>
+                                    <span>${file.name}</span>
+                                    <i class="fas fa-times remove-file" onclick="removeTaskFile('${file.name}')"></i>
+                                `;
+                                elements.taskFileList.appendChild(fileItem);
+                            });
+                        }
                     }
                 } catch (error) {
                     console.error("Error loading task:", error);
@@ -1492,27 +832,31 @@
                 elements.taskPayment.value = '';
                 elements.taskFile.value = '';
             }
-    
+
             elements.taskPopup.classList.add('active');
         }
-    
-        // Close task popup
+
         function closeTaskPopup() {
             if (elements.taskPopup) {
                 elements.taskPopup.classList.remove('active');
+                uploadedTaskFiles = [];
+                elements.taskFileList.innerHTML = '';
             }
         }
-    
-        // Submit task
+
         async function submitTask() {
             const title = elements.taskTitle?.value.trim();
             const description = elements.taskDescription?.value.trim();
             const deadline = elements.taskDeadline?.value;
-            const file = elements.taskFile?.files[0] ? elements.taskFile.files[0].name : null;
             const payment = parseFloat(elements.taskPayment?.value) || 0;
-    
+
             if (title && description && deadline && selectedStudentId) {
                 try {
+                    const filesObj = uploadedTaskFiles.reduce((acc, file, index) => ({
+                        ...acc,
+                        [index]: file
+                    }), {});
+
                     const newTask = {
                         professionalId: userId,
                         studentId: selectedStudentId,
@@ -1520,12 +864,12 @@
                         description,
                         deadline,
                         status: 'pending',
-                        document: file,
+                        files: filesObj,
                         payment,
                         createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString()
                     };
-    
+
                     if (editingTaskId) {
                         const taskRef = ref(db, `tasks/${editingTaskId}`);
                         await update(taskRef, {
@@ -1537,7 +881,7 @@
                         const newTaskRef = push(taskRef);
                         await set(newTaskRef, newTask);
                     }
-    
+
                     loadWorkflows();
                     closeTaskPopup();
                 } catch (error) {
@@ -1548,11 +892,9 @@
                 alert('Please fill all required fields (Task Name, Description, and Deadline).');
             }
         }
-    
-        // Load workflows
+
         function loadWorkflows() {
             if (!elements.workflowList) return;
-    
             if (selectedStudentId) {
                 const tasksRef = ref(db, `tasks`);
                 onValue(tasksRef, (snapshot) => {
@@ -1567,6 +909,14 @@
                                 const workflowItem = document.createElement('div');
                                 workflowItem.className = 'workflow-item';
                                 workflowItem.dataset.taskId = taskId;
+                                let fileIcons = '';
+                                if (task.files) {
+                                    fileIcons = Object.values(task.files).map(file => `
+                                        <a href="${file.url}" download="${file.name}" class="file-icon-container" title="${file.name}">
+                                            <i class="${getFileIconClass(file.type)} file-icon"></i>
+                                        </a>
+                                    `).join('');
+                                }
                                 workflowItem.innerHTML = `
                                     <i class="fas fa-edit edit-icon"></i>
                                     <h4>${task.title}</h4>
@@ -1580,7 +930,7 @@
                                         <option value="in progress" ${task.status === "in progress" ? "selected" : ""}>In Progress</option>
                                         <option value="completed" ${task.status === "completed" ? "selected" : ""}>Completed</option>
                                     </select>
-                                    <i class="fas fa-file-alt file-icon" title="${task.document || 'No file'}"></i>
+                                    <div class="file-icons">${fileIcons}</div>
                                 `;
                                 elements.workflowList.appendChild(workflowItem);
                             }
@@ -1592,13 +942,10 @@
                 });
             }
         }
-    
-        // Load completed tasks
+
         function loadCompletedTasks() {
             if (!elements.completedTasksList) return;
-    
             elements.completedTasksList.innerHTML = '';
-    
             if (selectedStudentId) {
                 const tasksRef = ref(db, `tasks`);
                 onValue(tasksRef, (snapshot) => {
@@ -1613,13 +960,20 @@
                                 const completedItem = document.createElement('div');
                                 completedItem.className = 'workflow-item completed';
                                 completedItem.dataset.taskId = taskId;
+                                let fileIcons = '';
+                                if (task.files) {
+                                    fileIcons = Object.values(task.files).map(file => `
+                                        <a href="${file.url}" download="${file.name}" class="file-icon-container" title="${file.name}">
+                                            <i class="${getFileIconClass(file.type)} file-icon"></i>
+                                        </a>
+                                    `).join('');
+                                }
                                 completedItem.innerHTML = `
                                     <span class="status-label completed">Completed</span>
                                     <h4>${task.title}</h4>
                                     <p>${task.description}</p>
-                                    <div class="deadline-container">
-                                        
-                                    </div>
+                                    <div class="deadline-container"></div>
+                                    <div class="file-icons">${fileIcons}</div>
                                     <i class="fas fa-trash delete-icon"></i>
                                 `;
                                 elements.completedTasksList.appendChild(completedItem);
@@ -1632,16 +986,14 @@
                 });
             }
         }
-    
-        // Toggle completed tasks visibility
+
         function toggleCompletedTasks() {
             if (elements.completedTasksList && document.querySelector('.completed-tasks .toggle-icon')) {
                 elements.completedTasksList.classList.toggle('active');
                 document.querySelector('.completed-tasks .toggle-icon').classList.toggle('active');
             }
         }
-    
-        // Update task status
+
         async function updateStatus({ taskId, status }) {
             try {
                 const taskRef = ref(db, `tasks/${taskId}`);
@@ -1656,8 +1008,7 @@
                 alert("Failed to update task status.");
             }
         }
-    
-        // Calculate days left until deadline
+
         function calculateDaysLeft(deadline) {
             const now = new Date();
             const deadlineDate = new Date(deadline);
@@ -1665,31 +1016,26 @@
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             return diffDays > 0 ? diffDays : 0;
         }
-    
-        // Calculate deadline progress percentage
+
         function calculateDeadlineProgress(deadline) {
             const now = new Date();
             const deadlineDate = new Date(deadline);
             const diffTime = deadlineDate - now;
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
             if (diffDays <= 0) return 0;
             if (diffDays >= 30) return 100;
-    
             return Math.round((diffDays / 30) * 100);
         }
-    
-        // Get color for deadline progress
+
         function getDeadlineColor(deadline) {
             const daysLeft = calculateDaysLeft(deadline);
-    
             if (daysLeft <= 3) return '#FF5252';
             if (daysLeft <= 7) return '#FFC107';
             return '#4CAF50';
         }
-    
-        // Make functions accessible globally
+
         window.sendMessage = sendMessage;
+        window.sendFileMessage = sendFileMessage;
         window.openTaskPopup = openTaskPopup;
         window.closeTaskPopup = closeTaskPopup;
         window.submitTask = submitTask;
@@ -1702,8 +1048,7 @@
         window.deleteTask = deleteTask;
         window.confirmAction = confirmAction;
         window.closeConfirmation = closeConfirmation;
-    
-        // Initialize application
+
         init();
     </script>
 </body>
