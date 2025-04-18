@@ -1,3 +1,1047 @@
+<!-- Updated tasks.css -->
+<style>
+body { 
+    background: #f8f9fa; 
+    font-family: 'Poppins', sans-serif; 
+    margin: 0; 
+    padding: 0; 
+    height: 100vh; 
+    overflow: hidden; 
+    display: flex; 
+    flex-direction: column; 
+}
+.navbar { 
+    background: #fff; 
+    padding: 1rem 2rem; 
+    position: fixed; 
+    top: 0; 
+    width: 100%; 
+    z-index: 1000; 
+    border-bottom: 1px solid #e0e0e0; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+}
+.navbar .logo { 
+    font-size: 1.5rem; 
+    color: #1a1a1a; 
+}
+.navbar .nav-menu { 
+    display: flex; 
+    gap: 1.5rem; 
+    list-style: none; 
+}
+.navbar .nav-menu li a { 
+    color: #1a1a1a; 
+    text-decoration: none; 
+    font-size: 1rem; 
+    transition: color 0.3s; 
+}
+.navbar .nav-menu li a.active { 
+    color: #0000ff; 
+}
+.navbar .nav-menu li a:hover { 
+    color: #4CAF50; 
+}
+.navbar .hamburger { 
+    display: none; 
+    font-size: 1.5rem; 
+    cursor: pointer; 
+    color: #1a1a1a; 
+}
+.dashboard-content { 
+    display: flex; 
+    flex: 1; 
+    margin-top: 3rem; 
+    height: calc(100vh - 60px); 
+}
+.sidebar-left { 
+    width: 30%; 
+    background: #fff; 
+    border-right: 1px solid #e0e0e0; 
+    overflow-y: auto; 
+    min-width: 200px; 
+    max-width: 400px; 
+}
+.sidebar-left h3 { 
+    font-size: 1.2rem; 
+    color: #1a1a1a; 
+    padding: 1rem; 
+    margin: 0; 
+    border-bottom: 1px solid #e0e0e0; 
+}
+.user-item { 
+    display: flex; 
+    align-items: center; 
+    padding: 0.75rem 1rem; 
+    margin: 0.25rem 0; 
+    cursor: pointer; 
+    transition: background 0.3s; 
+    position: relative;
+}
+.user-item:hover { 
+    background: #f1f3f5; 
+}
+.user-item .profile-pic { 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    margin-right: 0.75rem; 
+    object-fit: cover; 
+}
+.user-item .user-info { 
+    color: #1a1a1a; 
+    flex: 1;
+}
+.user-item .user-info .name { 
+    font-size: 0.95rem; 
+    margin-bottom: 0.1rem; 
+}
+.user-item .user-info .last-message { 
+    font-size: 0.85rem; 
+    color: #6c757d; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.user-item.active { 
+    background: #f1f3f5; 
+}
+.user-item.active .user-info .name,
+.user-item.active .user-info .last-message { 
+    color: #1a1a1a; 
+}
+.user-item .unread-dot {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    width: 8px;
+    height: 8px;
+    background: #FF5252;
+    border-radius: 50%;
+    transform: translateY(-50%);
+}
+.pending-requests { 
+    margin: 1rem; 
+    padding: 0.5rem; 
+    border-top: 1px solid #e0e0e0; 
+}
+.pending-requests h3 { 
+    font-size: 1.2rem; 
+    color: #1a1a1a; 
+    padding: 1rem 0; 
+    margin: 0; 
+    border-bottom: 1px solid #e0e0e0; 
+}
+.pending-item { 
+    display: flex; 
+    align-items: center; 
+    padding: 0.75rem 1rem; 
+    margin: 0.25rem 0; 
+    background: #fff; 
+    border-radius: 8px; 
+    justify-content: space-between; 
+    transition: background 0.3s;
+}
+.pending-item:hover {
+    background: #f1f3f5;
+}
+.pending-item .user-info { 
+    display: flex; 
+    align-items: center; 
+}
+.pending-item .user-info .name { 
+    font-size: 0.95rem; 
+    color: #1a1a1a; 
+}
+.pending-item .actions { 
+    display: flex; 
+    gap: 0.5rem; 
+}
+.pending-item .actions button { 
+    padding: 0.5rem 1rem; 
+    border: none; 
+    border-radius: 5px; 
+    font-size: 0.85rem; 
+    cursor: pointer; 
+    transition: background 0.3s; 
+}
+.pending-item .actions .accept-btn { 
+    background: #4CAF50; 
+    color: #fff; 
+}
+.pending-item .actions .accept-btn:hover { 
+    background: #45a049; 
+}
+.pending-item .actions .delete-btn { 
+    background: #FF5252; 
+    color: #fff; 
+}
+.pending-item .actions .delete-btn:hover { 
+    background: #e04848; 
+}
+.chat-area { 
+    width: 42%; 
+    background: #fff; 
+    border-right: 1px solid #e0e0e0; 
+    overflow-y: auto; 
+    min-width: 200px; 
+    max-width: 600px; 
+    display: none; 
+    position: relative; 
+}
+.chat-header { 
+    padding: 1rem; 
+    border-bottom: 1px solid #e0e0e0; 
+    background: #fff; 
+    position: sticky; 
+    top: 0; 
+    z-index: 10; 
+    display: flex; 
+    align-items: center; 
+    gap: 1rem; 
+    justify-content: space-between;
+}
+.chat-header .profile-pic { 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+}
+.chat-header .name { 
+    font-size: 1rem; 
+    font-weight: 600; 
+    color: #1a1a1a; 
+}
+.chat-header .title { 
+    font-size: 0.85rem; 
+    color: #6c757d; 
+}
+.chat-header .menu {
+    position: relative;
+    cursor: pointer;
+}
+.chat-header .menu-icon {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+.chat-header .menu-icon:hover {
+    color: #1a1a1a;
+}
+.chat-header .menu-dropdown {
+    display: none;
+    position: absolute;
+    top: 2rem;
+    right: 0;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 20;
+}
+.chat-header .menu-dropdown.active {
+    display: block;
+}
+.chat-header .menu-dropdown button {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 0.9rem;
+    color: #1a1a1a;
+    cursor: pointer;
+}
+.chat-header .menu-dropdown button:hover {
+    background: #f1f3f5;
+}
+.messages { 
+    height: calc(100% - 120px); 
+    padding: 1rem; 
+    overflow-y: auto; 
+}
+.date-divider {
+    text-align: center;
+    margin: 1rem 0;
+}
+.date-divider span {
+    background: #f8f9fa;
+    padding: 0.25rem 1rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+.message { 
+    padding: 0.75rem 1rem; 
+    margin-bottom: 1rem; 
+    background: #f8f9fa; 
+    border-radius: 12px; 
+    max-width: 70%; 
+    color: #1a1a1a; 
+    font-size: 0.9rem; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+    position: relative;
+}
+.message.sent { 
+    margin-left: auto; 
+    background: #DCF8C6; 
+    border: 1px solid #e0e0e0; 
+}
+.message.received { 
+    background: #f8f9fa; 
+}
+.message.file-message {
+    padding: 0.75rem;
+    background: #f1f3f5;
+    border-radius: 12px;
+    max-width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+.message.file-message .file-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.message.file-message .file-icon {
+    font-size: 2rem;
+}
+.message.file-message .file-details {
+    flex: 1;
+}
+.message.file-message .file-name {
+    font-size: 0.95rem;
+    color: #1a1a1a;
+    font-weight: 500;
+}
+.message.file-message .file-size {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+.message .message-header { 
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 0.5rem; 
+}
+.message .message-header .profile-pic { 
+    width: 30px; 
+    height: 30px; 
+    border-radius: 50%; 
+    margin-right: 0.5rem; 
+    object-fit: cover; 
+}
+.message .message-header .name { 
+    font-size: 0.85rem; 
+    font-weight: 500; 
+    color: #1a1a1a; 
+}
+.message .message-header .time { 
+    font-size: 0.75rem; 
+    color: #6c757d; 
+    margin-left: auto; 
+    font-style: italic;
+}
+.message .content {
+    word-break: break-word;
+}
+.message .read-status {
+    font-size: 0.75rem;
+    color: #6c757d;
+    font-style: italic;
+    margin-top: 0.25rem;
+    opacity: 0.7;
+}
+.message .reactions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+.message .reactions .reaction {
+    background: #e0e0e0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+.message .reaction-bar {
+    display: none;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 0.25rem 0.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+.message:hover .reaction-bar {
+    display: flex;
+    gap: 0.5rem;
+}
+.message .reaction-icon {
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    padding: 0.2rem;
+    border-radius: 50%;
+}
+.message .reaction-icon:hover {
+    transform: scale(1.3);
+    background: #f1f3f5;
+}
+.message .message-menu {
+    position: relative;
+}
+.message .message-menu-icon {
+    font-size: 0.9rem;
+    color: #6c757d;
+    cursor: pointer;
+}
+.message .message-menu-icon:hover {
+    color: #1a1a1a;
+}
+.message .message-menu-dropdown {
+    display: none;
+    position: absolute;
+    top: 1.5rem;
+    right: 0;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 20;
+    min-width: 120px;
+}
+.message .message-menu-dropdown.active {
+    display: block;
+}
+.message .message-menu-dropdown button {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 0.9rem;
+    color: #1a1a1a;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.message .message-menu-dropdown button:hover {
+    background: #f1f3f5;
+}
+.chat-input { 
+    width: 100%;
+    background: #fff;
+    padding: 0.75rem;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+    position: sticky; 
+    bottom: 0;
+}
+.chat-input .input-container {
+    flex: 1;
+    position: relative;
+    background: #f8f9fa;
+    border-radius: 25px;
+    border: 1px solid #e0e0e0;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+.chat-input .input-container:hover,
+.chat-input .input-container:focus-within {
+    border-color: #4CAF50;
+    background: #fff;
+}
+.chat-input .input-container textarea {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 1.25rem;
+    border: none;
+    background: transparent;
+    color: #1a1a1a;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+    resize: none;
+    outline: none;
+    line-height: 1.4;
+    max-height: 100px;
+    overflow-y: auto;
+}
+.chat-input .input-container textarea::placeholder {
+    color: #6c757d;
+    opacity: 0.7;
+}
+.chat-input .file-input-label {
+    position: absolute;
+    right: 2.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+    color: #6c757d;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+.chat-input .file-input-label:hover {
+    color: #4CAF50;
+}
+.chat-input .file-input {
+    display: none;
+}
+.chat-input button { 
+    background: none; 
+    border: none; 
+    cursor: pointer; 
+    font-size: 1.2rem; 
+    color: #6c757d; 
+    transition: color 0.3s; 
+}
+.chat-input button:hover { 
+    color: #4CAF50; 
+}
+.upload-progress {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+    display: none;
+}
+.upload-progress.active {
+    display: block;
+}
+.upload-progress-bar {
+    height: 100%;
+    background: #4CAF50;
+    width: 0;
+    transition: width 0.3s ease;
+}
+.sidebar-right { 
+    width: 30%; 
+    background: #fff; 
+    overflow-y: auto; 
+    min-width: 200px; 
+    max-width: 400px; 
+    display: none; 
+    position: relative;
+}
+.sidebar-right h3 { 
+    font-size: 1.2rem; 
+    color: #1a1a1a; 
+    padding: 1rem; 
+    margin: 0; 
+    border-bottom: 1px solid #e0e0e0; 
+}
+.sidebar-right .add-task-btn { 
+    display: block; 
+    width: 80%; 
+    margin: 1rem auto; 
+    padding: 0.5rem 1rem; 
+    background: #fff; 
+    color: #1a1a1a; 
+    border: 1px solid #1a1a1a; 
+    border-radius: 25px; 
+    cursor: pointer; 
+    font-size: 0.9rem; 
+    font-weight: 500; 
+    transition: all 0.3s; 
+}
+.sidebar-right .add-task-btn:hover { 
+    background: #1a1a1a; 
+    color: #fff; 
+}
+.workflow-item { 
+    background: #fff; 
+    border: 1px solid #e0e0e0; 
+    border-radius: 12px; 
+    padding: 1rem; 
+    margin: 0.5rem 1rem; 
+    position: relative; 
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.workflow-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.workflow-item.completed {
+    background: #e9ecef;
+    opacity: 0.75;
+}
+.workflow-item .task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+.workflow-item h4 { 
+    color: #1a1a1a; 
+    font-size: 1rem; 
+    margin: 0; 
+}
+.workflow-item p { 
+    color: #6c757d; 
+    font-size: 0.85rem; 
+    margin: 0.25rem 0; 
+}
+.workflow-item .task-menu {
+    position: relative;
+}
+.workflow-item .task-menu-icon {
+    font-size: 1rem;
+    color: #6c757d;
+    cursor: pointer;
+}
+.workflow-item .task-menu-icon:hover {
+    color: #1a1a1a;
+}
+.workflow-item .task-menu-dropdown {
+    display: none;
+    position: absolute;
+    top: 1.5rem;
+    right: 0;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 20;
+    min-width: 120px;
+}
+.workflow-item .task-menu-dropdown.active {
+    display: block;
+}
+.workflow-item .task-menu-dropdown button {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 0.9rem;
+    color: #1a1a1a;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.workflow-item .task-menu-dropdown button.delete-task-btn {
+    color: #FF5252;
+}
+.workflow-item .task-menu-dropdown button:hover {
+    background: #f1f3f5;
+}
+.workflow-item .deadline-container {
+    position: relative;
+    margin: 0.5rem 0;
+}
+.workflow-item .deadline-slider {
+    height: 4px;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+.workflow-item .days-left {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+.workflow-item .status-select {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background: #f8f9fa;
+    font-size: 0.9rem;
+    width: 100%;
+    cursor: pointer;
+}
+.workflow-item .status-select:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+.workflow-item .file-icons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+.workflow-item .file-icon-container {
+    position: relative;
+}
+.workflow-item .file-icon {
+    font-size: 1.5rem;
+}
+.workflow-item .file-icon:hover {
+    opacity: 0.8;
+}
+.workflow-item .comment-toggle {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #4CAF50;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.workflow-item .comment-toggle:hover {
+    color: #45a049;
+}
+.workflow-item .comment-section {
+    display: none;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+.workflow-item .comment-section.active {
+    display: block;
+}
+.workflow-item .comments-list {
+    max-height: 150px;
+    overflow-y: auto;
+    margin-bottom: 0.5rem;
+}
+.workflow-item .comment {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+.workflow-item .comment.sent {
+    background: #DCF8C6;
+    margin-left: 10%;
+}
+.workflow-item .comment.received {
+    background: #fff;
+    margin-right: 10%;
+}
+.workflow-item .comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+}
+.workflow-item .comment-header .name {
+    font-weight: 500;
+    color: #1a1a1a;
+}
+.workflow-item .comment-header .time {
+    font-size: 0.75rem;
+    color: #6c757d;
+    font-style: italic;
+}
+.workflow-item .comment .content {
+    word-break: break-word;
+}
+.workflow-item .comment-input-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.workflow-item .comment-input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    resize: none;
+    outline: none;
+}
+.workflow-item .comment-input:focus {
+    border-color: #4CAF50;
+}
+.workflow-item .comment-send-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #6c757d;
+    transition: color 0.3s;
+}
+.workflow-item .comment-send-btn:hover {
+    color: #4CAF50;
+}
+.workflow-item .status-label {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+.workflow-item .status-label.completed {
+    background: #4CAF50;
+    color: #fff;
+}
+.completed-tasks {
+    margin: 1rem;
+    padding: 0.5rem;
+}
+.completed-tasks h4 {
+    font-size: 1rem;
+    color: #1a1a1a;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.completed-tasks .toggle-icon {
+    transition: transform 0.3s;
+}
+.completed-tasks .toggle-icon.active {
+    transform: rotate(180deg);
+}
+.completed-tasks-list {
+    display: none;
+}
+.completed-tasks-list.active {
+    display: block;
+}
+.task-popup, .review-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.task-popup.active, .review-popup.active {
+    display: flex;
+}
+.task-popup .header, .review-popup .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.task-popup .header h3, .review-popup .header h3 {
+    margin: 0;
+    color: #1a1a1a;
+}
+.task-popup .header button, .review-popup .header button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #6c757d;
+    cursor: pointer;
+}
+.task-popup .header button:hover, .review-popup .header button:hover {
+    color: #1a1a1a;
+}
+.task-popup .form-group, .review-popup .form-group {
+    margin-bottom: 1rem;
+}
+.task-popup .form-group label, .review-popup .form-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: #1a1a1a;
+    margin-bottom: 0.25rem;
+}
+.task-popup .form-group input,
+.task-popup .form-group textarea,
+.review-popup .form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    outline: none;
+}
+.task-popup .form-group input:focus,
+.task-popup .form-group textarea:focus,
+.review-popup .form-group textarea:focus {
+    border-color: #4CAF50;
+}
+.task-popup .form-group textarea {
+    resize: vertical;
+}
+.review-popup .star-rating {
+    display: flex;
+    gap: 0.5rem;
+}
+.review-popup .star-rating i {
+    font-size: 1.2rem;
+    color: #e0e0e0;
+    cursor: pointer;
+}
+.review-popup .star-rating i.selected {
+    color: #FFC107;
+}
+.task-popup .file-list {
+    margin-top: 0.5rem;
+}
+.task-popup .task-file-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+}
+.task-popup .task-file-item i {
+    font-size: 1.2rem;
+}
+.task-popup .task-file-item span {
+    flex: 1;
+    font-size: 0.9rem;
+    color: #1a1a1a;
+}
+.task-popup .task-file-item .remove-file {
+    cursor: pointer;
+    color: #FF5252;
+}
+.task-popup .task-file-item .remove-file:hover {
+    color: #e04848;
+}
+.task-popup .actions, .review-popup .actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+.task-popup .actions button, .review-popup .actions button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.task-popup .actions .cancel-btn, .review-popup .actions .cancel-btn {
+    background: #e0e0e0;
+    color: #1a1a1a;
+}
+.task-popup .actions .cancel-btn:hover, .review-popup .actions .cancel-btn:hover {
+    background: #d0d0d0;
+}
+.task-popup .actions .submit-btn, .review-popup .actions .submit-btn {
+    background: #4CAF50;
+    color: #fff;
+}
+.task-popup .actions .submit-btn:hover, .review-popup .actions .submit-btn:hover {
+    background: #45a049;
+}
+.confirmation-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.confirmation-dialog.active {
+    display: flex;
+}
+.confirmation-dialog .dialog-box {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+.confirmation-dialog .dialog-box h3 {
+    margin: 0 0 1rem;
+    color: #1a1a1a;
+}
+.confirmation-dialog .dialog-box p {
+    margin: 0 0 1.5rem;
+    color: #6c757d;
+}
+.confirmation-dialog .dialog-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+.confirmation-dialog .dialog-actions button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.confirmation-dialog .dialog-actions .cancel {
+    background: #e0e0e0;
+    color: #1a1a1a;
+}
+.confirmation-dialog .dialog-actions .cancel:hover {
+    background: #d0d0d0;
+}
+.confirmation-dialog .dialog-actions .confirm {
+    background: #4CAF50;
+    color: #fff;
+}
+.confirmation-dialog .dialog-actions .confirm:hover {
+    background: #45a049;
+}
+.confirmation-dialog .dialog-actions .delete {
+    background: #FF5252;
+    color: #fff;
+}
+.confirmation-dialog .dialog-actions .delete:hover {
+    background: #e04848;
+}
+.review-display {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+.review-display .stars {
+    color: #FFC107;
+    font-size: 1rem;
+}
+.review-display p {
+    font-size: 0.85rem;
+    color: #1a1a1a;
+}
+@media (max-width: 768px) {
+    .navbar .nav-menu {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        flex-direction: column;
+        padding: 1rem;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    .navbar .nav-menu.active {
+        display: flex;
+    }
+    .navbar .hamburger {
+        display: block;
+    }
+    .dashboard-content {
+        flex-direction: column;
+    }
+    .sidebar-left, .chat-area, .sidebar-right {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+    }
+    .chat-area, .sidebar-right {
+        display: none;
+    }
+    .chat-area.active, .sidebar-right.active {
+        display: block;
+    }
+}
+</style>
+
+<!-- Updated tasks.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -338,13 +1382,11 @@
                     const taskId = target.closest('.workflow-item').dataset.taskId;
                     toggleComments(taskId);
                 }
-                if (target.matches('.comment-input')) {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        const taskId = target.closest('.workflow-item').dataset.taskId;
-                        sendComment(taskId, target.value);
-                        target.value = '';
-                    }
+                if (target.matches('.comment-send-btn')) {
+                    const taskId = target.closest('.workflow-item').dataset.taskId;
+                    const commentInput = target.closest('.comment-input-container').querySelector('.comment-input');
+                    sendComment(taskId, commentInput.value);
+                    commentInput.value = '';
                 }
                 if (target.matches('.star-rating i')) {
                     selectedRating = parseInt(target.dataset.rating);
@@ -405,6 +1447,19 @@
                     document.querySelectorAll('.message-menu-dropdown.active').forEach(dropdown => {
                         dropdown.classList.remove('active');
                     });
+                }
+            });
+
+            // Dynamic positioning of reaction bar
+            document.addEventListener('mousemove', (e) => {
+                if (e.target.closest('.message')) {
+                    const message = e.target.closest('.message');
+                    const reactionBar = message.querySelector('.reaction-bar');
+                    if (reactionBar) {
+                        const rect = message.getBoundingClientRect();
+                        reactionBar.style.left = `${e.clientX - rect.left - 20}px`;
+                        reactionBar.style.top = `${e.clientY - rect.top - 40}px`;
+                    }
                 }
             });
         }
@@ -779,9 +1834,11 @@
                                     <div class="read-status">${msg.read ? 'Seen' : 'Sent'}</div>
                                     <div class="reactions">${reactionsHTML}</div>
                                     <div class="reaction-bar">
-                                        <i class="fas fa-handshake reaction-icon" data-reaction="🤝"></i>
-                                        <i class="fas fa-thumbs-up reaction-icon" data-reaction="👍"></i>
-                                        <i class="fas fa-heart reaction-icon" data-reaction="❤️"></i>
+                                        <span class="reaction-icon" data-reaction="🤝">🤝</span>
+                                        <span class="reaction-icon" data-reaction="👍">👍</span>
+                                        <span class="reaction-icon" data-reaction="❤️">❤️</span>
+                                        <span class="reaction-icon" data-reaction="😂">😂</span>
+                                        <span class="reaction-icon" data-reaction="😊">😊</span>
                                         <div class="message-menu">
                                             <i class="fas fa-ellipsis-h message-menu-icon"></i>
                                             <div class="message-menu-dropdown">
@@ -801,9 +1858,11 @@
                                     <div class="read-status">${msg.read ? 'Seen' : 'Sent'}</div>
                                     <div class="reactions">${reactionsHTML}</div>
                                     <div class="reaction-bar">
-                                        <i class="fas fa-handshake reaction-icon" data-reaction="🤝"></i>
-                                        <i class="fas fa-thumbs-up reaction-icon" data-reaction="👍"></i>
-                                        <i class="fas fa-heart reaction-icon" data-reaction="❤️"></i>
+                                        <span class="reaction-icon" data-reaction="🤝">🤝</span>
+                                        <span class="reaction-icon" data-reaction="👍">👍</span>
+                                        <span class="reaction-icon" data-reaction="❤️">❤️</span>
+                                        <span class="reaction-icon" data-reaction="😂">😂</span>
+                                        <span class="reaction-icon" data-reaction="😊">😊</span>
                                         <div class="message-menu">
                                             <i class="fas fa-ellipsis-h message-menu-icon"></i>
                                             <div class="message-menu-dropdown">
@@ -937,389 +1996,4 @@
                 const taskRef = ref(db, `tasks/${taskId}`);
                 try {
                     const snapshot = await get(taskRef);
-                    if (snapshot.exists()) {
-                        const task = snapshot.val();
-                        elements.taskTitle.value = task.title || '';
-                        elements.taskDescription.value = task.description || '';
-                        elements.taskDeadline.value = task.deadline || '';
-                        elements.taskPayment.value = task.payment || '';
-                        elements.taskFile.value = '';
-                        if (task.files) {
-                            uploadedTaskFiles = Object.values(task.files);
-                            uploadedTaskFiles.forEach(file => {
-                                const fileItem = document.createElement('div');
-                                fileItem.className = 'task-file-item';
-                                fileItem.innerHTML = `
-                                    <i class="${getFileIconClass(file.type)}" style="color: ${getFileIconColor(file.type)};"></i>
-                                    <span>${file.name}</span>
-                                    <i class="fas fa-times remove-file" onclick="removeTaskFile('${file.name}')"></i>
-                                `;
-                                elements.taskFileList.appendChild(fileItem);
-                            });
-                        }
-                    }
-                } catch (error) {
-                    console.error("Error loading task:", error);
-                    alert("Failed to load task details.");
-                }
-            } else {
-                editingTaskId = null;
-                elements.popupTitle.textContent = 'Add New Task';
-                elements.taskTitle.value = '';
-                elements.taskDescription.value = '';
-                elements.taskDeadline.value = '';
-                elements.taskPayment.value = '';
-                elements.taskFile.value = '';
-            }
-
-            elements.taskPopup.classList.add('active');
-        }
-
-        function closeTaskPopup() {
-            if (elements.taskPopup) {
-                elements.taskPopup.classList.remove('active');
-                uploadedTaskFiles = [];
-                elements.taskFileList.innerHTML = '';
-            }
-        }
-
-        async function submitTask() {
-            const title = elements.taskTitle?.value.trim();
-            const description = elements.taskDescription?.value.trim();
-            const deadline = elements.taskDeadline?.value;
-            const payment = parseFloat(elements.taskPayment?.value) || 0;
-
-            if (title && description && deadline && selectedStudentId) {
-                try {
-                    const filesObj = uploadedTaskFiles.reduce((acc, file, index) => ({
-                        ...acc,
-                        [index]: file
-                    }), {});
-
-                    const newTask = {
-                        professionalId: userId,
-                        studentId: selectedStudentId,
-                        title,
-                        description,
-                        deadline,
-                        status: 'pending',
-                        files: filesObj,
-                        payment,
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    };
-
-                    if (editingTaskId) {
-                        const taskRef = ref(db, `tasks/${editingTaskId}`);
-                        await update(taskRef, {
-                            ...newTask,
-                            updatedAt: new Date().toISOString()
-                        });
-                    } else {
-                        const taskRef = ref(db, `tasks`);
-                        const newTaskRef = push(taskRef);
-                        await set(newTaskRef, newTask);
-                    }
-
-                    loadWorkflows();
-                    closeTaskPopup();
-                } catch (error) {
-                    console.error("Error submitting task:", error);
-                    alert("Failed to submit task.");
-                }
-            } else {
-                alert('Please fill all required fields (Task Name, Description, and Deadline).');
-            }
-        }
-
-        async function sendComment(taskId, content) {
-            if (!content.trim()) return;
-            try {
-                const commentRef = ref(db, `tasks/${taskId}/comments`);
-                const currentUser = await fetchCurrentUserProfile();
-                const newComment = {
-                    senderId: userId,
-                    senderName: currentUser.name,
-                    content,
-                    timestamp: new Date().toISOString()
-                };
-                await push(commentRef, newComment);
-                if (elements.messageDing) {
-                    elements.messageDing.play().catch(error => console.error("Error playing ding sound:", error));
-                }
-            } catch (error) {
-                console.error("Error sending comment:", error);
-                alert("Failed to send comment.");
-            }
-        }
-
-        function toggleComments(taskId) {
-            const commentSection = document.querySelector(`.workflow-item[data-task-id="${taskId}"] .comment-section`);
-            if (commentSection) {
-                commentSection.classList.toggle('active');
-            }
-        }
-
-        async function loadWorkflows() {
-            if (!elements.workflowList) return;
-            if (selectedStudentId) {
-                const tasksRef = ref(db, `tasks`);
-                onValue(tasksRef, async (snapshot) => {
-                    elements.workflowList.innerHTML = '';
-                    let hasTasks = false;
-                    if (snapshot.exists()) {
-                        const tasks = snapshot.val();
-                        const currentUser = await fetchCurrentUserProfile();
-                        for (const taskId in tasks) {
-                            const task = tasks[taskId];
-                            if (task.professionalId === userId && task.studentId === selectedStudentId && task.status !== 'completed') {
-                                hasTasks = true;
-                                const workflowItem = document.createElement('div');
-                                workflowItem.className = 'workflow-item';
-                                workflowItem.dataset.taskId = taskId;
-                                let fileIcons = '';
-                                if (task.files) {
-                                    fileIcons = Object.values(task.files).map(file => `
-                                        <a href="${file.url}" download="${file.name}" class="file-icon-container" title="${file.name}">
-                                            <i class="${getFileIconClass(file.type)} file-icon" style="color: ${getFileIconColor(file.type)};"></i>
-                                        </a>
-                                    `).join('');
-                                }
-                                let commentsHTML = '';
-                                if (task.comments) {
-                                    commentsHTML = Object.entries(task.comments)
-                                        .map(([id, comment]) => {
-                                            const isSent = comment.senderId === userId;
-                                            return `
-                                                <div class="comment ${isSent ? 'sent' : 'received'}">
-                                                    <div class="comment-header">
-                                                        <span class="name">${comment.senderName}</span>
-                                                        <span class="time">${new Date(comment.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                                                    </div>
-                                                    <div class="content">${comment.content}</div>
-                                                </div>
-                                            `;
-                                        })
-                                        .join('');
-                                }
-                                workflowItem.innerHTML = `
-                                    <div class="task-header">
-                                        <h4>${task.title}</h4>
-                                        <div class="task-menu">
-                                            <i class="fas fa-ellipsis-v task-menu-icon"></i>
-                                            <div class="task-menu-dropdown">
-                                                <button data-action="editTask">Edit Task</button>
-                                                <button data-action="deleteTask" class="delete-task-btn">Delete Task</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p>${task.description}</p>
-                                    <div class="deadline-container">
-                                        <div class="deadline-slider" style="width: ${calculateDeadlineProgress(task.deadline)}%; background: ${getDeadlineColor(task.deadline)};"></div>
-                                        <span class="days-left">${calculateDaysLeft(task.deadline)} days left</span>
-                                    </div>
-                                    <select class="status-select">
-                                        <option value="pending" ${task.status === "pending" ? "selected" : ""}>Pending</option>
-                                        <option value="in progress" ${task.status === "in progress" ? "selected" : ""}>In Progress</option>
-                                        <option value="completed" ${task.status === "completed" ? "selected" : ""}>Completed</option>
-                                    </select>
-                                    <div class="file-icons">${fileIcons}</div>
-                                    <div class="comment-toggle">
-                                        <i class="fas fa-comment"></i> Comments
-                                    </div>
-                                    <div class="comment-section">
-                                        <div class="comments-list">${commentsHTML}</div>
-                                        <textarea class="comment-input" placeholder="Add a comment..."></textarea>
-                                    </div>
-                                `;
-                                elements.workflowList.appendChild(workflowItem);
-                            }
-                        }
-                    }
-                    if (!hasTasks) {
-                        elements.workflowList.innerHTML = '<p>No tasks found.</p>';
-                    }
-                });
-            }
-        }
-
-        async function loadCompletedTasks() {
-            if (!elements.completedTasksList) return;
-            elements.completedTasksList.innerHTML = '';
-            if (selectedStudentId) {
-                const tasksRef = ref(db, `tasks`);
-                onValue(tasksRef, async (snapshot) => {
-                    elements.completedTasksList.innerHTML = '';
-                    let hasCompletedTasks = false;
-                    if (snapshot.exists()) {
-                        const tasks = snapshot.val();
-                        const currentUser = await fetchCurrentUserProfile();
-                        for (const taskId in tasks) {
-                            const task = tasks[taskId];
-                            if (task.professionalId === userId && task.studentId === selectedStudentId && task.status === 'completed') {
-                                hasCompletedTasks = true;
-                                const completedItem = document.createElement('div');
-                                completedItem.className = 'workflow-item completed';
-                                completedItem.dataset.taskId = taskId;
-                                let fileIcons = '';
-                                if (task.files) {
-                                    fileIcons = Object.values(task.files).map(file => `
-                                        <a href="${file.url}" download="${file.name}" class="file-icon-container" title="${file.name}">
-                                            <i class="${getFileIconClass(file.type)} file-icon" style="color: ${getFileIconColor(file.type)};"></i>
-                                        </a>
-                                    `).join('');
-                                }
-                                let reviewHTML = '';
-                                if (task.review) {
-                                    reviewHTML = `
-                                        <div class="review-display">
-                                            <div class="stars">${'★'.repeat(task.review.rating)}${'☆'.repeat(5 - task.review.rating)}</div>
-                                            <p>${task.review.feedback}</p>
-                                        </div>
-                                    `;
-                                }
-                                completedItem.innerHTML = `
-                                    <div class="task-header">
-                                        <h4>${task.title}</h4>
-                                        <div class="task-menu">
-                                            <i class="fas fa-ellipsis-v task-menu-icon"></i>
-                                            <div class="task-menu-dropdown">
-                                                <button data-action="reviewTask">Review Task</button>
-                                                <button data-action="deleteTask" class="delete-task-btn">Delete Task</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <span class="status-label completed">Completed</span>
-                                    <p>${task.description}</p>
-                                    <div class="file-icons">${fileIcons}</div>
-                                    ${reviewHTML}
-                                `;
-                                elements.completedTasksList.appendChild(completedItem);
-                            }
-                        }
-                    }
-                    if (!hasCompletedTasks) {
-                        elements.completedTasksList.innerHTML = '<p>No completed tasks found.</p>';
-                    }
-                });
-            }
-        }
-
-        function toggleCompletedTasks() {
-            if (elements.completedTasksList && document.querySelector('.completed-tasks .toggle-icon')) {
-                elements.completedTasksList.classList.toggle('active');
-                document.querySelector('.completed-tasks .toggle-icon').classList.toggle('active');
-            }
-        }
-
-        async function updateStatus({ taskId, status }) {
-            try {
-                const taskRef = ref(db, `tasks/${taskId}`);
-                await update(taskRef, { 
-                    status,
-                    updatedAt: new Date().toISOString()
-                });
-                loadWorkflows();
-                loadCompletedTasks();
-            } catch (error) {
-                console.error("Error updating task status:", error);
-                alert("Failed to update task status.");
-            }
-        }
-
-        function openReviewPopup(taskId) {
-            reviewingTaskId = taskId;
-            selectedRating = 0;
-            elements.reviewFeedback.value = '';
-            updateStarRating();
-            elements.reviewPopup.classList.add('active');
-        }
-
-        function closeReviewPopup() {
-            elements.reviewPopup.classList.remove('active');
-            reviewingTaskId = null;
-            selectedRating = 0;
-        }
-
-        function updateStarRating() {
-            const stars = elements.starRating.querySelectorAll('i');
-            stars.forEach(star => {
-                const rating = parseInt(star.dataset.rating);
-                star.className = rating <= selectedRating ? 'fas fa-star selected' : 'fas fa-star';
-            });
-        }
-
-        async function submitReview() {
-            if (!reviewingTaskId || selectedRating === 0) {
-                alert('Please select a rating.');
-                return;
-            }
-            const feedback = elements.reviewFeedback.value.trim();
-            try {
-                const taskRef = ref(db, `tasks/${reviewingTaskId}`);
-                await update(taskRef, {
-                    review: {
-                        rating: selectedRating,
-                        feedback,
-                        timestamp: new Date().toISOString()
-                    }
-                });
-                closeReviewPopup();
-                loadCompletedTasks();
-            } catch (error) {
-                console.error("Error submitting review:", error);
-                alert("Failed to submit review.");
-            }
-        }
-
-        function calculateDaysLeft(deadline) {
-            const now = new Date();
-            const deadlineDate = new Date(deadline);
-            const diffTime = deadlineDate - now;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays > 0 ? diffDays : 0;
-        }
-
-        function calculateDeadlineProgress(deadline) {
-            const now = new Date();
-            const deadlineDate = new Date(deadline);
-            const diffTime = deadlineDate - now;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            if (diffDays <= 0) return 0;
-            if (diffDays >= 30) return 100;
-            return Math.round((diffDays / 30) * 100);
-        }
-
-        function getDeadlineColor(deadline) {
-            const daysLeft = calculateDaysLeft(deadline);
-            if (daysLeft <= 3) return '#FF5252';
-            if (daysLeft <= 7) return '#FFC107';
-            return '#4CAF50';
-        }
-
-        window.sendMessage = sendMessage;
-        window.sendFileMessage = sendFileMessage;
-        window.openTaskPopup = openTaskPopup;
-        window.closeTaskPopup = closeTaskPopup;
-        window.submitTask = submitTask;
-        window.toggleCompletedTasks = toggleCompletedTasks;
-        window.selectStudent = selectStudent;
-        window.updateStatus = updateStatus;
-        window.acceptRequest = acceptRequest;
-        window.deleteRequest = deleteRequest;
-        window.deleteConnection = deleteConnection;
-        window.deleteTask = deleteTask;
-        window.deleteMessage = deleteMessage;
-        window.confirmAction = confirmAction;
-        window.closeConfirmation = closeConfirmation;
-        window.sendComment = sendComment;
-        window.toggleComments = toggleComments;
-        window.addReaction = addReaction;
-        window.openReviewPopup = openReviewPopup;
-        window.closeReviewPopup = closeReviewPopup;
-        window.submitReview = submitReview;
-
-        init();
-    </script>
-</body>
-</html>
+                    if (
