@@ -278,20 +278,51 @@
             position: sticky; 
             bottom: 0;
         }
-        .chat-input input[type="text"] { 
+        .chat-input .input-container {
             flex: 1;
-            padding: 0.75rem 1.25rem;
-            border: 1px solid #e0e0e0;
+            position: relative;
+            background: #f8f9fa;
             border-radius: 25px;
+            border: 1px solid #e0e0e0;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+        .chat-input .input-container:hover,
+        .chat-input .input-container:focus-within {
+            border-color: #4CAF50;
+            background: #fff;
+        }
+        .chat-input .input-container textarea {
+            width: 100%;
+            padding: 0.75rem 2.5rem 0.75rem 1.25rem;
+            border: none;
+            background: transparent;
             color: #1a1a1a;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            resize: none;
             outline: none;
-            font-size: 1rem;
-            transition: border-color 0.3s;
+            line-height: 1.4;
+            max-height: 100px;
+            overflow-y: auto;
         }
-        .chat-input input[type="text"]:focus { 
-            border-color: #6c757d; 
+        .chat-input .input-container textarea::placeholder {
+            color: #6c757d;
+            opacity: 0.7;
         }
-        .chat-input input[type="file"] {
+        .chat-input .file-input-label {
+            position: absolute;
+            right: 2.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            color: #6c757d;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .chat-input .file-input-label:hover {
+            color: #4CAF50;
+        }
+        .chat-input .file-input {
             display: none;
         }
         .chat-input button { 
@@ -303,7 +334,7 @@
             transition: color 0.3s; 
         }
         .chat-input button:hover { 
-            color: #1a1a1a; 
+            color: #4CAF50; 
         }
         .sidebar-right { 
             width: 30%; 
@@ -346,12 +377,11 @@
             border-radius: 12px; 
             padding: 1rem; 
             margin: 0.5rem 1rem; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
-            transition: transform 0.2s; 
             position: relative; 
         }
-        .workflow-item:hover { 
-            transform: translateY(-2px); 
+        .workflow-item.completed {
+            background: #e9ecef;
+            opacity: 0.75;
         }
         .workflow-item h4 { 
             color: #1a1a1a; 
@@ -425,6 +455,18 @@
         }
         .workflow-item .edit-icon:hover { 
             color: #1a1a1a; 
+        }
+        .workflow-item .delete-icon {
+            position: absolute;
+            top: 0.5rem;
+            right: 2rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .workflow-item .delete-icon:hover {
+            color: #FF5252;
         }
         .completed-tasks { 
             margin: 1rem; 
@@ -694,7 +736,6 @@
     <nav class="navbar">
         <div class="logo">Taska Elite </div>
         <ul class="nav-menu">
-            
             <li><a href="tasks.html" class="active">Tasks</a></li>
             <li><a href="profile.html">Account</a></li>
         </ul>
@@ -714,10 +755,11 @@
             <div class="chat-header" id="chat-header"></div>
             <div class="messages" id="chat-messages"></div>
             <div class="chat-input">
-                <input type="text" id="chat-input" placeholder="Type a message...">
-                <input type="file" id="profile-pic-upload" accept="image/*">
-                <button onclick="uploadImage()"><i class="fas fa-camera"></i></button>
-                <button onclick="uploadFile()"><i class="fas fa-link"></i></button>
+                <div class="input-container">
+                    <textarea id="chat-input" placeholder="Type a message..." rows="1"></textarea>
+                    <label for="file-input" class="file-input-label"><i class="fas fa-paperclip"></i></label>
+                    <input type="file" id="file-input" class="file-input">
+                </div>
                 <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
@@ -824,7 +866,8 @@
             confirmationDialog: document.getElementById('confirmation-dialog'),
             dialogTitle: document.getElementById('dialog-title'),
             dialogMessage: document.getElementById('dialog-message'),
-            confirmButton: document.getElementById('confirm-button')
+            confirmButton: document.getElementById('confirm-button'),
+            fileInput: document.getElementById('file-input')
         };
     
         // Fetch student data from local JSON file
@@ -900,7 +943,7 @@
             document.addEventListener('click', (e) => {
                 const target = e.target;
     
-                if (target.closest('.user-item')) {
+                if (target.closest('.user-item') && !target.closest('.pending-item')) {
                     const studentId = target.closest('.user-item').dataset.studentId;
                     selectStudent(studentId);
                 }
@@ -919,6 +962,11 @@
                     const taskId = target.closest('.workflow-item').dataset.taskId;
                     openTaskPopup(taskId);
                 }
+    
+                if (target.matches('.delete-icon')) {
+                    const taskId = target.closest('.workflow-item').dataset.taskId;
+                    confirmAction('deleteTask', 'Delete Task', 'Are you sure you want to delete this task?', { taskId });
+                }
             });
     
             if (elements.workflowList) {
@@ -933,9 +981,22 @@
     
             if (elements.chatInput) {
                 elements.chatInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
+                    if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
                         sendMessage();
+                    }
+                });
+                // Auto-resize textarea
+                elements.chatInput.addEventListener('input', () => {
+                    elements.chatInput.style.height = 'auto';
+                    elements.chatInput.style.height = `${Math.min(elements.chatInput.scrollHeight, 100)}px`;
+                });
+            }
+    
+            if (elements.fileInput) {
+                elements.fileInput.addEventListener('change', () => {
+                    if (elements.fileInput.files.length > 0) {
+                        console.log('File selected:', elements.fileInput.files[0].name);
                     }
                 });
             }
@@ -1000,8 +1061,6 @@
                 console.error("Error loading connections:", error);
             }
         }
-        
-
     
         // Load pending requests
         async function loadPendingRequests() {
@@ -1089,6 +1148,19 @@
             } catch (error) {
                 console.error("Error deleting request:", error);
                 alert("Failed to delete request.");
+            }
+        }
+    
+        // Delete task
+        async function deleteTask({ taskId }) {
+            try {
+                const taskRef = ref(db, `tasks/${taskId}`);
+                await remove(taskRef);
+                loadWorkflows();
+                loadCompletedTasks();
+            } catch (error) {
+                console.error("Error deleting task:", error);
+                alert("Failed to delete task.");
             }
         }
     
@@ -1210,6 +1282,7 @@
     
                 await push(messageRef, newMessage);
                 elements.chatInput.value = '';
+                elements.chatInput.style.height = 'auto';
             } catch (error) {
                 console.error("Error sending message:", error);
                 alert("Failed to send message.");
@@ -1310,7 +1383,6 @@
         function loadWorkflows() {
             if (!elements.workflowList) return;
     
-    
             if (selectedStudentId) {
                 const tasksRef = ref(db, `tasks`);
                 onValue(tasksRef, (snapshot) => {
@@ -1369,8 +1441,10 @@
                             if (task.professionalId === userId && task.studentId === selectedStudentId && task.status === 'completed') {
                                 hasCompletedTasks = true;
                                 const completedItem = document.createElement('div');
-                                completedItem.className = 'workflow-item';
+                                completedItem.className = 'workflow-item completed';
+                                completedItem.dataset.taskId = taskId;
                                 completedItem.innerHTML = `
+                                    <i class="fas fa-trash delete-icon"></i>
                                     <span class="status-label completed">Completed</span>
                                     <h4>${task.title}</h4>
                                     <p>${task.description}</p>
@@ -1378,7 +1452,7 @@
                                         <div class="deadline-slider" style="width: 100%; background: #4CAF50;"></div>
                                         <span class="days-left">Completed</span>
                                     </div>
-                                    <i class="fas fa-file-alt file-icon" title="${task.document || 'No file'}"></i>
+                                    <i class="fas fa-trash delete-icon"></i>
                                 `;
                                 elements.completedTasksList.appendChild(completedItem);
                             }
@@ -1456,11 +1530,13 @@
         window.updateStatus = updateStatus;
         window.acceptRequest = acceptRequest;
         window.deleteRequest = deleteRequest;
+        window.deleteTask = deleteTask;
         window.confirmAction = confirmAction;
         window.closeConfirmation = closeConfirmation;
     
         // Initialize application
         init();
     </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9322e1ca59badd1c',t:'MTc0NDk2NTg4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

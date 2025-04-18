@@ -119,6 +119,16 @@
         .user-item.active .user-info .last-message { 
             color: #1a1a1a; 
         }
+        .user-item .unread-dot {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            width: 8px;
+            height: 8px;
+            background: #FF5252;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
         .pending-requests { 
             margin: 1rem; 
             padding: 0.5rem; 
@@ -198,6 +208,7 @@
             display: flex; 
             align-items: center; 
             gap: 1rem; 
+            justify-content: space-between;
         }
         .chat-header .profile-pic { 
             width: 40px; 
@@ -213,6 +224,45 @@
         .chat-header .title { 
             font-size: 0.85rem; 
             color: #6c757d; 
+        }
+        .chat-header .menu {
+            position: relative;
+            cursor: pointer;
+        }
+        .chat-header .menu-icon {
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+        .chat-header .menu-icon:hover {
+            color: #1a1a1a;
+        }
+        .chat-header .menu-dropdown {
+            display: none;
+            position: absolute;
+            top: 2rem;
+            right: 0;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 20;
+        }
+        .chat-header .menu-dropdown.active {
+            display: block;
+        }
+        .chat-header .menu-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 1rem;
+            background: none;
+            border: none;
+            text-align: left;
+            font-size: 0.9rem;
+            color: #1a1a1a;
+            cursor: pointer;
+        }
+        .chat-header .menu-dropdown button:hover {
+            background: #f1f3f5;
         }
         .messages { 
             height: calc(100% - 120px); 
@@ -278,20 +328,51 @@
             position: sticky; 
             bottom: 0;
         }
-        .chat-input input[type="text"] { 
+        .chat-input .input-container {
             flex: 1;
-            padding: 0.75rem 1.25rem;
-            border: 1px solid #e0e0e0;
+            position: relative;
+            background: #f8f9fa;
             border-radius: 25px;
+            border: 1px solid #e0e0e0;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+        .chat-input .input-container:hover,
+        .chat-input .input-container:focus-within {
+            border-color: #4CAF50;
+            background: #fff;
+        }
+        .chat-input .input-container textarea {
+            width: 100%;
+            padding: 0.75rem 2.5rem 0.75rem 1.25rem;
+            border: none;
+            background: transparent;
             color: #1a1a1a;
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            resize: none;
             outline: none;
-            font-size: 1rem;
-            transition: border-color 0.3s;
+            line-height: 1.4;
+            max-height: 100px;
+            overflow-y: auto;
         }
-        .chat-input input[type="text"]:focus { 
-            border-color: #6c757d; 
+        .chat-input .input-container textarea::placeholder {
+            color: #6c757d;
+            opacity: 0.7;
         }
-        .chat-input input[type="file"] {
+        .chat-input .file-input-label {
+            position: absolute;
+            right: 2.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            color: #6c757d;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .chat-input .file-input-label:hover {
+            color: #4CAF50;
+        }
+        .chat-input .file-input {
             display: none;
         }
         .chat-input button { 
@@ -303,7 +384,7 @@
             transition: color 0.3s; 
         }
         .chat-input button:hover { 
-            color: #1a1a1a; 
+            color: #4CAF50; 
         }
         .sidebar-right { 
             width: 30%; 
@@ -334,7 +415,6 @@
             font-size: 0.9rem; 
             font-weight: 500; 
             transition: all 0.3s; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
         }
         .sidebar-right .add-task-btn:hover { 
             background: #1a1a1a; 
@@ -346,12 +426,11 @@
             border-radius: 12px; 
             padding: 1rem; 
             margin: 0.5rem 1rem; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
-            transition: transform 0.2s; 
             position: relative; 
         }
-        .workflow-item:hover { 
-            transform: translateY(-2px); 
+        .workflow-item.completed {
+            background: #e9ecef;
+            opacity: 0.75;
         }
         .workflow-item h4 { 
             color: #1a1a1a; 
@@ -425,6 +504,18 @@
         }
         .workflow-item .edit-icon:hover { 
             color: #1a1a1a; 
+        }
+        .workflow-item .delete-icon {
+            position: absolute;
+            top: 0.5rem;
+            right: 2rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .workflow-item .delete-icon:hover {
+            color: #FF5252;
         }
         .completed-tasks { 
             margin: 1rem; 
@@ -571,7 +662,6 @@
         .task-popup .actions .submit-btn:hover {
             background: #45a049;
         }
-        /* Confirmation Dialog Styles */
         .confirmation-dialog {
             position: fixed;
             top: 0;
@@ -714,10 +804,11 @@
             <div class="chat-header" id="chat-header"></div>
             <div class="messages" id="chat-messages"></div>
             <div class="chat-input">
-                <input type="text" id="chat-input" placeholder="Type a message...">
-                <input type="file" id="profile-pic-upload" accept="image/*">
-                <button onclick="uploadImage()"><i class="fas fa-camera"></i></button>
-                <button onclick="uploadFile()"><i class="fas fa-link"></i></button>
+                <div class="input-container">
+                    <textarea id="chat-input" placeholder="Type a message..." rows="1"></textarea>
+                    <label for="file-input" class="file-input-label"><i class="fas fa-paperclip"></i></label>
+                    <input type="file" id="file-input" class="file-input">
+                </div>
                 <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
@@ -774,6 +865,8 @@
         </div>
     </div>
 
+    <audio id="message-ding" src="../assets/ding.mp3"></audio>
+
     <script type="module">
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
@@ -801,7 +894,8 @@
         let userId = null;
         let selectedStudentId = null;
         let editingTaskId = null;
-        let studentData = null; // Cache for fetched student data
+        let studentData = null;
+        let currentUserProfile = null;
     
         // DOM Elements
         const elements = {
@@ -824,12 +918,14 @@
             confirmationDialog: document.getElementById('confirmation-dialog'),
             dialogTitle: document.getElementById('dialog-title'),
             dialogMessage: document.getElementById('dialog-message'),
-            confirmButton: document.getElementById('confirm-button')
+            confirmButton: document.getElementById('confirm-button'),
+            messageDing: document.getElementById('message-ding'),
+            fileInput: document.getElementById('file-input')
         };
     
-        // Fetch student data from local JSON file
+        // Fetch student and user data from local JSON file
         async function fetchStudentData() {
-            if (studentData) return studentData; // Return cached data if already fetched
+            if (studentData) return studentData;
     
             try {
                 const response = await fetch('manualstudentlist.json');
@@ -837,7 +933,6 @@
                     throw new Error(`Failed to fetch student data: ${response.statusText}`);
                 }
                 studentData = await response.json();
-                // Ensure each student has an id
                 studentData = studentData.map((student, index) => ({
                     ...student,
                     id: student.id || `student_${index}`
@@ -849,13 +944,34 @@
             }
         }
     
+        // Fetch current user's profile
+        async function fetchCurrentUserProfile() {
+            if (currentUserProfile) return currentUserProfile;
+    
+            try {
+                const students = await fetchStudentData();
+                const user = students.find(s => s.id === userId) || {};
+                currentUserProfile = {
+                    name: user.personal?.name || "Unnamed",
+                    profilePic: user.personal?.profilePic 
+                        ? user.personal.profilePic 
+                        : user.personal?.linkedin 
+                            ? `https://via.placeholder.com/40?text=${user.personal?.name?.[0] || 'U'}`
+                            : "../assets/avatar/1.png"
+                };
+                return currentUserProfile;
+            } catch (error) {
+                console.error('Error fetching current user profile:', error);
+                return { name: "Unnamed", profilePic: "../assets/avatar/1.png" };
+            }
+        }
+    
         // Confirmation dialog handler
         function confirmAction(action, title, message, actionParams = {}) {
             elements.dialogTitle.textContent = title;
             elements.dialogMessage.textContent = message;
             elements.confirmationDialog.classList.add('active');
     
-            // Set confirm button text and action
             elements.confirmButton.textContent = title.includes('Delete') ? 'Delete' : 'Confirm';
             elements.confirmButton.className = title.includes('Delete') ? 'delete' : 'confirm';
     
@@ -872,15 +988,16 @@
         // Initialize application
         async function init() {
             document.addEventListener('DOMContentLoaded', async () => {
-                // Fetch student data before setting up the app
                 await fetchStudentData();
                 setupEventListeners();
                 auth.onAuthStateChanged(user => {
                     if (user) {
                         userId = user.uid;
-                        loadConnections();
-                        loadPendingRequests();
-                        loadCompletedTasks();
+                        fetchCurrentUserProfile().then(() => {
+                            loadConnections();
+                            loadPendingRequests();
+                            loadCompletedTasks();
+                        });
                     } else {
                         console.error("User not authenticated");
                         window.location.href = "../index.html";
@@ -900,7 +1017,7 @@
             document.addEventListener('click', (e) => {
                 const target = e.target;
     
-                if (target.closest('.user-item')) {
+                if (target.closest('.user-item') && !target.closest('.pending-item')) {
                     const studentId = target.closest('.user-item').dataset.studentId;
                     selectStudent(studentId);
                 }
@@ -919,6 +1036,23 @@
                     const taskId = target.closest('.workflow-item').dataset.taskId;
                     openTaskPopup(taskId);
                 }
+    
+                if (target.matches('.delete-icon')) {
+                    const taskId = target.closest('.workflow-item').dataset.taskId;
+                    confirmAction('deleteTask', 'Delete Task', 'Are you sure you want to delete this task?', { taskId });
+                }
+    
+                if (target.matches('.menu-icon')) {
+                    const dropdown = target.closest('.menu').querySelector('.menu-dropdown');
+                    dropdown.classList.toggle('active');
+                }
+    
+                if (target.matches('.menu-dropdown button')) {
+                    const action = target.dataset.action;
+                    if (action === 'deleteConnection') {
+                        confirmAction('deleteConnection', 'Delete Connection', 'Are you sure you want to remove this connection?', { studentId: selectedStudentId });
+                    }
+                }
             });
     
             if (elements.workflowList) {
@@ -933,12 +1067,34 @@
     
             if (elements.chatInput) {
                 elements.chatInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
+                    if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
                         sendMessage();
                     }
                 });
+                // Auto-resize textarea
+                elements.chatInput.addEventListener('input', () => {
+                    elements.chatInput.style.height = 'auto';
+                    elements.chatInput.style.height = `${Math.min(elements.chatInput.scrollHeight, 100)}px`;
+                });
             }
+    
+            if (elements.fileInput) {
+                elements.fileInput.addEventListener('change', () => {
+                    if (elements.fileInput.files.length > 0) {
+                        console.log('File selected:', elements.fileInput.files[0].name);
+                        // Implement file upload logic here if needed
+                    }
+                });
+            }
+    
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.menu')) {
+                    document.querySelectorAll('.menu-dropdown.active').forEach(dropdown => {
+                        dropdown.classList.remove('active');
+                    });
+                }
+            });
         }
     
         // Load connections
@@ -952,28 +1108,29 @@
                     const connections = snapshot.val();
                     let hasConnections = false;
     
-                    // Ensure studentData is available
                     const students = await fetchStudentData();
     
+                    elements.connectionsList.innerHTML = '';
                     for (const studentId in connections) {
                         if (connections[studentId].status === "connected") {
                             hasConnections = true;
                             const student = students.find(s => s.id === studentId) || {};
                             const userName = student.personal?.name || "Unnamed";
-                            // Use profilePic from JSON if available, else fallback
                             const profilePic = student.personal?.profilePic 
                                 ? student.personal.profilePic 
                                 : student.personal?.linkedin 
-                                    ? `https://via.placeholder.com/40?text=${userName[0]}` 
+                                    ? `https://via.placeholder.com/40?text=${userName[0]}`
                                     : "../assets/avatar/1.png";
     
                             const chatId = [userId, studentId].sort().join("+");
                             const chatRef = ref(db, `chats/${chatId}/messages`);
                             let lastMessage = "No messages yet";
+                            let hasUnread = false;
                             const chatSnapshot = await get(chatRef);
                             if (chatSnapshot.exists()) {
                                 const messages = Object.values(chatSnapshot.val());
                                 lastMessage = messages[messages.length - 1].content || "No messages yet";
+                                hasUnread = messages.some(msg => msg.senderId !== userId && !msg.read);
                             }
     
                             const userItem = document.createElement('div');
@@ -985,6 +1142,7 @@
                                     <div class="name">${userName}</div>
                                     <div class="last-message">${lastMessage}</div>
                                 </div>
+                                ${hasUnread ? '<div class="unread-dot"></div>' : ''}
                             `;
                             elements.connectionsList.appendChild(userItem);
                         }
@@ -998,10 +1156,9 @@
                 }
             } catch (error) {
                 console.error("Error loading connections:", error);
+                elements.connectionsList.innerHTML = '<p>Error loading connections.</p>';
             }
         }
-        
-
     
         // Load pending requests
         async function loadPendingRequests() {
@@ -1014,19 +1171,18 @@
                     const connections = snapshot.val();
                     let hasPending = false;
     
-                    // Ensure studentData is available
                     const students = await fetchStudentData();
     
+                    elements.pendingRequestsList.innerHTML = '';
                     for (const professionalId in connections) {
                         if (connections[professionalId].status === "pending") {
                             hasPending = true;
                             const student = students.find(s => s.id === professionalId) || {};
                             const userName = student.personal?.name || "Unnamed";
-                            // Use profilePic from JSON if available, else fallback
                             const profilePic = student.personal?.profilePic 
                                 ? student.personal.profilePic 
                                 : student.personal?.linkedin 
-                                    ? `https://via.placeholder.com/40?text=${userName[0]}` 
+                                    ? `https://via.placeholder.com/40?text=${userName[0]}`
                                     : "../assets/avatar/1.png";
     
                             const pendingItem = document.createElement('div');
@@ -1038,7 +1194,6 @@
                                     <div class="name">${userName}</div>
                                 </div>
                                 <div class="actions">
-                                    <button class="accept-btn">Accept</button>
                                     <button class="delete-btn">Delete</button>
                                 </div>
                             `;
@@ -1092,6 +1247,39 @@
             }
         }
     
+        // Delete connection
+        async function deleteConnection({ studentId }) {
+            try {
+                const studentConnectionRef = ref(db, `users/${userId}/connections/${studentId}`);
+                const professionalConnectionRef = ref(db, `users/${studentId}/connections/${userId}`);
+    
+                await remove(studentConnectionRef);
+                await remove(professionalConnectionRef);
+    
+                loadConnections();
+                loadPendingRequests();
+                elements.chatArea.style.display = 'none';
+                elements.workflowArea.style.display = 'none';
+                selectedStudentId = null;
+            } catch (error) {
+                console.error("Error deleting connection:", error);
+                alert("Failed to delete connection.");
+            }
+        }
+    
+        // Delete task
+        async function deleteTask({ taskId }) {
+            try {
+                const taskRef = ref(db, `tasks/${taskId}`);
+                await remove(taskRef);
+                loadWorkflows();
+                loadCompletedTasks();
+            } catch (error) {
+                console.error("Error deleting task:", error);
+                alert("Failed to delete task.");
+            }
+        }
+    
         // Select student
         function selectStudent(studentId) {
             selectedStudentId = studentId;
@@ -1111,31 +1299,70 @@
             if (!elements.chatHeader) return;
     
             try {
-                // Ensure studentData is available
                 const students = await fetchStudentData();
                 const student = students.find(s => s.id === selectedStudentId) || {};
                 const userName = student.personal?.name || "Unnamed";
                 const userTitle = student.education?.branch || "";
-                // Use profilePic from JSON if available, else fallback
                 const profilePic = student.personal?.profilePic 
                     ? student.personal.profilePic 
                     : student.personal?.linkedin 
-                        ? `https://via.placeholder.com/40?text=${userName[0]}` 
+                        ? `https://via.placeholder.com/40?text=${userName[0]}`
                         : "../assets/avatar/1.png";
     
                 elements.chatHeader.innerHTML = `
-                    <img src="${profilePic}" alt="${userName}" class="profile-pic">
-                    <div class="name">${userName}</div>
-                    <div class="title">${userTitle}</div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img src="${profilePic}" alt="${userName}" class="profile-pic">
+                        <div>
+                            <div class="name">${userName}</div>
+                            <div class="title">${userTitle}</div>
+                        </div>
+                    </div>
+                    <div class="menu">
+                        <i class="fas fa-ellipsis-v menu-icon"></i>
+                        <div class="menu-dropdown">
+                            <button data-action="deleteConnection">Delete Connection</button>
+                        </div>
+                    </div>
                 `;
             } catch (error) {
                 console.error("Error loading chat header:", error);
-                elements.chatHeader.innerHTML = '<div class="name">Unnamed</div><div class="title"></div>';
+                elements.chatHeader.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img src="../assets/avatar/1.png" alt="Unnamed" class="profile-pic">
+                        <div>
+                            <div class="name">Unnamed</div>
+                            <div class="title"></div>
+                        </div>
+                    </div>
+                    <div class="menu">
+                        <i class="fas fa-ellipsis-v menu-icon"></i>
+                        <div class="menu-dropdown">
+                            <button data-action="deleteConnection">Delete Connection</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    
+        // Format message timestamp
+        function formatMessageDate(timestamp) {
+            const now = new Date();
+            const messageDate = new Date(timestamp);
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+            const messageDay = new Date(messageDate.getFullYear(), messageDate.getMonth(), messageDate.getDate());
+    
+            if (messageDay.getTime() === today.getTime()) {
+                return 'Today';
+            } else if (messageDay.getTime() === yesterday.getTime()) {
+                return 'Yesterday';
+            } else {
+                return messageDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             }
         }
     
         // Load chat messages
-        function loadChat() {
+        async function loadChat() {
             if (!elements.chatMessages) return;
     
             elements.chatMessages.innerHTML = '<div class="message">Loading messages...</div>';
@@ -1144,24 +1371,36 @@
                 const chatId = [userId, selectedStudentId].sort().join("+");
                 const chatRef = ref(db, `chats/${chatId}/messages`);
     
-                onValue(chatRef, (snapshot) => {
+                const currentUser = await fetchCurrentUserProfile();
+    
+                onValue(chatRef, async (snapshot) => {
                     elements.chatMessages.innerHTML = '';
                     if (snapshot.exists()) {
                         const messages = Object.entries(snapshot.val())
                             .map(([id, msg]) => ({ id, ...msg }))
                             .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
     
+                        const students = await fetchStudentData();
+                        const student = students.find(s => s.id === selectedStudentId) || {};
+    
                         messages.forEach(msg => {
                             const isSent = msg.senderId === userId;
-                            const senderName = msg.senderId === userId ? "You" : msg.senderName || "Unnamed";
+                            const senderName = isSent ? currentUser.name : (student.personal?.name || "Unnamed");
+                            const profilePic = isSent 
+                                ? currentUser.profilePic
+                                : student.personal?.profilePic 
+                                    ? student.personal.profilePic 
+                                    : student.personal?.linkedin 
+                                        ? `https://via.placeholder.com/40?text=${senderName[0]}`
+                                        : "../assets/avatar/1.png";
                             const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                            const date = new Date(msg.timestamp).toLocaleDateString();
+                            const date = formatMessageDate(msg.timestamp);
     
                             const messageDiv = document.createElement('div');
                             messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
                             messageDiv.innerHTML = `
                                 <div class="message-header">
-                                    <img src="../assets/avatar/1.png" alt="${senderName}" class="profile-pic">
+                                    <img src="${profilePic}" alt="${senderName}" class="profile-pic">
                                     <div class="name">${senderName}</div>
                                     <div class="time">${date} ${time}</div>
                                 </div>
@@ -1196,13 +1435,10 @@
             const messageRef = ref(db, `chats/${chatId}/messages`);
     
             try {
-                const userRef = ref(db, `users/${userId}`);
-                const userSnapshot = await get(userRef);
-                const senderName = userSnapshot.exists() && userSnapshot.val().name ? userSnapshot.val().name : "Unnamed";
-    
+                const currentUser = await fetchCurrentUserProfile();
                 const newMessage = {
                     senderId: userId,
-                    senderName,
+                    senderName: currentUser.name,
                     content,
                     timestamp: new Date().toISOString(),
                     read: false
@@ -1210,6 +1446,10 @@
     
                 await push(messageRef, newMessage);
                 elements.chatInput.value = '';
+                elements.chatInput.style.height = 'auto';
+                if (elements.messageDing) {
+                    elements.messageDing.play().catch(error => console.error("Error playing ding sound:", error));
+                }
             } catch (error) {
                 console.error("Error sending message:", error);
                 alert("Failed to send message.");
@@ -1310,7 +1550,6 @@
         function loadWorkflows() {
             if (!elements.workflowList) return;
     
-    
             if (selectedStudentId) {
                 const tasksRef = ref(db, `tasks`);
                 onValue(tasksRef, (snapshot) => {
@@ -1369,7 +1608,8 @@
                             if (task.professionalId === userId && task.studentId === selectedStudentId && task.status === 'completed') {
                                 hasCompletedTasks = true;
                                 const completedItem = document.createElement('div');
-                                completedItem.className = 'workflow-item';
+                                completedItem.className = 'workflow-item completed';
+                                completedItem.dataset.taskId = taskId;
                                 completedItem.innerHTML = `
                                     <span class="status-label completed">Completed</span>
                                     <h4>${task.title}</h4>
@@ -1378,7 +1618,7 @@
                                         <div class="deadline-slider" style="width: 100%; background: #4CAF50;"></div>
                                         <span class="days-left">Completed</span>
                                     </div>
-                                    <i class="fas fa-file-alt file-icon" title="${task.document || 'No file'}"></i>
+                                    <i class="fas fa-trash delete-icon"></i>
                                 `;
                                 elements.completedTasksList.appendChild(completedItem);
                             }
@@ -1456,6 +1696,8 @@
         window.updateStatus = updateStatus;
         window.acceptRequest = acceptRequest;
         window.deleteRequest = deleteRequest;
+        window.deleteConnection = deleteConnection;
+        window.deleteTask = deleteTask;
         window.confirmAction = confirmAction;
         window.closeConfirmation = closeConfirmation;
     
