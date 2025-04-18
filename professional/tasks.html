@@ -507,8 +507,8 @@
         }
         .workflow-item .delete-icon {
             position: absolute;
-            top: 0.5rem;
-            right: 2rem;
+            bottom: 1rem;
+            right: 1rem;
             font-size: 0.9rem;
             color: #6c757d;
             cursor: pointer;
@@ -1150,6 +1150,7 @@
     
                     if (!hasConnections) {
                         elements.connectionsList.innerHTML = '<p>No connected students found.</p>';
+
                     }
                 } else {
                     elements.connectionsList.innerHTML = '<p>No connected students found.</p>';
@@ -1201,9 +1202,11 @@
                         }
                     }
     
-                    if (!hasPending) {
-                        elements.pendingRequestsList.innerHTML = '<p>No pending requests.</p>';
-                    }
+                   if (!hasPending) {
+                            document.querySelector('.pending-requests').style.display = 'none';
+                        } else {
+                            document.querySelector('.pending-requests').style.display = 'block';
+                        }
                 } else {
                     elements.pendingRequestsList.innerHTML = '<p>No pending requests.</p>';
                 }
@@ -1615,8 +1618,7 @@
                                     <h4>${task.title}</h4>
                                     <p>${task.description}</p>
                                     <div class="deadline-container">
-                                        <div class="deadline-slider" style="width: 100%; background: #4CAF50;"></div>
-                                        <span class="days-left">Completed</span>
+                                        
                                     </div>
                                     <i class="fas fa-trash delete-icon"></i>
                                 `;
