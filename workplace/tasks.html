@@ -55,40 +55,7 @@
         </div>
     </div>
 
-    <div class="task-popup" id="task-popup">
-        <div class="header">
-            <h3 id="popup-title">Edit Task</h3>
-            <button onclick="closeTaskPopup()"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="form-group">
-            <label for="task-title">Task Name</label>
-            <input type="text" id="task-title" placeholder="Enter task name">
-        </div>
-        <div class="form-group">
-            <label for="task-description">Description</label>
-            <textarea id="task-description" placeholder="Enter description" rows="4"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="task-deadline">Deadline</label>
-            <input type="date" id="task-deadline">
-        </div>
-        <div class="form-group">
-            <label for="task-file">Attach Files</label>
-            <input type="file" id="task-file" multiple>
-            <div class="upload-progress" id="task-upload-progress">
-                <div class="upload-progress-bar" id="task-upload-progress-bar"></div>
-            </div>
-            <div id="task-file-list" class="file-list"></div>
-        </div>
-        <div class="form-group">
-            <label for="task-payment" style="display: none;">Cash Payment (USD)</label>
-            <input type="number" id="task-payment" placeholder="Enter amount" min="0">
-        </div>
-        <div class="actions">
-            <button class="cancel-btn" onclick="closeTaskPopup()">Cancel</button>
-            <button class="submit-btn" onclick="confirmAction('submitTask', 'Update Task', 'Are you sure you want to update this task?')">Update Task</button>
-        </div>
-    </div>
+   
 
     <div class="confirmation-dialog" id="confirmation-dialog">
         <div class="dialog-box">
@@ -906,7 +873,7 @@
                                     `).join('');
                                 }
                                 workflowItem.innerHTML = `
-                                    <i class="fas fa-edit edit-icon"></i>
+                                    
                                     <h4>${task.title}</h4>
                                     <p>${task.description}</p>
                                     <div class="deadline-container">
