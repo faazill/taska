@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taska Elite - Professional Tasks</title>
+    <title>Taska Elite - Student Tasks</title>
     <link rel="stylesheet" href="css/tasks.css">
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-   
 </head>
 <body>
     <nav class="navbar">
-        <div class="logo">Taska Elite </div>
+        <div class="logo">Taska Elite - Student</div>
         <ul class="nav-menu">
             <li><a href="tasks.html" class="active">Tasks</a></li>
             <li><a href="profile.html">Account</a></li>
@@ -24,7 +23,7 @@
 
     <div class="dashboard-content">
         <div class="sidebar-left">
-            <h3>Connections</h3>
+            <h3>Connected Professionals</h3>
             <div id="connections-list"></div>
             <div class="pending-requests">
                 <h3>Pending Requests</h3>
@@ -36,6 +35,9 @@
             <div class="messages" id="chat-messages"></div>
             <div class="chat-input">
                 <div class="input-container">
+                    <div class="upload-progress" id="upload-progress">
+                        <div class="upload-progress-bar" id="upload-progress-bar"></div>
+                    </div>
                     <textarea id="chat-input" placeholder="Type a message..." rows="1"></textarea>
                     <label for="file-input" class="file-input-label"><i class="fas fa-paperclip"></i></label>
                     <input type="file" id="file-input" class="file-input">
@@ -55,7 +57,7 @@
 
     <div class="task-popup" id="task-popup">
         <div class="header">
-            <h3 id="popup-title">Add New Task</h3>
+            <h3 id="popup-title">Edit Task</h3>
             <button onclick="closeTaskPopup()"><i class="fas fa-times"></i></button>
         </div>
         <div class="form-group">
@@ -73,14 +75,18 @@
         <div class="form-group">
             <label for="task-file">Attach Files</label>
             <input type="file" id="task-file" multiple>
+            <div class="upload-progress" id="task-upload-progress">
+                <div class="upload-progress-bar" id="task-upload-progress-bar"></div>
+            </div>
+            <div id="task-file-list" class="file-list"></div>
         </div>
         <div class="form-group">
-            <label for="task-payment" style="display: non;">Cash Payment (Coins)</label>
+            <label for="task-payment" style="display: none;">Cash Payment (USD)</label>
             <input type="number" id="task-payment" placeholder="Enter amount" min="0">
         </div>
         <div class="actions">
             <button class="cancel-btn" onclick="closeTaskPopup()">Cancel</button>
-            <button class="submit-btn" onclick="confirmAction('submitTask', 'Add Task', 'Are you sure you want to add this task?')">Add Task</button>
+            <button class="submit-btn" onclick="confirmAction('submitTask', 'Update Task', 'Are you sure you want to update this task?')">Update Task</button>
         </div>
     </div>
 
@@ -95,36 +101,37 @@
         </div>
     </div>
 
+    <audio id="message-ding" src="../assets/ding.mp3"></audio>
+
     <script type="module">
-        // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getDatabase, ref, get, push, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
         import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-    
-        // Firebase configuration
+        import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
             authDomain: "taska-45011.firebaseapp.com",
             databaseURL: "https://taska-45011-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "taska-45011",
-            storageBucket: "taska-45011.appspot.com",
+            storageBucket: "gs://taska-45011.firebasestorage.app",
             messagingSenderId: "205487498813",
             appId: "1:205487498813:web:0de2c9eab567482781ec54",
             measurementId: "G-G0G1F6GQ9B"
         };
-    
-        // Initialize Firebase
+
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const auth = getAuth(app);
-    
-        // Global variables
+        const storage = getStorage(app);
+
         let userId = null;
-        let selectedStudentId = null;
+        let selectedProfessionalId = null;
         let editingTaskId = null;
-        let studentData = null; // Cache for fetched student data
-    
-        // DOM Elements
+        let professionalData = null;
+        let currentUserProfile = null;
+        let uploadedTaskFiles = [];
+
         const elements = {
             connectionsList: document.getElementById('connections-list'),
             pendingRequestsList: document.getElementById('pending-requests-list'),
@@ -146,63 +153,89 @@
             dialogTitle: document.getElementById('dialog-title'),
             dialogMessage: document.getElementById('dialog-message'),
             confirmButton: document.getElementById('confirm-button'),
-            fileInput: document.getElementById('file-input')
+            messageDing: document.getElementById('message-ding'),
+            fileInput: document.getElementById('file-input'),
+            taskFileList: document.getElementById('task-file-list'),
+            uploadProgress: document.getElementById('upload-progress'),
+            uploadProgressBar: document.getElementById('upload-progress-bar'),
+            taskUploadProgress: document.getElementById('task-upload-progress'),
+            taskUploadProgressBar: document.getElementById('task-upload-progress-bar')
         };
-    
-        // Fetch student data from local JSON file
-        async function fetchStudentData() {
-            if (studentData) return studentData; // Return cached data if already fetched
-    
+
+        async function fetchProfessionalData() {
+            if (professionalData) return professionalData;
             try {
                 const response = await fetch('../professional/manualstudentlist.json');
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch student data: ${response.statusText}`);
-                }
-                studentData = await response.json();
-                // Ensure each student has an id
-                studentData = studentData.map((student, index) => ({
-                    ...student,
-                    id: student.id || `student_${index}`
+                if (!response.ok) throw new Error(`Failed to fetch professional data: ${response.statusText}`);
+                professionalData = await response.json();
+                professionalData = professionalData.map((professional, index) => ({
+                    ...professional,
+                    id: professional.id || `professional_${index}`
                 }));
-                return studentData;
+                return professionalData;
             } catch (error) {
-                console.error('Error fetching student data:', error);
+                console.error('Error fetching professional data:', error);
                 return [];
             }
         }
-    
-        // Confirmation dialog handler
+
+        async function fetchCurrentUserProfile() {
+            if (currentUserProfile) return currentUserProfile;
+            try {
+                const professionals = await fetchProfessionalData();
+                const user = professionals.find(s => s.id === userId) || {};
+                currentUserProfile = {
+                    name: user.personal?.name || "Unnamed",
+                    profilePic: user.personal?.profilePic 
+                        ? user.personal.profilePic 
+                        : user.personal?.linkedin 
+                            ? `https://via.placeholder.com/40?text=${user.personal?.name?.[0] || 'U'}`
+                            : "../assets/avatar/1.png"
+                };
+                return currentUserProfile;
+            } catch (error) {
+                console.error('Error fetching current user profile:', error);
+                return { name: "Unnamed", profilePic: "../assets/avatar/1.png" };
+            }
+        }
+
         function confirmAction(action, title, message, actionParams = {}) {
             elements.dialogTitle.textContent = title;
             elements.dialogMessage.textContent = message;
             elements.confirmationDialog.classList.add('active');
-    
-            // Set confirm button text and action
             elements.confirmButton.textContent = title.includes('Delete') ? 'Delete' : 'Confirm';
             elements.confirmButton.className = title.includes('Delete') ? 'delete' : 'confirm';
-    
             elements.confirmButton.onclick = () => {
                 window[action](actionParams);
                 closeConfirmation();
             };
         }
-    
+
         function closeConfirmation() {
             elements.confirmationDialog.classList.remove('active');
         }
-    
-        // Initialize application
+
+        function getFileIconClass(type) {
+            if (type.includes('pdf')) return 'fas fa-file-pdf';
+            if (type.includes('image')) return 'fas fa-file-image';
+            if (type.includes('video')) return 'fas fa-file-video';
+            if (type.includes('excel') || type.includes('spreadsheet')) return 'fas fa-file-excel';
+            if (type.includes('word') || type.includes('doc')) return 'fas fa-file-word';
+            return 'fas fa-file';
+        }
+
         async function init() {
             document.addEventListener('DOMContentLoaded', async () => {
-                // Fetch student data before setting up the app
-                await fetchStudentData();
+                await fetchProfessionalData();
                 setupEventListeners();
                 auth.onAuthStateChanged(user => {
                     if (user) {
                         userId = user.uid;
-                        loadConnections();
-                        loadPendingRequests();
-                        loadCompletedTasks();
+                        fetchCurrentUserProfile().then(() => {
+                            loadConnections();
+                            loadPendingRequests();
+                            loadCompletedTasks();
+                        });
                     } else {
                         console.error("User not authenticated");
                         window.location.href = "../index.html";
@@ -210,44 +243,48 @@
                 });
             });
         }
-    
-        // Setup event listeners
+
         function setupEventListeners() {
             const hamburger = document.querySelector('.navbar .hamburger');
             const navMenu = document.querySelector('.navbar .nav-menu');
             if (hamburger && navMenu) {
                 hamburger.addEventListener('click', () => navMenu.classList.toggle('active'));
             }
-    
+
             document.addEventListener('click', (e) => {
                 const target = e.target;
-    
                 if (target.closest('.user-item') && !target.closest('.pending-item')) {
-                    const studentId = target.closest('.user-item').dataset.studentId;
-                    selectStudent(studentId);
+                    const professionalId = target.closest('.user-item').dataset.professionalId;
+                    selectProfessional(professionalId);
                 }
-    
                 if (target.matches('.accept-btn')) {
                     const professionalId = target.closest('.pending-item').dataset.professionalId;
                     confirmAction('acceptRequest', 'Accept Request', 'Are you sure you want to accept this connection request?', { professionalId });
                 }
-    
                 if (target.matches('.delete-btn')) {
                     const professionalId = target.closest('.pending-item').dataset.professionalId;
                     confirmAction('deleteRequest', 'Delete Request', 'Are you sure you want to delete this connection request?', { professionalId });
                 }
-    
                 if (target.matches('.edit-icon')) {
                     const taskId = target.closest('.workflow-item').dataset.taskId;
                     openTaskPopup(taskId);
                 }
-    
                 if (target.matches('.delete-icon')) {
                     const taskId = target.closest('.workflow-item').dataset.taskId;
                     confirmAction('deleteTask', 'Delete Task', 'Are you sure you want to delete this task?', { taskId });
                 }
+                if (target.matches('.menu-icon')) {
+                    const dropdown = target.closest('.menu').querySelector('.menu-dropdown');
+                    dropdown.classList.toggle('active');
+                }
+                if (target.matches('.menu-dropdown button')) {
+                    const action = target.dataset.action;
+                    if (action === 'deleteConnection') {
+                        confirmAction('deleteConnection', 'Delete Connection', 'Are you sure you want to remove this connection?', { professionalId: selectedProfessionalId });
+                    }
+                }
             });
-    
+
             if (elements.workflowList) {
                 elements.workflowList.addEventListener('change', (e) => {
                     if (e.target.matches('.status-select')) {
@@ -257,7 +294,7 @@
                     }
                 });
             }
-    
+
             if (elements.chatInput) {
                 elements.chatInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
@@ -265,108 +302,174 @@
                         sendMessage();
                     }
                 });
-                // Auto-resize textarea
                 elements.chatInput.addEventListener('input', () => {
                     elements.chatInput.style.height = 'auto';
                     elements.chatInput.style.height = `${Math.min(elements.chatInput.scrollHeight, 100)}px`;
                 });
             }
-    
+
             if (elements.fileInput) {
-                elements.fileInput.addEventListener('change', () => {
+                elements.fileInput.addEventListener('change', async () => {
                     if (elements.fileInput.files.length > 0) {
-                        console.log('File selected:', elements.fileInput.files[0].name);
+                        await sendFileMessage(elements.fileInput.files[0]);
+                        elements.fileInput.value = '';
                     }
                 });
             }
+
+            if (elements.taskFile) {
+                elements.taskFile.addEventListener('change', async () => {
+                    uploadedTaskFiles = [];
+                    elements.taskFileList.innerHTML = '';
+                    const files = Array.from(elements.taskFile.files);
+                    for (const file of files) {
+                        await uploadTaskFile(file);
+                    }
+                });
+            }
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.menu')) {
+                    document.querySelectorAll('.menu-dropdown.active').forEach(dropdown => {
+                        dropdown.classList.remove('active');
+                    });
+                }
+            });
         }
-    
-        // Load connections
+
+        async function uploadTaskFile(file) {
+            try {
+                const storagePath = `tasks/temp/${Date.now()}_${file.name}`;
+                const fileRef = storageRef(storage, storagePath);
+                const uploadTask = uploadBytesResumable(fileRef, file);
+
+                elements.taskUploadProgress.classList.add('active');
+                elements.taskUploadProgressBar.style.width = '0%';
+
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        elements.taskUploadProgressBar.style.width = `${progress}%`;
+                    },
+                    (error) => {
+                        console.error('Error uploading task file:', error);
+                        elements.taskUploadProgress.classList.remove('active');
+                        alert('Failed to upload file.');
+                    },
+                    async () => {
+                        const fileUrl = await getDownloadURL(fileRef);
+                        uploadedTaskFiles.push({
+                            name: file.name,
+                            url: fileUrl,
+                            type: file.type
+                        });
+
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'task-file-item';
+                        fileItem.innerHTML = `
+                            <i class="${getFileIconClass(file.type)}"></i>
+                            <span>${file.name}</span>
+                            <i class="fas fa-times remove-file" onclick="removeTaskFile('${file.name}')"></i>
+                        `;
+                        elements.taskFileList.appendChild(fileItem);
+
+                        elements.taskUploadProgress.classList.remove('active');
+                    }
+                );
+            } catch (error) {
+                console.error('Error initiating task file upload:', error);
+                elements.taskUploadProgress.classList.remove('active');
+                alert('Failed to upload file.');
+            }
+        }
+
+        window.removeTaskFile = function(fileName) {
+            uploadedTaskFiles = uploadedTaskFiles.filter(file => file.name !== fileName);
+            const fileItems = elements.taskFileList.querySelectorAll('.task-file-item');
+            fileItems.forEach(item => {
+                if (item.querySelector('span').textContent === fileName) {
+                    item.remove();
+                }
+            });
+        };
+
         async function loadConnections() {
             if (!elements.connectionsList) return;
-    
             try {
                 const connectionsRef = ref(db, `users/${userId}/connections`);
                 const snapshot = await get(connectionsRef);
                 if (snapshot.exists()) {
                     const connections = snapshot.val();
                     let hasConnections = false;
-    
-                    // Ensure studentData is available
-                    const students = await fetchStudentData();
-    
-                    for (const studentId in connections) {
-                        if (connections[studentId].status === "connected") {
+                    const professionals = await fetchProfessionalData();
+                    elements.connectionsList.innerHTML = '';
+                    for (const professionalId in connections) {
+                        if (connections[professionalId].status === "connected") {
                             hasConnections = true;
-                            const student = students.find(s => s.id === studentId) || {};
-                            const userName = student.personal?.name || "Unnamed";
-                            // Use profilePic from JSON if available, else fallback
-                            const profilePic = student.personal?.profilePic 
-                                ? student.personal.profilePic 
-                                : student.personal?.linkedin 
-                                    ? `https://via.placeholder.com/40?text=${userName[0]}` 
+                            const professional = professionals.find(p => p.id === professionalId) || {};
+                            const userName = professional.personal?.name || "Unnamed";
+                            const profilePic = professional.personal?.profilePic 
+                                ? professional.personal.profilePic 
+                                : professional.personal?.linkedin 
+                                    ? `https://via.placeholder.com/40?text=${userName[0]}`
                                     : "../assets/avatar/1.png";
-    
-                            const chatId = [userId, studentId].sort().join("+");
+                            const chatId = [userId, professionalId].sort().join("+");
                             const chatRef = ref(db, `chats/${chatId}/messages`);
                             let lastMessage = "No messages yet";
+                            let hasUnread = false;
                             const chatSnapshot = await get(chatRef);
                             if (chatSnapshot.exists()) {
                                 const messages = Object.values(chatSnapshot.val());
-                                lastMessage = messages[messages.length - 1].content || "No messages yet";
+                                const lastMsg = messages[messages.length - 1];
+                                lastMessage = lastMsg.file ? `[File] ${lastMsg.file.name}` : lastMsg.content || "No messages yet";
+                                hasUnread = messages.some(msg => msg.senderId !== userId && !msg.read);
                             }
-    
                             const userItem = document.createElement('div');
                             userItem.className = 'user-item';
-                            userItem.dataset.studentId = studentId;
+                            userItem.dataset.professionalId = professionalId;
                             userItem.innerHTML = `
                                 <img src="${profilePic}" alt="${userName}" class="profile-pic">
                                 <div class="user-info">
                                     <div class="name">${userName}</div>
                                     <div class="last-message">${lastMessage}</div>
                                 </div>
+                                ${hasUnread ? '<div class="unread-dot"></div>' : ''}
                             `;
                             elements.connectionsList.appendChild(userItem);
                         }
                     }
-    
                     if (!hasConnections) {
-                        elements.connectionsList.innerHTML = '<p>No connected students found.</p>';
+                        elements.connectionsList.innerHTML = '<p>No connected professionals found.</p>';
                     }
                 } else {
-                    elements.connectionsList.innerHTML = '<p>No connected students found.</p>';
+                    elements.connectionsList.innerHTML = '<p>No connected professionals found.</p>';
                 }
             } catch (error) {
                 console.error("Error loading connections:", error);
+                elements.connectionsList.innerHTML = '<p>Error loading connections.</p>';
             }
         }
-    
-        // Load pending requests
+
         async function loadPendingRequests() {
             if (!elements.pendingRequestsList) return;
-    
             try {
                 const connectionsRef = ref(db, `users/${userId}/connections`);
                 const snapshot = await get(connectionsRef);
                 if (snapshot.exists()) {
                     const connections = snapshot.val();
                     let hasPending = false;
-    
-                    // Ensure studentData is available
-                    const students = await fetchStudentData();
-    
+                    const professionals = await fetchProfessionalData();
+                    elements.pendingRequestsList.innerHTML = '';
                     for (const professionalId in connections) {
                         if (connections[professionalId].status === "pending") {
                             hasPending = true;
-                            const student = students.find(s => s.id === professionalId) || {};
-                            const userName = student.personal?.name || "Unnamed";
-                            // Use profilePic from JSON if available, else fallback
-                            const profilePic = student.personal?.profilePic 
-                                ? student.personal.profilePic 
-                                : student.personal?.linkedin 
-                                    ? `https://via.placeholder.com/40?text=${userName[0]}` 
+                            const professional = professionals.find(p => p.id === professionalId) || {};
+                            const userName = professional.personal?.name || "Unnamed";
+                            const profilePic = professional.personal?.profilePic 
+                                ? professional.personal.profilePic 
+                                : professional.personal?.linkedin 
+                                    ? `https://via.placeholder.com/40?text=${userName[0]}`
                                     : "../assets/avatar/1.png";
-    
                             const pendingItem = document.createElement('div');
                             pendingItem.className = 'pending-item user-item';
                             pendingItem.dataset.professionalId = professionalId;
@@ -383,12 +486,11 @@
                             elements.pendingRequestsList.appendChild(pendingItem);
                         }
                     }
-    
                     if (!hasPending) {
-                            document.querySelector('.pending-requests').style.display = 'none';
-                        } else {
-                            document.querySelector('.pending-requests').style.display = 'block';
-                        }
+                        document.querySelector('.pending-requests').style.display = 'none';
+                    } else {
+                        document.querySelector('.pending-requests').style.display = 'block';
+                    }
                 } else {
                     elements.pendingRequestsList.innerHTML = '<p>No pending requests.</p>';
                 }
@@ -397,16 +499,13 @@
                 elements.pendingRequestsList.innerHTML = '<p>Error loading pending requests.</p>';
             }
         }
-    
-        // Accept connection request
+
         async function acceptRequest({ professionalId }) {
             try {
                 const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
                 const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
-    
                 await update(studentConnectionRef, { status: "connected" });
                 await update(professionalConnectionRef, { status: "connected" });
-                window.location.reload()
                 loadConnections();
                 loadPendingRequests();
             } catch (error) {
@@ -414,16 +513,13 @@
                 alert("Failed to accept request.");
             }
         }
-    
-        // Delete connection request
+
         async function deleteRequest({ professionalId }) {
             try {
                 const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
                 const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
-    
                 await remove(studentConnectionRef);
                 await remove(professionalConnectionRef);
-                window.location.reload()
                 loadConnections();
                 loadPendingRequests();
             } catch (error) {
@@ -431,8 +527,24 @@
                 alert("Failed to delete request.");
             }
         }
-    
-        // Delete task
+
+        async function deleteConnection({ professionalId }) {
+            try {
+                const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
+                const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
+                await remove(studentConnectionRef);
+                await remove(professionalConnectionRef);
+                loadConnections();
+                loadPendingRequests();
+                elements.chatArea.style.display = 'none';
+                elements.workflowArea.style.display = 'none';
+                selectedProfessionalId = null;
+            } catch (error) {
+                console.error("Error deleting connection:", error);
+                alert("Failed to delete connection.");
+            }
+        }
+
         async function deleteTask({ taskId }) {
             try {
                 const taskRef = ref(db, `tasks/${taskId}`);
@@ -444,12 +556,11 @@
                 alert("Failed to delete task.");
             }
         }
-    
-        // Select student
-        function selectStudent(studentId) {
-            selectedStudentId = studentId;
+
+        function selectProfessional(professionalId) {
+            selectedProfessionalId = professionalId;
             document.querySelectorAll('.user-item').forEach(item => {
-                item.classList.toggle('active', item.dataset.studentId === studentId);
+                item.classList.toggle('active', item.dataset.professionalId === professionalId);
             });
             if (elements.chatArea) elements.chatArea.style.display = 'block';
             if (elements.workflowArea) elements.workflowArea.style.display = 'block';
@@ -458,74 +569,129 @@
             loadWorkflows();
             loadCompletedTasks();
         }
-    
-        // Load chat header
+
         async function loadChatHeader() {
             if (!elements.chatHeader) return;
-    
             try {
-                // Ensure studentData is available
-                const students = await fetchStudentData();
-                const student = students.find(s => s.id === selectedStudentId) || {};
-                const userName = student.personal?.name || "Unnamed";
-                const userTitle = student.education?.branch || "";
-                // Use profilePic from JSON if available, else fallback
-                const profilePic = student.personal?.profilePic 
-                    ? student.personal.profilePic 
-                    : student.personal?.linkedin 
-                        ? `https://via.placeholder.com/40?text=${userName[0]}` 
+                const professionals = await fetchProfessionalData();
+                const professional = professionals.find(p => p.id === selectedProfessionalId) || {};
+                const userName = professional.personal?.name || "Unnamed";
+                const userTitle = professional.education?.branch || "";
+                const profilePic = professional.personal?.profilePic 
+                    ? professional.personal.profilePic 
+                    : professional.personal?.linkedin 
+                        ? `https://via.placeholder.com/40?text=${userName[0]}`
                         : "../assets/avatar/1.png";
-    
                 elements.chatHeader.innerHTML = `
-                    <img src="${profilePic}" alt="${userName}" class="profile-pic">
-                    <div class="name">${userName}</div>
-                    <div class="title">${userTitle}</div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img src="${profilePic}" alt="${userName}" class="profile-pic">
+                        <div>
+                            <div class="name">${userName}</div>
+                            <div class="title">${userTitle}</div>
+                        </div>
+                    </div>
+                    <div class="menu">
+                        <i class="fas fa-ellipsis-v menu-icon"></i>
+                        <div class="menu-dropdown">
+                            <button data-action="deleteConnection">Delete Connection</button>
+                        </div>
+                    </div>
                 `;
             } catch (error) {
                 console.error("Error loading chat header:", error);
-                elements.chatHeader.innerHTML = '<div class="name">Unnamed</div><div class="title"></div>';
+                elements.chatHeader.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img src="../assets/avatar/1.png" alt="Unnamed" class="profile-pic">
+                        <div>
+                            <div class="name">Unnamed</div>
+                            <div class="title"></div>
+                        </div>
+                    </div>
+                    <div class="menu">
+                        <i class="fas fa-ellipsis-v menu-icon"></i>
+                        <div class="menu-dropdown">
+                            <button data-action="deleteConnection">Delete Connection</button>
+                        </div>
+                    </div>
+                `;
             }
         }
-    
-        // Load chat messages
-        function loadChat() {
+
+        function formatMessageDate(timestamp) {
+            const now = new Date();
+            const messageDate = new Date(timestamp);
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+            const messageDay = new Date(messageDate.getFullYear(), messageDate.getMonth(), messageDate.getDate());
+            if (messageDay.getTime() === today.getTime()) {
+                return 'Today';
+            } else if (messageDay.getTime() === yesterday.getTime()) {
+                return 'Yesterday';
+            } else {
+                return messageDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            }
+        }
+
+        async function loadChat() {
             if (!elements.chatMessages) return;
-    
             elements.chatMessages.innerHTML = '<div class="message">Loading messages...</div>';
-    
-            if (selectedStudentId) {
-                const chatId = [userId, selectedStudentId].sort().join("+");
+            if (selectedProfessionalId) {
+                const chatId = [userId, selectedProfessionalId].sort().join("+");
                 const chatRef = ref(db, `chats/${chatId}/messages`);
-    
-                onValue(chatRef, (snapshot) => {
+                const currentUser = await fetchCurrentUserProfile();
+                onValue(chatRef, async (snapshot) => {
                     elements.chatMessages.innerHTML = '';
                     if (snapshot.exists()) {
                         const messages = Object.entries(snapshot.val())
                             .map(([id, msg]) => ({ id, ...msg }))
                             .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-    
+                        const professionals = await fetchProfessionalData();
+                        const professional = professionals.find(p => p.id === selectedProfessionalId) || {};
                         messages.forEach(msg => {
                             const isSent = msg.senderId === userId;
-                            const senderName = msg.senderId === userId ? "You" : msg.senderName || "Unnamed";
+                            const senderName = isSent ? currentUser.name : (professional.personal?.name || "Unnamed");
+                            const profilePic = isSent 
+                                ? currentUser.profilePic
+                                : professional.personal?.profilePic 
+                                    ? professional.personal.profilePic 
+                                    : professional.personal?.linkedin 
+                                        ? `https://via.placeholder.com/40?text=${senderName[0]}`
+                                        : "../assets/avatar/1.png";
                             const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                            const date = new Date(msg.timestamp).toLocaleDateString();
-    
+                            const date = formatMessageDate(msg.timestamp);
                             const messageDiv = document.createElement('div');
-                            messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
-                            messageDiv.innerHTML = `
-                                <div class="message-header">
-                                    <img src="../assets/avatar/1.png" alt="${senderName}" class="profile-pic">
-                                    <div class="name">${senderName}</div>
-                                    <div class="time">${date} ${time}</div>
-                                </div>
-                                <div class="content">${msg.content}</div>
-                                <div class="read-status">${msg.read ? 'Seen' : 'Sent'}</div>
-                            `;
+                            messageDiv.className = `message ${isSent ? 'sent' : 'received'} ${msg.file ? 'file-message' : ''}`;
+                            if (msg.file) {
+                                const fileSize = msg.file.size ? (msg.file.size / 1024).toFixed(2) + ' KB' : 'Unknown size';
+                                messageDiv.innerHTML = `
+                                    <div class="message-header">
+                                        <img src="${profilePic}" alt="${senderName}" class="profile-pic">
+                                        <div class="name">${senderName}</div>
+                                        <div class="time">${date} ${time}</div>
+                                    </div>
+                                    <a href="${msg.file.url}" download="${msg.file.name}" target="_blank">
+                                        <div class="file-info">
+                                            <i class="${getFileIconClass(msg.file.type)} file-icon"></i>
+                                            <div class="file-name">${msg.file.name}</div>
+                                            <div class="file-size">${fileSize}</div>
+                                        </div>
+                                    </a>
+                                    <div class="read-status">${msg.read ? 'Seen' : 'Sent'}</div>
+                                `;
+                            } else {
+                                messageDiv.innerHTML = `
+                                    <div class="message-header">
+                                        <img src="${profilePic}" alt="${senderName}" class="profile-pic">
+                                        <div class="name">${senderName}</div>
+                                        <div class="time">${date} ${time}</div>
+                                    </div>
+                                    <div class="content">${msg.content}</div>
+                                    <div class="read-status">${msg.read ? 'Seen' : 'Sent'}</div>
+                                `;
+                            }
                             elements.chatMessages.appendChild(messageDiv);
                         });
-    
                         elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
-    
                         messages.forEach(msg => {
                             if (msg.senderId !== userId && !msg.read) {
                                 update(ref(db, `chats/${chatId}/messages/${msg.id}`), { read: true });
@@ -537,45 +703,93 @@
                 });
             }
         }
-    
-        // Send message
+
         async function sendMessage() {
             if (!elements.chatInput) return;
-    
             const content = elements.chatInput.value.trim();
-            if (!content || !selectedStudentId) return;
-    
-            const chatId = [userId, selectedStudentId].sort().join("+");
+            if (!content || !selectedProfessionalId) return;
+            const chatId = [userId, selectedProfessionalId].sort().join("+");
             const messageRef = ref(db, `chats/${chatId}/messages`);
-    
             try {
-                const userRef = ref(db, `users/${userId}`);
-                const userSnapshot = await get(userRef);
-                const senderName = userSnapshot.exists() && userSnapshot.val().name ? userSnapshot.val().name : "Unnamed";
-    
+                const currentUser = await fetchCurrentUserProfile();
                 const newMessage = {
                     senderId: userId,
-                    senderName,
+                    senderName: currentUser.name,
                     content,
                     timestamp: new Date().toISOString(),
                     read: false
                 };
-    
                 await push(messageRef, newMessage);
                 elements.chatInput.value = '';
                 elements.chatInput.style.height = 'auto';
+                if (elements.messageDing) {
+                    elements.messageDing.play().catch(error => console.error("Error playing ding sound:", error));
+                }
             } catch (error) {
                 console.error("Error sending message:", error);
                 alert("Failed to send message.");
             }
         }
-    
-        // Open task popup
+
+        async function sendFileMessage(file) {
+            if (!selectedProfessionalId) return;
+            const chatId = [userId, selectedProfessionalId].sort().join("+");
+            const messageRef = ref(db, `chats/${chatId}/messages`);
+            try {
+                const storagePath = `chats/${chatId}/${Date.now()}_${file.name}`;
+                const fileRef = storageRef(storage, storagePath);
+                const uploadTask = uploadBytesResumable(fileRef, file);
+
+                elements.uploadProgress.classList.add('active');
+                elements.uploadProgressBar.style.width = '0%';
+
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        elements.uploadProgressBar.style.width = `${progress}%`;
+                    },
+                    (error) => {
+                        console.error('Error uploading file:', error);
+                        elements.uploadProgress.classList.remove('active');
+                        alert('Failed to upload file.');
+                    },
+                    async () => {
+                        const fileUrl = await getDownloadURL(fileRef);
+                        const currentUser = await fetchCurrentUserProfile();
+                        const newMessage = {
+                            senderId: userId,
+                            senderName: currentUser.name,
+                            file: {
+                                name: file.name,
+                                url: fileUrl,
+                                type: file.type,
+                                size: file.size
+                            },
+                            timestamp: new Date().toISOString(),
+                            read: false
+                        };
+                        await push(messageRef, newMessage);
+                        elements.uploadProgress.classList.remove('active');
+                        if (elements.messageDing) {
+                            elements.messageDing.play().catch(error => console.error("Error playing ding sound:", error));
+                        }
+                    }
+                );
+            } catch (error) {
+                console.error("Error initiating file upload:", error);
+                elements.uploadProgress.classList.remove('active');
+                alert("Failed to upload file.");
+            }
+        }
+
         async function openTaskPopup(taskId = null) {
             if (!elements.taskPopup || !elements.popupTitle || !elements.taskTitle ||
                 !elements.taskDescription || !elements.taskDeadline || !elements.taskFile ||
                 !elements.taskPayment) return;
-    
+
+            uploadedTaskFiles = [];
+            elements.taskFileList.innerHTML = '';
+
             if (taskId) {
                 editingTaskId = taskId;
                 elements.popupTitle.textContent = 'Edit Task';
@@ -589,66 +803,73 @@
                         elements.taskDeadline.value = task.deadline || '';
                         elements.taskPayment.value = task.payment || '';
                         elements.taskFile.value = '';
+                        if (task.files) {
+                            uploadedTaskFiles = Object.values(task.files);
+                            uploadedTaskFiles.forEach(file => {
+                                const fileItem = document.createElement('div');
+                                fileItem.className = 'task-file-item';
+                                fileItem.innerHTML = `
+                                    <i class="${getFileIconClass(file.type)}"></i>
+                                    <span>${file.name}</span>
+                                    <i class="fas fa-times remove-file" onclick="removeTaskFile('${file.name}')"></i>
+                                `;
+                                elements.taskFileList.appendChild(fileItem);
+                            });
+                        }
                     }
                 } catch (error) {
                     console.error("Error loading task:", error);
                     alert("Failed to load task details.");
                 }
             } else {
-                editingTaskId = null;
-                elements.popupTitle.textContent = 'Add New Task';
-                elements.taskTitle.value = '';
-                elements.taskDescription.value = '';
-                elements.taskDeadline.value = '';
-                elements.taskPayment.value = '';
-                elements.taskFile.value = '';
+                elements.taskPopup.classList.remove('active');
+                return;
             }
-    
+
             elements.taskPopup.classList.add('active');
         }
-    
-        // Close task popup
+
         function closeTaskPopup() {
             if (elements.taskPopup) {
                 elements.taskPopup.classList.remove('active');
+                uploadedTaskFiles = [];
+                elements.taskFileList.innerHTML = '';
             }
         }
-    
-        // Submit task
+
         async function submitTask() {
             const title = elements.taskTitle?.value.trim();
             const description = elements.taskDescription?.value.trim();
             const deadline = elements.taskDeadline?.value;
-            const file = elements.taskFile?.files[0] ? elements.taskFile.files[0].name : null;
             const payment = parseFloat(elements.taskPayment?.value) || 0;
-    
-            if (title && description && deadline && selectedStudentId) {
+
+            if (title && description && deadline && selectedProfessionalId) {
                 try {
-                    const newTask = {
-                        professionalId: userId,
-                        studentId: selectedStudentId,
+                    const filesObj = uploadedTaskFiles.reduce((acc, file, index) => ({
+                        ...acc,
+                        [index]: file
+                    }), {});
+
+                    const updatedTask = {
+                        professionalId: selectedProfessionalId,
+                        studentId: userId,
                         title,
                         description,
                         deadline,
                         status: 'pending',
-                        document: file,
+                        files: filesObj,
                         payment,
-                        createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString()
                     };
-    
+
                     if (editingTaskId) {
                         const taskRef = ref(db, `tasks/${editingTaskId}`);
                         await update(taskRef, {
-                            ...newTask,
+                            ...updatedTask,
                             updatedAt: new Date().toISOString()
                         });
-                    } else {
-                        const taskRef = ref(db, `tasks`);
-                        const newTaskRef = push(taskRef);
-                        await set(newTaskRef, newTask);
                     }
-    
+
                     loadWorkflows();
                     closeTaskPopup();
                 } catch (error) {
@@ -659,12 +880,10 @@
                 alert('Please fill all required fields (Task Name, Description, and Deadline).');
             }
         }
-    
-        // Load workflows
+
         function loadWorkflows() {
             if (!elements.workflowList) return;
-    
-            if (selectedStudentId) {
+            if (selectedProfessionalId) {
                 const tasksRef = ref(db, `tasks`);
                 onValue(tasksRef, (snapshot) => {
                     elements.workflowList.innerHTML = '';
@@ -673,11 +892,19 @@
                         const tasks = snapshot.val();
                         for (const taskId in tasks) {
                             const task = tasks[taskId];
-                            if (task.professionalId === userId && task.studentId === selectedStudentId && task.status !== 'completed') {
+                            if (task.studentId === userId && task.professionalId === selectedProfessionalId && task.status !== 'completed') {
                                 hasTasks = true;
                                 const workflowItem = document.createElement('div');
                                 workflowItem.className = 'workflow-item';
                                 workflowItem.dataset.taskId = taskId;
+                                let fileIcons = '';
+                                if (task.files) {
+                                    fileIcons = Object.values(task.files).map(file => `
+                                        <a href="${file.url}" download="${file.name}" class="file-icon-container" title="${file.name}">
+                                            <i class="${getFileIconClass(file.type)} file-icon"></i>
+                                        </a>
+                                    `).join('');
+                                }
                                 workflowItem.innerHTML = `
                                     <i class="fas fa-edit edit-icon"></i>
                                     <h4>${task.title}</h4>
@@ -691,7 +918,7 @@
                                         <option value="in progress" ${task.status === "in progress" ? "selected" : ""}>In Progress</option>
                                         <option value="completed" ${task.status === "completed" ? "selected" : ""}>Completed</option>
                                     </select>
-                                    <i class="fas fa-file-alt file-icon" title="${task.document || 'No file'}"></i>
+                                    <div class="file-icons">${fileIcons}</div>
                                 `;
                                 elements.workflowList.appendChild(workflowItem);
                             }
@@ -703,14 +930,11 @@
                 });
             }
         }
-    
-        // Load completed tasks
+
         function loadCompletedTasks() {
             if (!elements.completedTasksList) return;
-    
             elements.completedTasksList.innerHTML = '';
-    
-            if (selectedStudentId) {
+            if (selectedProfessionalId) {
                 const tasksRef = ref(db, `tasks`);
                 onValue(tasksRef, (snapshot) => {
                     elements.completedTasksList.innerHTML = '';
@@ -719,18 +943,25 @@
                         const tasks = snapshot.val();
                         for (const taskId in tasks) {
                             const task = tasks[taskId];
-                            if (task.professionalId === userId && task.studentId === selectedStudentId && task.status === 'completed') {
+                            if (task.studentId === userId && task.professionalId === selectedProfessionalId && task.status === 'completed') {
                                 hasCompletedTasks = true;
                                 const completedItem = document.createElement('div');
                                 completedItem.className = 'workflow-item completed';
                                 completedItem.dataset.taskId = taskId;
+                                let fileIcons = '';
+                                if (task.files) {
+                                    fileIcons = Object.values(task.files).map(file => `
+                                        <a href="${file.url}" download="${file.name}" class="file-icon-container" title="${file.name}">
+                                            <i class="${getFileIconClass(file.type)} file-icon"></i>
+                                        </a>
+                                    `).join('');
+                                }
                                 completedItem.innerHTML = `
-                                    <i class="fas fa-trash delete-icon"></i>
                                     <span class="status-label completed">Completed</span>
                                     <h4>${task.title}</h4>
                                     <p>${task.description}</p>
-                                    <div class="deadline-container">
-                                    </div>
+                                    <div class="deadline-container"></div>
+                                    <div class="file-icons">${fileIcons}</div>
                                     <i class="fas fa-trash delete-icon"></i>
                                 `;
                                 elements.completedTasksList.appendChild(completedItem);
@@ -743,16 +974,14 @@
                 });
             }
         }
-    
-        // Toggle completed tasks visibility
+
         function toggleCompletedTasks() {
             if (elements.completedTasksList && document.querySelector('.completed-tasks .toggle-icon')) {
                 elements.completedTasksList.classList.toggle('active');
                 document.querySelector('.completed-tasks .toggle-icon').classList.toggle('active');
             }
         }
-    
-        // Update task status
+
         async function updateStatus({ taskId, status }) {
             try {
                 const taskRef = ref(db, `tasks/${taskId}`);
@@ -767,8 +996,7 @@
                 alert("Failed to update task status.");
             }
         }
-    
-        // Calculate days left until deadline
+
         function calculateDaysLeft(deadline) {
             const now = new Date();
             const deadlineDate = new Date(deadline);
@@ -776,46 +1004,40 @@
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             return diffDays > 0 ? diffDays : 0;
         }
-    
-        // Calculate deadline progress percentage
+
         function calculateDeadlineProgress(deadline) {
             const now = new Date();
             const deadlineDate = new Date(deadline);
             const diffTime = deadlineDate - now;
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
             if (diffDays <= 0) return 0;
             if (diffDays >= 30) return 100;
-    
             return Math.round((diffDays / 30) * 100);
         }
-    
-        // Get color for deadline progress
+
         function getDeadlineColor(deadline) {
             const daysLeft = calculateDaysLeft(deadline);
-    
             if (daysLeft <= 3) return '#FF5252';
             if (daysLeft <= 7) return '#FFC107';
             return '#4CAF50';
         }
-    
-        // Make functions accessible globally
+
         window.sendMessage = sendMessage;
+        window.sendFileMessage = sendFileMessage;
         window.openTaskPopup = openTaskPopup;
         window.closeTaskPopup = closeTaskPopup;
         window.submitTask = submitTask;
         window.toggleCompletedTasks = toggleCompletedTasks;
-        window.selectStudent = selectStudent;
+        window.selectProfessional = selectProfessional;
         window.updateStatus = updateStatus;
         window.acceptRequest = acceptRequest;
         window.deleteRequest = deleteRequest;
+        window.deleteConnection = deleteConnection;
         window.deleteTask = deleteTask;
         window.confirmAction = confirmAction;
         window.closeConfirmation = closeConfirmation;
-    
-        // Initialize application
+
         init();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9322e1ca59badd1c',t:'MTc0NDk2NTg4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
