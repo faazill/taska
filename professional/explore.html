@@ -302,6 +302,14 @@
         .ai-intro-btn:hover {
             background: #2C5282;
         }
+        .ai-intro-btn.connected {
+            background: #4CAF50;
+            cursor: not-allowed;
+        }
+        .ai-intro-btn.connected:hover {
+            background: #4CAF50;
+            transform: none;
+        }
         .view-profile {
             color: #374151;
             text-decoration: underline;
@@ -461,6 +469,60 @@
             transition: background 0.3s ease;
         }
         .message-popup .send-btn:hover { background: #2C5282; }
+        .connection-request-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #FFFFFF;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 450px;
+            z-index: 1000;
+            border: 1px solid #F0F0F0;
+            text-align: center;
+        }
+        .connection-request-popup.active {
+            display: flex;
+            flex-direction: column;
+        }
+        .connection-request-popup h2 {
+            font-size: 1.5rem;
+            color: #1A1A1A;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .connection-request-popup p {
+            font-size: 1rem;
+            color: #4B5563;
+            margin-bottom: 1.5rem;
+        }
+        .connection-request-popup .ok-btn {
+            padding: 0.75rem;
+            background: #2B6CB0;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+        .connection-request-popup .ok-btn:hover {
+            background: #2C5282;
+        }
+        .connection-request-popup .manage-connections {
+            color: #2B6CB0;
+            font-weight: 500;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .connection-request-popup .manage-connections:hover {
+            color: #1E4A80;
+        }
         footer { background: #FFFFFF; padding: 1rem; text-align: center; position: fixed; bottom: 0; width: 100%; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); }
         @media (max-width: 768px) {
             .search-container { padding: 1rem; margin: 1.5rem 0; border-radius: 8px; }
@@ -518,41 +580,52 @@
             .message-popup h2 { font-size: 1.25rem; margin-bottom: 1rem; }
             .message-popup textarea { font-size: 0.9rem; }
             .message-popup .send-btn { font-size: 0.9rem; }
+            .connection-request-popup {
+                padding: 1.5rem;
+                max-width: 90%;
+            }
+            .connection-request-popup h2 {
+                font-size: 1.25rem;
+            }
+            .connection-request-popup p {
+                font-size: 0.9rem;
+            }
+            .connection-request-popup .ok-btn {
+                font-size: 0.9rem;
+            }
         }
         @media (min-width: 768px) {
             .students-list { align-items: center; }
         }
-
         .mobile-message {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: #f4f5eb;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        z-index: 1002;
-        font-size: 1.2rem;
-        color: #374151;
-        padding: 1rem;
-    }
-    @media (max-width: 768px) {
-        .mobile-message {
-            display: flex;
-        }
-        .dashboard-content,
-        .navbar,
-        footer {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f4f5eb;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 1002;
+            font-size: 1.2rem;
+            color: #374151;
+            padding: 1rem;
         }
-    }
+        @media (max-width: 768px) {
+            .mobile-message {
+                display: flex;
+            }
+            .dashboard-content,
+            .navbar,
+            footer {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
-
     <div class="mobile-message">
         <p>Please use a desktop for a better experience.</p>
     </div>
@@ -565,7 +638,6 @@
         </ul>
         <div class="hamburger">☰</div>
     </nav>
-
     <main class="dashboard-content">
         <section class="dashboard-section">
             <br><br>
@@ -586,17 +658,14 @@
                 <i class="fas fa-brain ai-icon"></i>
                 <h3>Discover Talent That Fits — Powered by Smart AI</h3>
                 <p>Our <span class="highlight">AI-powered search engine</span> understands your exact needs by analyzing keywords and context. It intelligently scans thousands of verified student profiles, evaluating their <span class="highlight">colleges, degrees, skills, and project experiences</span> to surface the most relevant candidates.</p>
-                
                 <p>Whether you're looking for a <span class="highlight">Python developer from IIT Madras skilled in SQL</span> or a <span class="highlight">B.Tech student experienced in AI and Flutter</span>, just type your requirements in natural language — and let our AI do the magic.</p>
-            
                 <p>The more specific your query, the better the results. Try searches like:</p>
                 <ul>
                     "IIT Delhi CSE student with React and backend experience"<br>
                     "Python + SQL developer from NIT with internship experience"<br>
-                   "Machine learning enthusiast with Kaggle profile and TensorFlow projects"
-                   <br>
+                    "Machine learning enthusiast with Kaggle profile and TensorFlow projects"
+                    <br>
                 </ul>
-            
                 <p>Our smart algorithms <span class="highlight">understand your intent</span> and do a deep dive into every profile to ensure you connect with <span class="highlight">only the best-fit candidates</span>.</p>
             </div>
             <div class="loading-overlay" id="loadingOverlay">
@@ -606,29 +675,30 @@
             <div class="pagination" id="pagination"></div>
         </section>
     </main>
-
     <footer>
-        <p>© 2025 Taska Elite. All rights reserved. </p>
+        <p>© 2025 Taska Elite. All rights reserved.</p>
     </footer>
-
     <div class="overlay" id="overlay"></div>
     <div class="profile-popup" id="profilePopup">
         <button class="close-btn" onclick="closeProfilePopup()"><i class="fas fa-times"></i></button>
         <div class="profile-content" id="profileContent"></div>
     </div>
-
     <div class="message-popup" id="messagePopup">
         <button class="close-btn" onclick="closeMessagePopup()">×</button>
         <h2>Connect</h2>
         <textarea id="introMessage" placeholder="Generating message..."></textarea>
         <button class="send-btn" onclick="sendMessage()">Send via WhatsApp</button>
     </div>
-
+    <div class="connection-request-popup" id="connectionRequestPopup">
+        <button class="close-btn" onclick="closeConnectionRequestPopup()">×</button>
+        <h2>Connection Request Sent</h2>
+        <p id="connectionRequestMessage"></p>
+        <button class="ok-btn" onclick="closeConnectionRequestPopup()">OK</button>
+    </div>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-
     <script>
         // Initialize Firebase
         const firebaseConfig = {
@@ -643,13 +713,11 @@
         };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-
         // Hamburger menu toggle
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.hamburger').addEventListener('click', () => {
                 document.querySelector('.nav-menu').classList.toggle('active');
             });
-
             // Search on Enter key
             document.getElementById('ai-search-input').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -657,14 +725,12 @@
                 }
             });
         });
-
         const part1 = 'sk-proj-3F9d8rVuPthYn2jvKneznUYN-ZYaFSy0nKkKIJ5IOEVdjRQdGebYsRkkmJqn25YfZNDLUY12S6T3BlbkFJVBfH9b';
         const part2 = 'EfOVjVB3iRmikjAcyzHapDxOwLArvNo2eln91xFnjyR_D-Mo7XeXcjgcdjRiTueSh8MA';
         const apiKey = part1 + part2;
         let studentsData = [];
         let currentStudentId = null;
         let connectedStudents = new Set();
-
         const studentsList = document.getElementById('students-list');
         const profilePopup = document.getElementById('profilePopup');
         const profileContent = document.getElementById('profileContent');
@@ -673,7 +739,6 @@
         const messagePopup = document.getElementById('messagePopup');
         const introMessage = document.getElementById('introMessage');
         const searchInfo = document.getElementById('searchInfo');
-
         // Fetch student data and connected students
         document.addEventListener('DOMContentLoaded', () => {
             Promise.all([
@@ -692,7 +757,6 @@
                     studentsList.innerHTML = '<p>Error loading student data.</p>';
                 });
         });
-
         // Fetch connected students from Firebase
         async function getConnectedStudents() {
             const user = firebase.auth().currentUser;
@@ -700,13 +764,13 @@
             try {
                 const snapshot = await database.ref(`users/${user.uid}/connections`).once('value');
                 const connections = snapshot.val() || {};
-                return Object.keys(connections);
+                // Include both pending and connected statuses
+                return Object.keys(connections).filter(id => ['pending', 'connected'].includes(connections[id].status));
             } catch (error) {
                 console.error('Error fetching connections:', error);
                 return [];
             }
         }
-
         // Map education year to label
         function getYearLabel(year) {
             if (!year || year === 'Not set') return 'Student';
@@ -723,16 +787,13 @@
                 default: return 'Alumni';
             }
         }
-
         async function aiSearch(query = '') {
             if (!query) {
                 studentsList.innerHTML = '<p>Please enter a search query</p>';
                 return;
             }
-
             loadingOverlay.style.display = 'flex';
             searchInfo.classList.add('hidden');
-
             const csvText = [
                 ['id', 'personal.name', 'education.college', 'education.degree', 'education.branch', 'education.year', 'skills', 'experience'].join(','),
                 ...studentsData.map(student => [
@@ -746,11 +807,9 @@
                     student.experience || 'Not set'
                 ].join(','))
             ].join('\n');
-
             const prompt = `
                 You are an expert at analyzing student data for talent matching. Given the following CSV data of students:
                 ${csvText}
-
                 The user has provided this requirement: "${query}"
                 Your task is to:
                 1. Carefully analyze each student's data (name, college, degree, branch, year, skills, experience).
@@ -759,17 +818,14 @@
                 4. Return EXACTLY 10 student IDs in order of relevance as a JSON array of strings.
                 5. If fewer than 10 students match exactly, fill the remaining slots with the most relevant students based on partial matches.
                 6. Do not simply return the first 10 students unless they genuinely match the query.
-
                 Examples:
                 - Query: "IIT Delhi B.Tech Applied Mechanics student with Python skill"
                   - Prioritize students from IIT Delhi, with B.Tech in Applied Mechanics, and Python in skills.
                 - Query: "IIT Bombay student with machine learning experience"
                   - Prioritize IIT Bombay students with "machine learning" in skills or experience.
-
                 Return the result STRICTLY as a JSON array of 10 student IDs, e.g.:
                 ["student_1", "student_2", "student_3", "student_4", "student_5", "student_6", "student_7", "student_8", "student_9", "student_10"]
             `;
-
             try {
                 const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
@@ -784,10 +840,8 @@
                         temperature: 0.3
                     })
                 });
-
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error?.message || 'API request failed');
-
                 let shortlistedIds;
                 try {
                     shortlistedIds = JSON.parse(data.choices[0].message.content);
@@ -808,17 +862,16 @@
                     console.error('JSON Parse Error:', parseError, 'Response:', data.choices[0].message.content);
                     shortlistedIds = basicKeywordMatch(query);
                 }
-
                 const filteredStudents = studentsData
                     .filter(student => shortlistedIds.includes(student.id) && !connectedStudents.has(student.id))
                     .sort((a, b) => shortlistedIds.indexOf(a.id) - shortlistedIds.indexOf(b.id));
-
                 studentsList.innerHTML = filteredStudents.length > 0
                     ? filteredStudents.map(student => {
                         const description = student.about || student.experience || 'No description available';
                         const isLong = description.length > 100;
                         const subheading = `${student.education?.college || 'Not set'} - ${student.education?.branch || 'Not set'}`;
                         const yearLabel = getYearLabel(student.education?.year);
+                        const isConnected = connectedStudents.has(student.id);
                         return `
                             <div class="student-card">
                                 <img src="${student.personal?.profilePic || '../assets/avatar/1.png'}" alt="Profile Picture" class="profile-pic">
@@ -828,7 +881,11 @@
                                     <p class="description${isLong ? '' : ' expanded'}">${description}</p>
                                     ${isLong ? `<a class="read-more" onclick="toggleReadMore(this)">Read More</a>` : ''}
                                     <div class="student-actions">
-                                        <button class="ai-intro-btn" onclick="generateAIIntro('${student.id}')">Connect</button>
+                                        <button class="ai-intro-btn${isConnected ? ' connected' : ''}" 
+                                                onclick="${isConnected ? '' : `generateAIIntro('${student.id}')`}" 
+                                                ${isConnected ? 'disabled' : ''}>
+                                            ${isConnected ? 'Connected' : 'Connect'}
+                                        </button>
                                         <span class="view-profile" onclick="showProfile('${student.id}')">View Profile</span>
                                         <div class="social-icons">
                                             <i class="fab fa-linkedin social-icon linkedin" onclick="window.open('${student.personal?.linkedin || '#'}', '_blank')"></i>
@@ -843,10 +900,8 @@
                 console.error('AI Search Error:', error);
                 studentsList.innerHTML = `<p>Error performing search: ${error.message}</p>`;
             }
-
             loadingOverlay.style.display = 'none';
         }
-
         function basicKeywordMatch(query) {
             const keywords = query.toLowerCase().split(' ');
             const scoredStudents = studentsData
@@ -864,29 +919,166 @@
                 .slice(0, 10)
                 .map(student => student.id);
         }
-
         window.performSearch = () => {
             const query = document.getElementById('ai-search-input').value.trim();
             aiSearch(query);
         };
-
         window.toggleReadMore = (element) => {
             const description = element.previousElementSibling;
             description.classList.toggle('expanded');
             element.textContent = description.classList.contains('expanded') ? 'Read Less' : 'Read More';
         };
-
         window.generateAIIntro = async (studentId) => {
             currentStudentId = studentId;
             loadingOverlay.style.display = 'flex';
-            const message = await generateIntroMessage(studentId);
-            introMessage.value = message;
+            const student = studentsData.find(s => s.id === studentId);
+            const user = firebase.auth().currentUser;
+            if (!user || !student) {
+                loadingOverlay.style.display = 'none';
+                alert('Error: User not authenticated or student not found.');
+                return;
+            }
+            try {
+                // Store connection request in Firebase
+                await storeConnectionRequest(studentId);
+                // Send notifications
+                await sendConnectionNotifications(studentId, student.personal?.name || 'Unnamed', student.personal?.email, student.personal?.whatsapp, user.email);
+                // Show popup
+                showConnectionRequestPopup(student.personal?.name || 'Unnamed');
+                // Update connected students set
+                connectedStudents.add(studentId);
+                // Refresh the student list to update button states
+                performSearch();
+            } catch (error) {
+                console.error('Error sending connection request:', error);
+                alert('Failed to send connection request.');
+            }
             loadingOverlay.style.display = 'none';
-            messagePopup.classList.add('active');
-            overlay.classList.add('active');
         };
-
-        function storeConnection(studentId) {
+        async function storeConnectionRequest(studentId) {
+            const user = firebase.auth().currentUser;
+            const userId = user.uid;
+            const timestamp = new Date().toISOString();
+            // Store for professional
+            await database.ref(`users/${userId}/connections/${studentId}`).set({
+                timestamp: timestamp,
+                status: "pending"
+            });
+            // Store for student
+            await database.ref(`users/${studentId}/connections/${userId}`).set({
+                timestamp: timestamp,
+                status: "pending"
+            });
+        }
+        async function sendConnectionNotifications(studentId, studentName, studentEmail, studentWhatsApp, professionalEmail) {
+            const user = firebase.auth().currentUser;
+            const professionalName = user.displayName || 'Professional';
+            // Send email notifications
+            try {
+                const response = await fetch('https://your-server.com/send-connection-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        studentEmail,
+                        studentName,
+                        professionalEmail,
+                        professionalName
+                    })
+                });
+                if (!response.ok) throw new Error('Failed to send email notifications');
+            } catch (error) {
+                console.error('Error sending email notifications:', error);
+            }
+            // Send WhatsApp notification
+            await sendWhatsAppNotification(studentWhatsApp, studentName, professionalName);
+        }
+        async function sendWhatsAppNotification(studentWhatsApp, studentName, professionalName) {
+            if (!studentWhatsApp) return;
+            try {
+                const response = await fetch('https://your-server.com/send-whatsapp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        to: studentWhatsApp,
+                        studentName,
+                        professionalName
+                    })
+                });
+                if (!response.ok) throw new Error('Failed to send WhatsApp notification');
+            } catch (error) {
+                console.error('Error sending WhatsApp notification:', error);
+            }
+        }
+        function showConnectionRequestPopup(studentName) {
+            const popup = document.getElementById('connectionRequestPopup');
+            const message = document.getElementById('connectionRequestMessage');
+            message.innerHTML = `
+                We have sent a connection request to <strong>${studentName}</strong>. 
+                They have been notified via Email. 
+                When they accept, we will inform you through Email. 
+                You can <a href="tasks.html" class="manage-connections">manage your connections</a> here.
+            `;
+            popup.classList.add('active');
+            overlay.classList.add('active');
+        }
+        window.closeConnectionRequestPopup = () => {
+            const popup = document.getElementById('connectionRequestPopup');
+            popup.classList.remove('active');
+            overlay.classList.remove('active');
+            currentStudentId = null;
+        };
+        window.showProfile = (targetUserId) => {
+            const student = studentsData.find(s => s.id === targetUserId);
+            if (student) {
+                const fields = [
+                    { label: 'Degree', value: student.education?.degree },
+                    { label: 'Year', value: student.education?.year },
+                    { label: 'Skills', value: student.skills },
+                    { label: 'Experience', value: student.experience },
+                    { label: 'Email', value: student.personal?.email },
+                    { label: 'LinkedIn', value: student.personal?.linkedin ? `<a href="${student.personal.linkedin}" target="_blank">View LinkedIn</a>` : null }
+                ].filter(field => field.value && field.value !== 'Not set');
+                profileContent.innerHTML = `
+                    <div class="profile-section">
+                        <img src="${student.personal?.profilePic || '../assets/avatar/1.png'}" alt="Profile Picture" class="profile-pic">
+                        <div class="profile-details">
+                            <h2>${student.personal?.name || 'Unnamed'}</h2>
+                            <h3>${student.education?.college || 'Not set'} - ${student.education?.branch || 'Not set'}</h3>
+                            ${fields.map(field => `<p><strong>${field.label}:</strong> ${field.value}</p>`).join('')}
+                        </div>
+                    </div>
+                `;
+                profilePopup.classList.add('active');
+                overlay.classList.add('active');
+            } else {
+                profileContent.innerHTML = '<div class="profile-section"><h2>Profile Not Found</h2><p>No data available.</p></div>';
+                profilePopup.classList.add('active');
+                overlay.classList.add('active');
+            }
+        };
+        window.closeProfilePopup = () => {
+            profilePopup.classList.remove('active');
+            overlay.classList.remove('active');
+        };
+        window.closeMessagePopup = () => {
+            messagePopup.classList.remove('active');
+            overlay.classList.remove('active');
+            currentStudentId = null;
+        };
+        window.sendMessage = () => {
+            if (!currentStudentId) return;
+            const student = studentsData.find(s => s.id === currentStudentId);
+            const message = introMessage.value.trim();
+            if (!message) return;
+            const phone = student.personal?.whatsapp || '';
+            if (phone) {
+                storeConnection(currentStudentId);
+                const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+            }
+            closeMessagePopup();
+        };
+        async function storeConnection(studentId) {
             const user = firebase.auth().currentUser;
             if (user) {
                 const userId = user.uid;
@@ -910,106 +1102,12 @@
                 console.log("User not authenticated, connection not stored");
             }
         }
-
-        async function generateIntroMessage(studentId) {
-            const student = studentsData.find(s => s.id === studentId);
-            const prompt = `
-                Given the student's details:
-                - Name: ${student.personal?.name || 'Unnamed'}
-                - College: ${student.education?.college || 'Not set'}
-                - Degree: ${student.education?.degree || 'Not set'}
-                - Branch: ${student.education?.branch || 'Not set'}
-                - Year: ${student.education?.year || 'Not set'}
-                - Skills: ${student.skills || 'Not set'}
-                - Experience: ${student.experience || 'Not set'}
-
-                Create a friendly, professional introduction message (max 200 characters) to send via WhatsApp. 
-                Introduce yourself briefly, mention interest in their background, and ask if they're interested in connecting.
-            `;
-
-            try {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-4o-mini',
-                        messages: [{ role: 'user', content: prompt }],
-                        max_tokens: 100
-                    })
-                });
-
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.error?.message || 'API request failed');
-                return data.choices[0].message.content.trim();
-            } catch (error) {
-                console.error('AI Intro Generation Error:', error);
-                return `Hi ${student.personal?.name || 'there'}, I'm from Taska Elite. Impressed by your ${student.education?.branch || 'skills'} at ${student.education?.college || 'your college'}. Interested in connecting?`;
-            }
-        }
-
-        window.showProfile = (targetUserId) => {
-            const student = studentsData.find(s => s.id === targetUserId);
-            if (student) {
-                const fields = [
-                    { label: 'Degree', value: student.education?.degree },
-                    { label: 'Year', value: student.education?.year },
-                    { label: 'Skills', value: student.skills },
-                    { label: 'Experience', value: student.experience },
-                    { label: 'Email', value: student.personal?.email },
-                    { label: 'LinkedIn', value: student.personal?.linkedin ? `<a href="${student.personal.linkedin}" target="_blank">View LinkedIn</a>` : null }
-                ].filter(field => field.value && field.value !== 'Not set');
-
-                profileContent.innerHTML = `
-                    <div class="profile-section">
-                        <img src="${student.personal?.profilePic || '../assets/avatar/1.png'}" alt="Profile Picture" class="profile-pic">
-                        <div class="profile-details">
-                            <h2>${student.personal?.name || 'Unnamed'}</h2>
-                            <h3>${student.education?.college || 'Not set'} - ${student.education?.branch || 'Not set'}</h3>
-                            ${fields.map(field => `<p><strong>${field.label}:</strong> ${field.value}</p>`).join('')}
-                        </div>
-                    </div>
-                `;
-                profilePopup.classList.add('active');
-                overlay.classList.add('active');
-            } else {
-                profileContent.innerHTML = '<div class="profile-section"><h2>Profile Not Found</h2><p>No data available.</p></div>';
-                profilePopup.classList.add('active');
-                overlay.classList.add('active');
-            }
-        };
-
-        window.closeProfilePopup = () => {
-            profilePopup.classList.remove('active');
-            overlay.classList.remove('active');
-        };
-
-        window.closeMessagePopup = () => {
-            messagePopup.classList.remove('active');
-            overlay.classList.remove('active');
-            currentStudentId = null;
-        };
-
-        window.sendMessage = () => {
-            if (!currentStudentId) return;
-            const student = studentsData.find(s => s.id === currentStudentId);
-            const message = introMessage.value.trim();
-            if (!message) return;
-            const phone = student.personal?.whatsapp || '';
-            if (phone) {
-                storeConnection(currentStudentId);
-                const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-                window.open(whatsappUrl, '_blank');
-            }
-            closeMessagePopup();
-        };
-
         overlay.addEventListener('click', () => {
             closeProfilePopup();
             closeMessagePopup();
+            closeConnectionRequestPopup();
         });
     </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'932e92e98a53b055',t:'MTc0NTA4ODQ4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
