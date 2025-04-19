@@ -12,15 +12,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="loading-overlay" id="loading-overlay">
-        <div class="loading-spinner"></div>
-        <p>Loading your workspace...</p>
-    </div>
-
     <nav class="navbar">
         <div class="logo">Taska Elite - Professional</div>
         <ul class="nav-menu">
-            <li><a href="explore.html">Explore</a></li>
             <li><a href="tasks.html" class="active">Tasks</a></li>
             <li><a href="profile.html">Account</a></li>
         </ul>
@@ -30,32 +24,45 @@
     <div class="dashboard-content">
         <div class="sidebar-left">
             <h3>Connected Students</h3>
-            <div id="connections-list"></div>
-            <div class="pending-requests">
+            <div id="connections-list" class="skeleton-loading">
+                <div class="skeleton-user-item"></div>
+                <div class="skeleton-user-item"></div>
+                <div class="skeleton-user-item"></div>
+            </div>
+            <div class="pending-requests" style="display: none;">
                 <h3>Pending Requests</h3>
                 <div id="pending-requests-list"></div>
             </div>
         </div>
         <div class="chat-area" id="chat-area">
-            <div class="chat-header" id="chat-header"></div>
-            <div class="messages" id="chat-messages"></div>
+            <div class="chat-header skeleton-loading" id="chat-header">
+                <div class="skeleton-header"></div>
+            </div>
+            <div class="messages skeleton-loading" id="chat-messages">
+                <div class="skeleton-message"></div>
+                <div class="skeleton-message"></div>
+            </div>
             <div class="chat-input">
                 <div class="input-container">
                     <div class="upload-progress" id="upload-progress">
                         <div class="upload-progress-bar" id="upload-progress-bar"></div>
                     </div>
-                    <textarea id="chat-input" placeholder="Type a message or @mention a task..." rows="1"></textarea>
+                    <textarea id="chat-input" placeholder="Type a message..." rows="1"></textarea>
+                    <i class="fas fa-at mention-icon" id="mention-icon"></i>
                     <label for="file-input" class="file-input-label"><i class="fas fa-paperclip"></i></label>
                     <input type="file" id="file-input" class="file-input">
-                    <div class="mention-suggestions" id="mention-suggestions"></div>
+                    <div class="task-dropdown" id="task-dropdown"></div>
                 </div>
                 <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
         <div class="sidebar-right" id="workflow-area">
             <h3>Tasks</h3>
-            <button class="add-task-btn" onclick="openTaskPopup()">Add New Task</button>
-            <div id="workflow-list"></div>
+            <button class="add-task-btn" onclick="openTaskPopup()">Add Task</button>
+            <div id="workflow-list" class="skeleton-loading">
+                <div class="skeleton-task-item"></div>
+                <div class="skeleton-task-item"></div>
+            </div>
             <div class="completed-tasks">
                 <h4 onclick="toggleCompletedTasks()">Completed Tasks <i class="fas fa-chevron-down toggle-icon"></i></h4>
                 <div class="completed-tasks-list" id="completed-tasks-list"></div>
@@ -66,36 +73,29 @@
     <div class="task-popup" id="task-popup">
         <div class="task-popup-content">
             <div class="header">
-                <h3 id="popup-title">Add New Task</h3>
+                <h3 id="task-popup-title">Add Task</h3>
                 <button onclick="closeTaskPopup()"><i class="fas fa-times"></i></button>
             </div>
             <div class="form-group">
-                <label for="task-title">Task Name</label>
-                <input type="text" id="task-title" placeholder="Enter task name">
+                <label for="task-title">Task Title</label>
+                <input type="text" id="task-title" placeholder="Enter task title">
             </div>
             <div class="form-group">
                 <label for="task-description">Description</label>
-                <textarea id="task-description" placeholder="Enter description" rows="4"></textarea>
+                <textarea id="task-description" placeholder="Enter task description"></textarea>
             </div>
             <div class="form-group">
                 <label for="task-deadline">Deadline</label>
                 <input type="date" id="task-deadline">
             </div>
             <div class="form-group">
-                <label for="task-file">Attach Files</label>
-                <input type="file" id="task-file" multiple>
-                <div class="upload-progress" id="task-upload-progress">
-                    <div class="upload-progress-bar" id="task-upload-progress-bar"></div>
-                </div>
-                <div id="task-file-list" class="file-list"></div>
-            </div>
-            <div class="form-group" style="display: none;">
-                <label for="task-payment">Cash Payment (USD)</label>
-                <input type="number" id="task-payment" placeholder="Enter payment amount">
+                <label for="task-files">Attach Files</label>
+                <input type="file" id="task-files" multiple>
+                <div id="task-files-list"></div>
             </div>
             <div class="actions">
                 <button class="cancel-btn" onclick="closeTaskPopup()">Cancel</button>
-                <button class="submit-btn" onclick="confirmAction('submitTask', 'Add Task', 'Are you sure you want to add this task?')">Add Task</button>
+                <button class="submit-btn" onclick="submitTask()">Submit</button>
             </div>
         </div>
     </div>
@@ -108,31 +108,6 @@
                 <button class="cancel" onclick="closeConfirmation()">Cancel</button>
                 <button id="confirm-button" class="confirm"></button>
             </div>
-        </div>
-    </div>
-
-    <div class="review-popup" id="review-popup">
-        <div class="header">
-            <h3>Submit Review</h3>
-            <button onclick="closeReviewPopup()"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="form-group">
-            <label>Rating</label>
-            <div class="star-rating" id="star-rating">
-                <i class="fas fa-star" data-rating="1"></i>
-                <i class="fas fa-star" data-rating="2"></i>
-                <i class="fas fa-star" data-rating="3"></i>
-                <i class="fas fa-star" data-rating="4"></i>
-                <i class="fas fa-star" data-rating="5"></i>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="review-feedback">Feedback</label>
-            <textarea id="review-feedback" placeholder="Enter your feedback" rows="4"></textarea>
-        </div>
-        <div class="actions">
-            <button class="cancel-btn" onclick="closeReviewPopup()">Cancel</button>
-            <button class="submit-btn" onclick="submitReview()">Submit Review</button>
         </div>
     </div>
 
@@ -162,13 +137,11 @@
 
         let userId = null;
         let selectedStudentId = null;
-        let editingTaskId = null;
         let studentData = null;
         let currentUserProfile = null;
         let uploadedTaskFiles = [];
-        let selectedRating = 0;
-        let reviewingTaskId = null;
-        let taskSuggestions = [];
+        let isDataLoaded = { connections: false, chats: false, tasks: false };
+        let editingTaskId = null;
 
         const elements = {
             connectionsList: document.getElementById('connections-list'),
@@ -180,35 +153,29 @@
             workflowArea: document.getElementById('workflow-area'),
             workflowList: document.getElementById('workflow-list'),
             completedTasksList: document.getElementById('completed-tasks-list'),
-            taskPopup: document.getElementById('task-popup'),
-            popupTitle: document.getElementById('popup-title'),
-            taskTitle: document.getElementById('task-title'),
-            taskDescription: document.getElementById('task-description'),
-            taskDeadline: document.getElementById('task-deadline'),
-            taskFile: document.getElementById('task-file'),
-            taskPayment: document.getElementById('task-payment'),
             confirmationDialog: document.getElementById('confirmation-dialog'),
             dialogTitle: document.getElementById('dialog-title'),
             dialogMessage: document.getElementById('dialog-message'),
             confirmButton: document.getElementById('confirm-button'),
             messageDing: document.getElementById('message-ding'),
             fileInput: document.getElementById('file-input'),
-            taskFileList: document.getElementById('task-file-list'),
             uploadProgress: document.getElementById('upload-progress'),
             uploadProgressBar: document.getElementById('upload-progress-bar'),
-            taskUploadProgress: document.getElementById('task-upload-progress'),
-            taskUploadProgressBar: document.getElementById('task-upload-progress-bar'),
-            reviewPopup: document.getElementById('review-popup'),
-            reviewFeedback: document.getElementById('review-feedback'),
-            starRating: document.getElementById('star-rating'),
-            mentionSuggestions: document.getElementById('mention-suggestions'),
-            loadingOverlay: document.getElementById('loading-overlay')
+            mentionIcon: document.getElementById('mention-icon'),
+            taskDropdown: document.getElementById('task-dropdown'),
+            taskPopup: document.getElementById('task-popup'),
+            taskPopupTitle: document.getElementById('task-popup-title'),
+            taskTitle: document.getElementById('task-title'),
+            taskDescription: document.getElementById('task-description'),
+            taskDeadline: document.getElementById('task-deadline'),
+            taskFiles: document.getElementById('task-files'),
+            taskFilesList: document.getElementById('task-files-list')
         };
 
         async function fetchStudentData() {
             if (studentData) return studentData;
             try {
-                const response = await fetch('manualstudentlist.json');
+                const response = await fetch('../professional/manualstudentlist.json');
                 if (!response.ok) throw new Error(`Failed to fetch student data: ${response.statusText}`);
                 studentData = await response.json();
                 studentData = studentData.map((student, index) => ({
@@ -225,15 +192,11 @@
         async function fetchCurrentUserProfile() {
             if (currentUserProfile) return currentUserProfile;
             try {
-                const students = await fetchStudentData();
-                const user = students.find(s => s.id === userId) || {};
+                const snapshot = await get(ref(db, `users/${userId}`));
+                const user = snapshot.exists() ? snapshot.val() : {};
                 currentUserProfile = {
-                    name: user.personal?.name || "Unnamed",
-                    profilePic: user.personal?.profilePic 
-                        ? user.personal.profilePic 
-                        : user.personal?.linkedin 
-                            ? `https://via.placeholder.com/40?text=${user.personal?.name?.[0] || 'U'}`
-                            : "../assets/avatar/1.png"
+                    name: user.name || "Unnamed",
+                    profilePic: user.profilePic || "../assets/avatar/1.png"
                 };
                 return currentUserProfile;
             } catch (error) {
@@ -276,24 +239,33 @@
             return '#6c757d';
         }
 
+        function checkAllDataLoaded() {
+            if (isDataLoaded.connections && isDataLoaded.chats && isDataLoaded.tasks) {
+                elements.connectionsList.classList.remove('skeleton-loading');
+                elements.chatArea.classList.remove('skeleton-loading');
+                elements.chatHeader.classList.remove('skeleton-loading');
+                elements.chatMessages.classList.remove('skeleton-loading');
+                elements.workflowList.classList.remove('skeleton-loading');
+            }
+        }
+
         async function init() {
-            elements.loadingOverlay.style.display = 'flex';
-            await fetchStudentData();
-            setupEventListeners();
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    userId = user.uid;
-                    fetchCurrentUserProfile().then(() => {
-                        loadConnections();
-                        loadPendingRequests();
-                        loadCompletedTasks();
-                        elements.loadingOverlay.style.display = 'none';
-                    });
-                } else {
-                    console.error("User not authenticated");
-                    elements.loadingOverlay.style.display = 'none';
-                    window.location.href = "../index.html";
-                }
+            document.addEventListener('DOMContentLoaded', async () => {
+                await fetchStudentData();
+                setupEventListeners();
+                auth.onAuthStateChanged(user => {
+                    if (user) {
+                        userId = user.uid;
+                        fetchCurrentUserProfile().then(() => {
+                            loadConnections();
+                            loadPendingRequests();
+                            loadCompletedTasks();
+                        });
+                    } else {
+                        console.error("User not authenticated");
+                        window.location.href = "../index.html";
+                    }
+                });
             });
         }
 
@@ -304,19 +276,19 @@
                 hamburger.addEventListener('click', () => navMenu.classList.toggle('active'));
             }
 
-            document.addEventListener('click', (e) => {
+            document.addEventListener('click', async (e) => {
                 const target = e.target;
                 if (target.closest('.user-item') && !target.closest('.pending-item')) {
                     const studentId = target.closest('.user-item').dataset.studentId;
                     selectStudent(studentId);
                 }
                 if (target.matches('.accept-btn')) {
-                    const professionalId = target.closest('.pending-item').dataset.professionalId;
-                    confirmAction('acceptRequest', 'Accept Request', 'Are you sure you want to accept this connection request?', { professionalId });
+                    const studentId = target.closest('.pending-item').dataset.studentId;
+                    confirmAction('acceptRequest', 'Accept Request', 'Are you sure you want to accept this connection request?', { studentId });
                 }
                 if (target.matches('.delete-btn')) {
-                    const professionalId = target.closest('.pending-item').dataset.professionalId;
-                    confirmAction('deleteRequest', 'Delete Request', 'Are you sure you want to delete this connection request?', { professionalId });
+                    const studentId = target.closest('.pending-item').dataset.studentId;
+                    confirmAction('deleteRequest', 'Delete Request', 'Are you sure you want to delete this connection request?', { studentId });
                 }
                 if (target.matches('.task-menu-icon')) {
                     const dropdown = target.closest('.task-menu').querySelector('.task-menu-dropdown');
@@ -329,48 +301,48 @@
                         openTaskPopup(taskId);
                     } else if (action === 'deleteTask') {
                         confirmAction('deleteTask', 'Delete Task', 'Are you sure you want to delete this task?', { taskId });
-                    } else if (action === 'reviewTask') {
-                        openReviewPopup(taskId);
-                    } else if (action === 'markComplete') {
-                        confirmAction('updateStatus', 'Mark as Completed', 'Are you sure you want to mark this task as completed?', { taskId, status: 'completed' });
-                    } else if (action === 'reopenTask') {
-                        confirmAction('updateStatus', 'Reopen Task', 'Are you sure you want to reopen this task?', { taskId, status: 'in progress' });
                     }
                 }
                 if (target.matches('.reaction-icon')) {
                     const messageId = target.closest('.message').dataset.messageId;
                     const reaction = target.dataset.reaction;
-                    addReaction(messageId, reaction);
+                    toggleReaction(messageId, reaction);
                 }
                 if (target.matches('.message-menu-icon')) {
                     const dropdown = target.closest('.message-menu').querySelector('.message-menu-dropdown');
                     dropdown.classList.toggle('active');
                 }
                 if (target.matches('.message-menu-dropdown button')) {
-                    const messageId = target.closest('.message').dataset.messageId;
                     const action = target.dataset.action;
+                    const messageId = target.closest('.message').dataset.messageId;
                     if (action === 'deleteMessage') {
                         confirmAction('deleteMessage', 'Delete Message', 'Are you sure you want to delete this message?', { messageId });
-                    } else if (action === 'copyMessage') {
-                        copyMessage(messageId);
                     }
                 }
-                if (target.matches('.comment-toggle')) {
-                    const taskId = target.closest('.workflow-item').dataset.taskId;
-                    toggleComments(taskId);
+                if (target.matches('.chat-header .menu-icon')) {
+                    const dropdown = target.closest('.menu').querySelector('.menu-dropdown');
+                    dropdown.classList.toggle('active');
                 }
-                if (target.matches('.comment-input') && e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    const taskId = target.closest('.workflow-item').dataset.taskId;
-                    sendComment(taskId, target.value);
-                    target.value = '';
+                if (target.matches('.chat-header .menu-dropdown button')) {
+                    const action = target.dataset.action;
+                    if (action === 'deleteConnection') {
+                        confirmAction('deleteConnection', 'Delete Connection', 'Are you sure you want to delete this connection?', { studentId: selectedStudentId });
+                    }
                 }
-                if (target.matches('.star-rating i')) {
-                    selectedRating = parseInt(target.dataset.rating);
-                    updateStarRating();
+                if (target.matches('.mention-icon')) {
+                    elements.taskDropdown.classList.toggle('active');
+                    if (elements.taskDropdown.classList.contains('active')) {
+                        await populateTaskDropdown();
+                    }
                 }
-                if (target.matches('.mention-suggestion')) {
-                    selectMention(target.dataset.taskId, target.dataset.taskTitle);
+                if (target.matches('.task-dropdown-item')) {
+                    const taskTitle = target.textContent;
+                    insertMention(taskTitle);
+                }
+                if (target.matches('.remove-file')) {
+                    const fileIndex = target.dataset.index;
+                    uploadedTaskFiles.splice(fileIndex, 1);
+                    updateTaskFilesList();
                 }
             });
 
@@ -391,15 +363,41 @@
                         sendMessage();
                     }
                 });
-                elements.chatInput.addEventListener('input', () => {
+                elements.chatInput.addEventListener('input', async () => {
                     elements.chatInput.style.height = 'auto';
                     elements.chatInput.style.height = `${Math.min(elements.chatInput.scrollHeight, 100)}px`;
-                    handleMentionInput();
+                    const value = elements.chatInput.value;
+                    if (value.endsWith('@') && !elements.taskDropdown.classList.contains('active')) {
+                        elements.taskDropdown.classList.add('active');
+                        await populateTaskDropdown();
+                    }
                 });
                 elements.chatInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        navigateMentionSuggestions(e.key);
+                    if (elements.taskDropdown.classList.contains('active')) {
+                        const items = elements.taskDropdown.querySelectorAll('.task-dropdown-item');
+                        let selectedIndex = -1;
+                        items.forEach((item, index) => {
+                            if (item.classList.contains('selected')) selectedIndex = index;
+                        });
+                        if (e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                            items.forEach(item => item.classList.remove('selected'));
+                            items[selectedIndex].classList.add('selected');
+                            items[selectedIndex].scrollIntoView({ block: 'nearest' });
+                        } else if (e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            selectedIndex = Math.max(selectedIndex - 1, 0);
+                            items.forEach(item => item.classList.remove('selected'));
+                            items[selectedIndex].classList.add('selected');
+                            items[selectedIndex].scrollIntoView({ block: 'nearest' });
+                        } else if (e.key === 'Enter' && selectedIndex >= 0) {
+                            e.preventDefault();
+                            const taskTitle = items[selectedIndex].textContent;
+                            insertMention(taskTitle);
+                        } else if (e.key === 'Escape') {
+                            elements.taskDropdown.classList.remove('active');
+                        }
                     }
                 });
             }
@@ -413,14 +411,12 @@
                 });
             }
 
-            if (elements.taskFile) {
-                elements.taskFile.addEventListener('change', async () => {
-                    uploadedTaskFiles = [];
-                    elements.taskFileList.innerHTML = '';
-                    const files = Array.from(elements.taskFile.files);
-                    for (const file of files) {
-                        await uploadTaskFile(file);
-                    }
+            if (elements.taskFiles) {
+                elements.taskFiles.addEventListener('change', () => {
+                    const files = Array.from(elements.taskFiles.files);
+                    uploadedTaskFiles.push(...files);
+                    updateTaskFilesList();
+                    elements.taskFiles.value = '';
                 });
             }
 
@@ -435,78 +431,41 @@
                         dropdown.classList.remove('active');
                     });
                 }
-                if (!e.target.closest('.chat-input')) {
-                    elements.mentionSuggestions.classList.remove('active');
+                if (!e.target.closest('.chat-header .menu')) {
+                    document.querySelectorAll('.chat-header .menu-dropdown.active').forEach(dropdown => {
+                        dropdown.classList.remove('active');
+                    });
+                }
+                if (!e.target.closest('.input-container')) {
+                    elements.taskDropdown.classList.remove('active');
                 }
             });
         }
 
-        async function uploadTaskFile(file) {
-            try {
-                const storagePath = `tasks/temp/${Date.now()}_${file.name}`;
-                const fileRef = storageRef(storage, storagePath);
-                const uploadTask = uploadBytesResumable(fileRef, file);
-
-                elements.taskUploadProgress.classList.add('active');
-                elements.taskUploadProgressBar.style.width = '0%';
-
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        elements.taskUploadProgressBar.style.width = `${progress}%`;
-                    },
-                    (error) => {
-                        console.error('Error uploading task file:', error);
-                        elements.taskUploadProgress.classList.remove('active');
-                        alert('Failed to upload file.');
-                    },
-                    async () => {
-                        const fileUrl = await getDownloadURL(fileRef);
-                        uploadedTaskFiles.push({
-                            name: file.name,
-                            url: fileUrl,
-                            type: file.type
-                        });
-
-                        const fileItem = document.createElement('div');
-                        fileItem.className = 'task-file-item';
-                        fileItem.innerHTML = `
-                            <i class="${getFileIconClass(file.type)}" style="color: ${getFileIconColor(file.type)};"></i>
-                            <span>${file.name}</span>
-                            <i class="fas fa-times remove-file" onclick="removeTaskFile('${file.name}')"></i>
-                        `;
-                        elements.taskFileList.appendChild(fileItem);
-
-                        elements.taskUploadProgress.classList.remove('active');
-                    }
-                );
-            } catch (error) {
-                console.error('Error initiating task file upload:', error);
-                elements.taskUploadProgress.classList.remove('active');
-                alert('Failed to upload file.');
-            }
-        }
-
-        window.removeTaskFile = function(fileName) {
-            uploadedTaskFiles = uploadedTaskFiles.filter(file => file.name !== fileName);
-            const fileItems = elements.taskFileList.querySelectorAll('.task-file-item');
-            fileItems.forEach(item => {
-                if (item.querySelector('span').textContent === fileName) {
-                    item.remove();
-                }
+        function updateTaskFilesList() {
+            elements.taskFilesList.innerHTML = '';
+            uploadedTaskFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'task-file-item';
+                fileItem.innerHTML = `
+                    <i class="${getFileIconClass(file.type)}"></i>
+                    <span>${file.name}</span>
+                    <i class="fas fa-times remove-file" data-index="${index}"></i>
+                `;
+                elements.taskFilesList.appendChild(fileItem);
             });
-        };
+        }
 
         async function loadConnections() {
             if (!elements.connectionsList) return;
             try {
                 const connectionsRef = ref(db, `users/${userId}/connections`);
                 const snapshot = await get(connectionsRef);
+                elements.connectionsList.innerHTML = '';
                 if (snapshot.exists()) {
                     const connections = snapshot.val();
                     let hasConnections = false;
                     const students = await fetchStudentData();
-                    elements.connectionsList.innerHTML = '';
                     for (const studentId in connections) {
                         if (connections[studentId].status === "connected") {
                             hasConnections = true;
@@ -548,9 +507,13 @@
                 } else {
                     elements.connectionsList.innerHTML = '<p>No connected students found.</p>';
                 }
+                isDataLoaded.connections = true;
+                checkAllDataLoaded();
             } catch (error) {
                 console.error("Error loading connections:", error);
                 elements.connectionsList.innerHTML = '<p>Error loading connections.</p>';
+                isDataLoaded.connections = true;
+                checkAllDataLoaded();
             }
         }
 
@@ -559,15 +522,16 @@
             try {
                 const connectionsRef = ref(db, `users/${userId}/connections`);
                 const snapshot = await get(connectionsRef);
+                elements.pendingRequestsList.innerHTML = '';
+                const pendingRequestsSection = document.querySelector('.pending-requests');
                 if (snapshot.exists()) {
                     const connections = snapshot.val();
                     let hasPending = false;
                     const students = await fetchStudentData();
-                    elements.pendingRequestsList.innerHTML = '';
-                    for (const professionalId in connections) {
-                        if (connections[professionalId].status === "pending") {
+                    for (const studentId in connections) {
+                        if (connections[studentId].status === "pending") {
                             hasPending = true;
-                            const student = students.find(s => s.id === professionalId) || {};
+                            const student = students.find(s => s.id === studentId) || {};
                             const userName = student.personal?.name || "Unnamed";
                             const profilePic = student.personal?.profilePic 
                                 ? student.personal.profilePic 
@@ -576,39 +540,37 @@
                                     : "../assets/avatar/1.png";
                             const pendingItem = document.createElement('div');
                             pendingItem.className = 'pending-item user-item';
-                            pendingItem.dataset.professionalId = professionalId;
+                            pendingItem.dataset.studentId = studentId;
                             pendingItem.innerHTML = `
                                 <div class="user-info">
                                     <img src="${profilePic}" alt="${userName}" class="profile-pic">
                                     <div class="name">${userName}</div>
                                 </div>
                                 <div class="actions">
+                                    <button class="accept-btn">Accept</button>
                                     <button class="delete-btn">Delete</button>
                                 </div>
                             `;
                             elements.pendingRequestsList.appendChild(pendingItem);
                         }
                     }
-                    if (!hasPending) {
-                        document.querySelector('.pending-requests').style.display = 'none';
-                    } else {
-                        document.querySelector('.pending-requests').style.display = 'block';
-                    }
+                    pendingRequestsSection.style.display = hasPending ? 'block' : 'none';
                 } else {
-                    elements.pendingRequestsList.innerHTML = '<p>No pending requests.</p>';
+                    pendingRequestsSection.style.display = 'none';
                 }
             } catch (error) {
                 console.error("Error loading pending requests:", error);
                 elements.pendingRequestsList.innerHTML = '<p>Error loading pending requests.</p>';
+                document.querySelector('.pending-requests').style.display = 'none';
             }
         }
 
-        async function acceptRequest({ professionalId }) {
+        async function acceptRequest({ studentId }) {
             try {
-                const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
-                const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
-                await update(studentConnectionRef, { status: "connected" });
+                const professionalConnectionRef = ref(db, `users/${userId}/connections/${studentId}`);
+                const studentConnectionRef = ref(db, `users/${studentId}/connections/${userId}`);
                 await update(professionalConnectionRef, { status: "connected" });
+                await update(studentConnectionRef, { status: "connected" });
                 loadConnections();
                 loadPendingRequests();
             } catch (error) {
@@ -617,13 +579,12 @@
             }
         }
 
-        async function deleteRequest({ professionalId }) {
+        async function deleteRequest({ studentId }) {
             try {
-                const studentConnectionRef = ref(db, `users/${userId}/connections/${professionalId}`);
-                const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
-                await remove(studentConnectionRef);
+                const professionalConnectionRef = ref(db, `users/${userId}/connections/${studentId}`);
+                const studentConnectionRef = ref(db, `users/${studentId}/connections/${userId}`);
                 await remove(professionalConnectionRef);
-                window.location.reload();
+                await remove(studentConnectionRef);
                 loadConnections();
                 loadPendingRequests();
             } catch (error) {
@@ -634,10 +595,10 @@
 
         async function deleteConnection({ studentId }) {
             try {
-                const studentConnectionRef = ref(db, `users/${userId}/connections/${studentId}`);
-                const professionalConnectionRef = ref(db, `users/${studentId}/connections/${userId}`);
-                await remove(studentConnectionRef);
+                const professionalConnectionRef = ref(db, `users/${userId}/connections/${studentId}`);
+                const studentConnectionRef = ref(db, `users/${studentId}/connections/${userId}`);
                 await remove(professionalConnectionRef);
+                await remove(studentConnectionRef);
                 loadConnections();
                 loadPendingRequests();
                 elements.chatArea.style.display = 'none';
@@ -672,27 +633,17 @@
             }
         }
 
-        async function copyMessage(messageId) {
-            try {
-                const chatId = [userId, selectedStudentId].sort().join("+");
-                const messageRef = ref(db, `chats/${chatId}/messages/${messageId}`);
-                const snapshot = await get(messageRef);
-                if (snapshot.exists()) {
-                    const message = snapshot.val();
-                    const text = message.file ? `[File] ${message.file.name}` : message.content;
-                    await navigator.clipboard.writeText(text);
-                    alert('Message copied to clipboard!');
-                }
-            } catch (error) {
-                console.error("Error copying message:", error);
-                alert("Failed to copy message.");
-            }
-        }
-
-        function selectStudent(studentId) {
+        async function selectStudent(studentId) {
             selectedStudentId = studentId;
             document.querySelectorAll('.user-item').forEach(item => {
-                item.classList.toggle('active', item.dataset.studentId === studentId);
+                const isActive = item.dataset.studentId === studentId;
+                item.classList.toggle('active', isActive);
+                const lastMessage = item.querySelector('.last-message');
+                if (lastMessage) lastMessage.style.display = isActive ? 'none' : 'block';
+                if (isActive) {
+                    const unreadDot = item.querySelector('.unread-dot');
+                    if (unreadDot) unreadDot.remove();
+                }
             });
             if (elements.chatArea) elements.chatArea.style.display = 'block';
             if (elements.workflowArea) elements.workflowArea.style.display = 'block';
@@ -700,7 +651,6 @@
             loadChat();
             loadWorkflows();
             loadCompletedTasks();
-            loadTaskSuggestions();
         }
 
         async function loadChatHeader() {
@@ -767,7 +717,10 @@
 
         async function loadChat() {
             if (!elements.chatMessages) return;
-            elements.chatMessages.innerHTML = '<div class="message">Loading messages...</div>';
+            elements.chatMessages.innerHTML = `
+                <div class="skeleton-message"></div>
+                <div class="skeleton-message"></div>
+            `;
             if (selectedStudentId) {
                 const chatId = [userId, selectedStudentId].sort().join("+");
                 const chatRef = ref(db, `chats/${chatId}/messages`);
@@ -780,6 +733,15 @@
                             .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                         const students = await fetchStudentData();
                         const student = students.find(s => s.id === selectedStudentId) || {};
+                        const tasksRef = ref(db, `tasks`);
+                        const tasksSnapshot = await get(tasksRef);
+                        const tasks = tasksSnapshot.exists() ? tasksSnapshot.val() : {};
+                        let taskTitles = [];
+                        for (const taskId in tasks) {
+                            if (tasks[taskId].professionalId === userId && tasks[taskId].studentId === selectedStudentId) {
+                                taskTitles.push(tasks[taskId].title);
+                            }
+                        }
                         let lastDate = null;
                         messages.forEach(msg => {
                             const isSent = msg.senderId === userId;
@@ -803,18 +765,14 @@
                             const messageDiv = document.createElement('div');
                             messageDiv.className = `message ${isSent ? 'sent' : 'received'} ${msg.file ? 'file-message' : ''}`;
                             messageDiv.dataset.messageId = msg.id;
+                            let content = msg.content || '';
+                            taskTitles.forEach(title => {
+                                const regex = new RegExp(`@${title.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}`, 'g');
+                                content = content.replace(regex, `<span class="mention">@${title}</span>`);
+                            });
                             let reactionsHTML = '';
-                            if (msg.reactions) {
-                                reactionsHTML = Object.entries(msg.reactions).map(([reaction, count]) => `
-                                    <span class="reaction">${reaction} ${count}</span>
-                                `).join('');
-                            }
-                            let contentHTML = msg.content || '';
-                            if (msg.mentionedTask) {
-                                contentHTML = contentHTML.replace(
-                                    `@${msg.mentionedTask.title}`,
-                                    `<a href="#" class="task-mention" data-task-id="${msg.mentionedTask.id}">@${msg.mentionedTask.title}</a>`
-                                );
+                            if (msg.reactions && msg.reactions[userId]) {
+                                reactionsHTML = `<span class="reaction">${msg.reactions[userId]}</span>`;
                             }
                             if (msg.file) {
                                 const fileSize = msg.file.size ? (msg.file.size / 1024).toFixed(2) + ' KB' : 'Unknown size';
@@ -836,13 +794,12 @@
                                     <div class="read-status">${msg.read ? 'Seen' : 'Sent'}</div>
                                     <div class="reactions">${reactionsHTML}</div>
                                     <div class="reaction-bar">
-                                        <i class="fas fa-handshake reaction-icon" data-reaction="🤝"></i>
-                                        <i class="fas fa-thumbs-up reaction-icon" data-reaction="👍"></i>
-                                        <i class="fas fa-heart reaction-icon" data-reaction="❤️"></i>
+                                        <span class="reaction-icon" data-reaction="🤝">🤝</span>
+                                        <span class="reaction-icon" data-reaction="👍">👍</span>
+                                        <span class="reaction-icon" data-reaction="❤️">❤️</span>
                                         <div class="message-menu">
                                             <i class="fas fa-ellipsis-h message-menu-icon"></i>
                                             <div class="message-menu-dropdown">
-                                                <button data-action="copyMessage">Copy Message</button>
                                                 <button data-action="deleteMessage">Delete Message</button>
                                             </div>
                                         </div>
@@ -855,17 +812,16 @@
                                         <div class="name">${senderName}</div>
                                         <div class="time">${time}</div>
                                     </div>
-                                    <div class="content">${contentHTML}</div>
+                                    <div class="content">${content}</div>
                                     <div class="read-status">${msg.read ? 'Seen' : 'Sent'}</div>
                                     <div class="reactions">${reactionsHTML}</div>
                                     <div class="reaction-bar">
-                                        <i class="fas fa-handshake reaction-icon" data-reaction="🤝"></i>
-                                        <i class="fas fa-thumbs-up reaction-icon" data-reaction="👍"></i>
-                                        <i class="fas fa-heart reaction-icon" data-reaction="❤️"></i>
+                                        <span class="reaction-icon" data-reaction="🤝">🤝</span>
+                                        <span class="reaction-icon" data-reaction="👍">👍</span>
+                                        <span class="reaction-icon" data-reaction="❤️">❤️</span>
                                         <div class="message-menu">
                                             <i class="fas fa-ellipsis-h message-menu-icon"></i>
                                             <div class="message-menu-dropdown">
-                                                <button data-action="copyMessage">Copy Message</button>
                                                 <button data-action="deleteMessage">Delete Message</button>
                                             </div>
                                         </div>
@@ -883,11 +839,13 @@
                     } else {
                         elements.chatMessages.innerHTML = '<div class="message">No messages yet</div>';
                     }
+                    isDataLoaded.chats = true;
+                    checkAllDataLoaded();
                 });
             }
         }
 
-        async function addReaction(messageId, reaction) {
+        async function toggleReaction(messageId, reaction) {
             try {
                 const chatId = [userId, selectedStudentId].sort().join("+");
                 const messageRef = ref(db, `chats/${chatId}/messages/${messageId}`);
@@ -895,93 +853,17 @@
                 if (snapshot.exists()) {
                     const message = snapshot.val();
                     const reactions = message.reactions || {};
-                    reactions[reaction] = (reactions[reaction] || 0) + 1;
+                    if (reactions[userId] === reaction) {
+                        delete reactions[userId];
+                    } else {
+                        reactions[userId] = reaction;
+                    }
                     await update(messageRef, { reactions });
                 }
             } catch (error) {
-                console.error("Error adding reaction:", error);
-                alert("Failed to add reaction.");
+                console.error("Error toggling reaction:", error);
+                alert("Failed to toggle reaction.");
             }
-        }
-
-        async function loadTaskSuggestions() {
-            if (!selectedStudentId) return;
-            taskSuggestions = [];
-            const tasksRef = ref(db, `tasks`);
-            const snapshot = await get(tasksRef);
-            if (snapshot.exists()) {
-                const tasks = snapshot.val();
-                for (const taskId in tasks) {
-                    const task = tasks[taskId];
-                    if (task.professionalId === userId && task.studentId === selectedStudentId) {
-                        taskSuggestions.push({ id: taskId, title: task.title });
-                    }
-                }
-            }
-        }
-
-        function handleMentionInput() {
-            const input = elements.chatInput.value;
-            const cursorPos = elements.chatInput.selectionStart;
-            const textBeforeCursor = input.substring(0, cursorPos);
-            const lastAtIndex = textBeforeCursor.lastIndexOf('@');
-            
-            if (lastAtIndex !== -1 && cursorPos > lastAtIndex) {
-                const query = textBeforeCursor.substring(lastAtIndex + 1).toLowerCase();
-                const suggestions = taskSuggestions.filter(task => 
-                    task.title.toLowerCase().includes(query)
-                );
-                
-                if (suggestions.length > 0) {
-                    elements.mentionSuggestions.innerHTML = suggestions.map(task => `
-                        <div class="mention-suggestion" data-task-id="${task.id}" data-task-title="${task.title}">
-                            ${task.title}
-                        </div>
-                    `).join('');
-                    elements.mentionSuggestions.classList.add('active');
-                } else {
-                    elements.mentionSuggestions.classList.remove('active');
-                }
-            } else {
-                elements.mentionSuggestions.classList.remove('active');
-            }
-        }
-
-        function navigateMentionSuggestions(key) {
-            const suggestions = elements.mentionSuggestions.querySelectorAll('.mention-suggestion');
-            if (suggestions.length === 0) return;
-            
-            let selectedIndex = -1;
-            suggestions.forEach((suggestion, index) => {
-                if (suggestion.classList.contains('selected')) {
-                    selectedIndex = index;
-                }
-            });
-
-            if (key === 'ArrowDown') {
-                selectedIndex = (selectedIndex + 1) % suggestions.length;
-            } else if (key === 'ArrowUp') {
-                selectedIndex = (selectedIndex - 1 + suggestions.length) % suggestions.length;
-            }
-
-            suggestions.forEach(suggestion => suggestion.classList.remove('selected'));
-            suggestions[selectedIndex].classList.add('selected');
-        }
-
-        function selectMention(taskId, taskTitle) {
-            const input = elements.chatInput.value;
-            const cursorPos = elements.chatInput.selectionStart;
-            const textBeforeCursor = input.substring(0, cursorPos);
-            const lastAtIndex = textBeforeCursor.lastIndexOf('@');
-            if (lastAtIndex !== -1) {
-                const textBeforeAt = input.substring(0, lastAtIndex);
-                const textAfterCursor = input.substring(cursorPos);
-                elements.chatInput.value = `${textBeforeAt}@${taskTitle}${textAfterCursor}`;
-                elements.chatInput.focus();
-                const newCursorPos = lastAtIndex + taskTitle.length + 1;
-                elements.chatInput.setSelectionRange(newCursorPos, newCursorPos);
-            }
-            elements.mentionSuggestions.classList.remove('active');
         }
 
         async function sendMessage() {
@@ -992,27 +874,17 @@
             const messageRef = ref(db, `chats/${chatId}/messages`);
             try {
                 const currentUser = await fetchCurrentUserProfile();
-                const mentionedTaskMatch = content.match(/@([\w\s]+)/);
-                let mentionedTask = null;
-                if (mentionedTaskMatch) {
-                    const taskTitle = mentionedTaskMatch[1];
-                    const task = taskSuggestions.find(t => t.title === taskTitle);
-                    if (task) {
-                        mentionedTask = { id: task.id, title: task.title };
-                    }
-                }
                 const newMessage = {
                     senderId: userId,
                     senderName: currentUser.name,
                     content,
                     timestamp: new Date().toISOString(),
-                    read: false,
-                    mentionedTask
+                    read: false
                 };
                 await push(messageRef, newMessage);
                 elements.chatInput.value = '';
                 elements.chatInput.style.height = 'auto';
-                elements.mentionSuggestions.classList.remove('active');
+                elements.taskDropdown.classList.remove('active');
                 if (elements.messageDing) {
                     elements.messageDing.play().catch(error => console.error("Error playing ding sound:", error));
                 }
@@ -1074,152 +946,181 @@
         }
 
         async function openTaskPopup(taskId = null) {
-            if (!elements.taskPopup || !elements.popupTitle || !elements.taskTitle ||
-                !elements.taskDescription || !elements.taskDeadline || !elements.taskFile ||
-                !elements.taskPayment) return;
-
+            if (!selectedStudentId) {
+                alert('Please select a student to assign a task.');
+                return;
+            }
+            editingTaskId = taskId;
+            elements.taskPopupTitle.textContent = taskId ? 'Edit Task' : 'Add Task';
+            elements.taskTitle.value = '';
+            elements.taskDescription.value = '';
+            elements.taskDeadline.value = '';
             uploadedTaskFiles = [];
-            elements.taskFileList.innerHTML = '';
+            elements.taskFilesList.innerHTML = '';
 
             if (taskId) {
-                editingTaskId = taskId;
-                elements.popupTitle.textContent = 'Edit Task';
-                const taskRef = ref(db, `tasks/${taskId}`);
                 try {
+                    const taskRef = ref(db, `tasks/${taskId}`);
                     const snapshot = await get(taskRef);
                     if (snapshot.exists()) {
                         const task = snapshot.val();
                         elements.taskTitle.value = task.title || '';
                         elements.taskDescription.value = task.description || '';
-                        elements.taskDeadline.value = task.deadline || '';
-                        elements.taskPayment.value = task.payment || '';
-                        elements.taskFile.value = '';
+                        elements.taskDeadline.value = task.deadline ? new Date(task.deadline).toISOString().split('T')[0] : '';
                         if (task.files) {
-                            uploadedTaskFiles = Object.values(task.files);
-                            uploadedTaskFiles.forEach(file => {
-                                const fileItem = document.createElement('div');
-                                fileItem.className = 'task-file-item';
-                                fileItem.innerHTML = `
-                                    <i class="${getFileIconClass(file.type)}" style="color: ${getFileIconColor(file.type)};"></i>
-                                    <span>${file.name}</span>
-                                    <i class="fas fa-times remove-file" onclick="removeTaskFile('${file.name}')"></i>
-                                `;
-                                elements.taskFileList.appendChild(fileItem);
-                            });
+                            uploadedTaskFiles = Object.values(task.files).map(file => ({
+                                name: file.name,
+                                url: file.url,
+                                type: file.type,
+                                size: file.size
+                            }));
+                            updateTaskFilesList();
                         }
                     }
                 } catch (error) {
-                    console.error("Error loading task:", error);
-                    alert("Failed to load task details.");
+                    console.error('Error loading task data:', error);
+                    alert('Failed to load task data.');
                 }
-            } else {
-                editingTaskId = null;
-                elements.popupTitle.textContent = 'Add New Task';
-                elements.taskTitle.value = '';
-                elements.taskDescription.value = '';
-                elements.taskDeadline.value = '';
-                elements.taskPayment.value = '';
-                elements.taskFile.value = '';
             }
 
             elements.taskPopup.classList.add('active');
         }
 
         function closeTaskPopup() {
-            if (elements.taskPopup) {
-                elements.taskPopup.classList.remove('active');
-                uploadedTaskFiles = [];
-                elements.taskFileList.innerHTML = '';
-            }
+            elements.taskPopup.classList.remove('active');
+            editingTaskId = null;
+            elements.taskTitle.value = '';
+            elements.taskDescription.value = '';
+            elements.taskDeadline.value = '';
+            uploadedTaskFiles = [];
+            elements.taskFilesList.innerHTML = '';
         }
 
         async function submitTask() {
-            const title = elements.taskTitle?.value.trim();
-            const description = elements.taskDescription?.value.trim();
-            const deadline = elements.taskDeadline?.value;
-            const payment = parseFloat(elements.taskPayment?.value) || 0;
+            const title = elements.taskTitle.value.trim();
+            const description = elements.taskDescription.value.trim();
+            const deadline = elements.taskDeadline.value;
 
-            if (title && description && deadline && selectedStudentId) {
-                try {
-                    const filesObj = uploadedTaskFiles.reduce((acc, file, index) => ({
-                        ...acc,
-                        [index]: file
-                    }), {});
+            if (!title || !deadline) {
+                alert('Please fill in the task title and deadline.');
+                return;
+            }
 
-                    const newTask = {
-                        professionalId: userId,
-                        studentId: selectedStudentId,
-                        title,
-                        description,
-                        deadline,
-                        status: 'pending',
-                        files: filesObj,
-                        payment,
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString()
-                    };
+            try {
+                let taskRef;
+                const taskData = {
+                    professionalId: userId,
+                    studentId: selectedStudentId,
+                    title,
+                    description,
+                    deadline,
+                    status: 'pending',
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
 
-                    if (editingTaskId) {
-                        const taskRef = ref(db, `tasks/${editingTaskId}`);
-                        await update(taskRef, {
-                            ...newTask,
-                            updatedAt: new Date().toISOString()
-                        });
-                    } else {
-                        const taskRef = ref(db, `tasks`);
-                        const newTaskRef = push(taskRef);
-                        await set(newTaskRef, newTask);
+                if (uploadedTaskFiles.length > 0) {
+                    taskData.files = {};
+                    for (let i = 0; i < uploadedTaskFiles.length; i++) {
+                        const file = uploadedTaskFiles[i];
+                        if (!file.url) {
+                            const storagePath = `tasks/${Date.now()}_${file.name}`;
+                            const fileRef = storageRef(storage, storagePath);
+                            const uploadTask = await uploadBytesResumable(fileRef, file);
+                            const fileUrl = await getDownloadURL(fileRef);
+                            taskData.files[i] = {
+                                name: file.name,
+                                url: fileUrl,
+                                type: file.type,
+                                size: file.size
+                            };
+                        } else {
+                            taskData.files[i] = {
+                                name: file.name,
+                                url: file.url,
+                                type: file.type,
+                                size: file.size
+                            };
+                        }
                     }
-
-                    loadWorkflows();
-                    closeTaskPopup();
-                } catch (error) {
-                    console.error("Error submitting task:", error);
-                    alert("Failed to submit task.");
                 }
-            } else {
-                alert('Please fill all required fields (Task Name, Description, and Deadline).');
+
+                if (editingTaskId) {
+                    taskRef = ref(db, `tasks/${editingTaskId}`);
+                    await update(taskRef, taskData);
+                } else {
+                    taskRef = ref(db, `tasks`);
+                    await push(taskRef, taskData);
+                }
+
+                closeTaskPopup();
+                loadWorkflows();
+                loadCompletedTasks();
+            } catch (error) {
+                console.error('Error submitting task:', error);
+                alert('Failed to submit task.');
             }
         }
 
-        async function sendComment(taskId, content) {
-            if (!content.trim()) return;
+        async function populateTaskDropdown() {
             try {
-                const commentRef = ref(db, `tasks/${taskId}/comments`);
-                const currentUser = await fetchCurrentUserProfile();
-                const newComment = {
-                    senderId: userId,
-                    senderName: currentUser.name,
-                    content,
-                    timestamp: new Date().toISOString()
-                };
-                await push(commentRef, newComment);
-                if (elements.messageDing) {
-                    elements.messageDing.play().catch(error => console.error("Error playing ding sound:", error));
+                const tasksRef = ref(db, `tasks`);
+                const snapshot = await get(tasksRef);
+                elements.taskDropdown.innerHTML = '';
+                if (snapshot.exists()) {
+                    const tasks = snapshot.val();
+                    let taskFound = false;
+                    for (const id in tasks) {
+                        if (tasks[id].professionalId === userId && tasks[id].studentId === selectedStudentId) {
+                            taskFound = true;
+                            const taskItem = document.createElement('div');
+                            taskItem.className = 'task-dropdown-item';
+                            taskItem.textContent = tasks[id].title;
+                            elements.taskDropdown.appendChild(taskItem);
+                        }
+                    }
+                    if (!taskFound) {
+                        elements.taskDropdown.innerHTML = '<div class="task-dropdown-item">No tasks available</div>';
+                    }
+                } else {
+                    elements.taskDropdown.innerHTML = '<div class="task-dropdown-item">No tasks available</div>';
                 }
             } catch (error) {
-                console.error("Error sending comment:", error);
-                alert("Failed to send comment.");
+                console.error("Error populating task dropdown:", error);
+                elements.taskDropdown.innerHTML = '<div class="task-dropdown-item">Error loading tasks</div>';
             }
         }
 
-        function toggleComments(taskId) {
-            const commentSection = document.querySelector(`.workflow-item[data-task-id="${taskId}"] .comment-section`);
-            if (commentSection) {
-                commentSection.classList.toggle('active');
+        function insertMention(taskTitle) {
+            const currentValue = elements.chatInput.value;
+            const cursorPos = elements.chatInput.selectionStart;
+            const textBefore = currentValue.substring(0, cursorPos);
+            const textAfter = currentValue.substring(cursorPos);
+            const lastAtIndex = textBefore.lastIndexOf('@');
+            let newValue;
+            if (lastAtIndex >= 0 && lastAtIndex === cursorPos - 1) {
+                newValue = textBefore + taskTitle + ' ' + textAfter;
+            } else {
+                newValue = textBefore + '@' + taskTitle + ' ' + textAfter;
             }
+            elements.chatInput.value = newValue;
+            elements.chatInput.focus();
+            const newCursorPos = lastAtIndex >= 0 ? lastAtIndex + taskTitle.length + 2 : cursorPos + taskTitle.length + 2;
+            elements.chatInput.setSelectionRange(newCursorPos, newCursorPos);
+            elements.taskDropdown.classList.remove('active');
+            elements.chatInput.style.height = 'auto';
+            elements.chatInput.style.height = `${Math.min(elements.chatInput.scrollHeight, 100)}px`;
         }
 
-        async function loadWorkflows() {
+        function loadWorkflows() {
             if (!elements.workflowList) return;
             if (selectedStudentId) {
                 const tasksRef = ref(db, `tasks`);
-                onValue(tasksRef, async (snapshot) => {
+                onValue(tasksRef, (snapshot) => {
                     elements.workflowList.innerHTML = '';
                     let hasTasks = false;
                     if (snapshot.exists()) {
                         const tasks = snapshot.val();
-                        const currentUser = await fetchCurrentUserProfile();
                         for (const taskId in tasks) {
                             const task = tasks[taskId];
                             if (task.professionalId === userId && task.studentId === selectedStudentId && task.status !== 'completed') {
@@ -1235,25 +1136,6 @@
                                         </a>
                                     `).join('');
                                 }
-                                let commentsHTML = '';
-                                let commentCount = 0;
-                                if (task.comments) {
-                                    commentCount = Object.keys(task.comments).length;
-                                    commentsHTML = Object.entries(task.comments)
-                                        .map(([id, comment]) => {
-                                            const isSent = comment.senderId === userId;
-                                            return `
-                                                <div class="comment ${isSent ? 'sent' : 'received'}">
-                                                    <div class="comment-header">
-                                                        <span class="name">${comment.senderName}</span>
-                                                        <span class="time">${new Date(comment.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                                                    </div>
-                                                    <div class="content">${comment.content}</div>
-                                                </div>
-                                            `;
-                                        })
-                                        .join('');
-                                }
                                 workflowItem.innerHTML = `
                                     <div class="task-header">
                                         <h4>${task.title}</h4>
@@ -1261,16 +1143,11 @@
                                             <i class="fas fa-ellipsis-v task-menu-icon"></i>
                                             <div class="task-menu-dropdown">
                                                 <button data-action="editTask">Edit Task</button>
-                                                <button data-action="markComplete">Mark as Completed</button>
                                                 <button data-action="deleteTask" class="delete-task-btn">Delete Task</button>
                                             </div>
                                         </div>
                                     </div>
                                     <p>${task.description}</p>
-                                    <div class="task-meta">
-                                        <span class="created-at">Created: ${new Date(task.createdAt).toLocaleDateString()}</span>
-                                        <span class="comment-count">${commentCount} Comments</span>
-                                    </div>
                                     <div class="deadline-container">
                                         <div class="deadline-slider" style="width: ${calculateDeadlineProgress(task.deadline)}%; background: ${getDeadlineColor(task.deadline)};"></div>
                                         <span class="days-left">${calculateDaysLeft(task.deadline)} days left</span>
@@ -1281,13 +1158,6 @@
                                         <option value="completed" ${task.status === "completed" ? "selected" : ""}>Completed</option>
                                     </select>
                                     <div class="file-icons">${fileIcons}</div>
-                                    <div class="comment-toggle">
-                                        <i class="fas fa-comment"></i> Comments (${commentCount})
-                                    </div>
-                                    <div class="comment-section">
-                                        <div class="comments-list">${commentsHTML}</div>
-                                        <textarea class="comment-input" placeholder="Add a comment..."></textarea>
-                                    </div>
                                 `;
                                 elements.workflowList.appendChild(workflowItem);
                             }
@@ -1296,21 +1166,22 @@
                     if (!hasTasks) {
                         elements.workflowList.innerHTML = '<p>No tasks found.</p>';
                     }
+                    isDataLoaded.tasks = true;
+                    checkAllDataLoaded();
                 });
             }
         }
 
-        async function loadCompletedTasks() {
+        function loadCompletedTasks() {
             if (!elements.completedTasksList) return;
             elements.completedTasksList.innerHTML = '';
             if (selectedStudentId) {
                 const tasksRef = ref(db, `tasks`);
-                onValue(tasksRef, async (snapshot) => {
+                onValue(tasksRef, (snapshot) => {
                     elements.completedTasksList.innerHTML = '';
                     let hasCompletedTasks = false;
                     if (snapshot.exists()) {
                         const tasks = snapshot.val();
-                        const currentUser = await fetchCurrentUserProfile();
                         for (const taskId in tasks) {
                             const task = tasks[taskId];
                             if (task.professionalId === userId && task.studentId === selectedStudentId && task.status === 'completed') {
@@ -1326,36 +1197,19 @@
                                         </a>
                                     `).join('');
                                 }
-                                let reviewHTML = '';
-                                if (task.review) {
-                                    reviewHTML = `
-                                        <div class="review-display">
-                                            <div class="stars">${'★'.repeat(task.review.rating)}${'☆'.repeat(5 - task.review.rating)}</div>
-                                            <p>${task.review.feedback}</p>
-                                        </div>
-                                    `;
-                                }
-                                let commentCount = task.comments ? Object.keys(task.comments).length : 0;
                                 completedItem.innerHTML = `
                                     <div class="task-header">
                                         <h4>${task.title}</h4>
                                         <div class="task-menu">
                                             <i class="fas fa-ellipsis-v task-menu-icon"></i>
                                             <div class="task-menu-dropdown">
-                                                <button data-action="reviewTask">Review Task</button>
-                                                <button data-action="reopenTask">Reopen Task</button>
                                                 <button data-action="deleteTask" class="delete-task-btn">Delete Task</button>
                                             </div>
                                         </div>
                                     </div>
                                     <span class="status-label completed">Completed</span>
                                     <p>${task.description}</p>
-                                    <div class="task-meta">
-                                        <span class="created-at">Created: ${new Date(task.createdAt).toLocaleDateString()}</span>
-                                        <span class="comment-count">${commentCount} Comments</span>
-                                    </div>
                                     <div class="file-icons">${fileIcons}</div>
-                                    ${reviewHTML}
                                 `;
                                 elements.completedTasksList.appendChild(completedItem);
                             }
@@ -1387,51 +1241,6 @@
             } catch (error) {
                 console.error("Error updating task status:", error);
                 alert("Failed to update task status.");
-            }
-        }
-
-        function openReviewPopup(taskId) {
-            reviewingTaskId = taskId;
-            selectedRating = 0;
-            elements.reviewFeedback.value = '';
-            updateStarRating();
-            elements.reviewPopup.classList.add('active');
-        }
-
-        function closeReviewPopup() {
-            elements.reviewPopup.classList.remove('active');
-            reviewingTaskId = null;
-            selectedRating = 0;
-        }
-
-        function updateStarRating() {
-            const stars = elements.starRating.querySelectorAll('i');
-            stars.forEach(star => {
-                const rating = parseInt(star.dataset.rating);
-                star.className = rating <= selectedRating ? 'fas fa-star selected' : 'fas fa-star';
-            });
-        }
-
-        async function submitReview() {
-            if (!reviewingTaskId || selectedRating === 0) {
-                alert('Please select a rating.');
-                return;
-            }
-            const feedback = elements.reviewFeedback.value.trim();
-            try {
-                const taskRef = ref(db, `tasks/${reviewingTaskId}`);
-                await update(taskRef, {
-                    review: {
-                        rating: selectedRating,
-                        feedback,
-                        timestamp: new Date().toISOString()
-                    }
-                });
-                closeReviewPopup();
-                loadCompletedTasks();
-            } catch (error) {
-                console.error("Error submitting review:", error);
-                alert("Failed to submit review.");
             }
         }
 
@@ -1473,16 +1282,9 @@
         window.deleteConnection = deleteConnection;
         window.deleteTask = deleteTask;
         window.deleteMessage = deleteMessage;
-        window.copyMessage = copyMessage;
         window.confirmAction = confirmAction;
         window.closeConfirmation = closeConfirmation;
-        window.sendComment = sendComment;
-        window.toggleComments = toggleComments;
-        window.addReaction = addReaction;
-        window.openReviewPopup = openReviewPopup;
-        window.closeReviewPopup = closeReviewPopup;
-        window.submitReview = submitReview;
-        window.removeTaskFile = removeTaskFile;
+        window.toggleReaction = toggleReaction;
 
         init();
     </script>

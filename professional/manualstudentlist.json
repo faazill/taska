@@ -399,7 +399,7 @@
         "education": {
             "college": "IIT Delhi",
             "degree": "B.Tech",
-            "branch": "Computer Science",
+            "branch": "Btech @ IIT Delhi",
             "year": "Third"
         },
         "skills": "Machine Learning, Node.js, HTML, C++, React",
@@ -448,7 +448,7 @@
         "education": {
             "college": "IIT Delhi",
             "degree": "B.Tech",
-            "branch": "Electrical Engineering",
+            "branch": "Founder of Shaadi.com",
             "year": "First"
         },
         "skills": "C, React, Machine Learning, C++, Node.js",
