@@ -388,34 +388,34 @@
     {
         "id": "t4KeQhVfMQhipwJV1VnRQwADBVT2",
         "personal": {
-            "name": "Fazil",
-            "email": "medinawilliam@mahoney.com",
+            "name": "Fazil k",
+            "email": "am1240156@iitd.ac.in",
             "gender": "Male",
-            "location": "Bangalore",
+            "location": "Delhi",
             "linkedin": "https://www.linkedin.com/in/faazill",
-            "whatsapp": "8301967056",
-            "profilePic": "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp"
+            "whatsapp": "918301967056",
+            "profilePic": "https://media.licdn.com/dms/image/v2/D5603AQEOtDEogB8Prg/profile-displayphoto-shrink_400_400/B56ZYkK0lRH0Ag-/0/1744363548240?e=1750291200&v=beta&t=tXBMpq2de2MDyhEHtB8rlcXzfgZmBVxuAMjgK6U8eyc"
         },
         "education": {
             "college": "IIT Delhi",
             "degree": "B.Tech",
             "branch": "Btech @ IIT Delhi",
-            "year": "Third"
+            "year": "Fresher"
         },
         "skills": "Machine Learning, Node.js, HTML, C++, React",
-        "experience": "Worked on embrace sticky schemas project",
+        "experience": "Team head at Rendezvous IIT Delhi ",
         "availability": {
-            "hours": "15",
-            "worktime": "Mornings",
+            "hours": "60",
+            "worktime": "Night",
             "remote": "Yes",
-            "duration": "3 months"
+            "duration": "5 months"
         },
         "portfolio": [
-            "https://github.com/alexandra_howell/project2"
+            ""
         ],
         "preferences": {
-            "roles": "Full Stack Developer",
-            "why": "Evening painting response data plant enough."
+            "roles": "Community Management , Social media marketing , FUll stack development",
+            "why": ""
         },
         "softSkills": {
             "communication": "Good",
@@ -423,16 +423,16 @@
         },
         "profiles": {
             "github": {
-                "username": "alexandra_howell"
+                "username": "faazill"
             },
             "codeforces": {
-                "username": "alexandra_howell_cf"
+                "username": ""
             },
             "leetcode": {
-                "username": "alexandra_howell_lc"
+                "username": ""
             }
         },
-        "about": "Alexandra Howell is a Third-year B.Tech student in Computer Science at IITKanpur. Skilled in Machine Learning, Node.js, HTML, C++, React, with experience in worked on embrace sticky schemas project. Interested in the role of Full Stack Developer, Alexandra Howell is available for 15 hours per week, primarily during mornings. Remote work: Yes."
+        "about": "Studying applied mechanics at IIT Delhi. I am a fresher and looking for internships in the field of machine learning and full stack development. I have experience in community management and social media marketing as well. I am available for 60 hours per week, "
     },
     {
         "id": "bSa14TskFkWStpCfcXCdGsFGMRT2",
