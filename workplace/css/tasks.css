@@ -9,6 +9,33 @@ body {
     flex-direction: column; 
 }
 
+.mobile-message {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #f4f5eb;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 1002;
+    font-size: 1.2rem;
+    color: #374151;
+    padding: 1rem;
+}
+@media (max-width: 768px) {
+    .mobile-message {
+        display: flex;
+    }
+    .dashboard-content,
+    .navbar,
+    footer {
+        display: none;
+    }
+}
+
 .navbar { 
     background: #fff; 
     padding: 1rem 2rem; 
