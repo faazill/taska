@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Loading your workspace...</p>
+    </div>
+
     <nav class="navbar">
         <div class="logo">Taska Elite - Professional</div>
         <ul class="nav-menu">
@@ -39,9 +44,10 @@
                     <div class="upload-progress" id="upload-progress">
                         <div class="upload-progress-bar" id="upload-progress-bar"></div>
                     </div>
-                    <textarea id="chat-input" placeholder="Type a message..." rows="1"></textarea>
+                    <textarea id="chat-input" placeholder="Type a message or @mention a task..." rows="1"></textarea>
                     <label for="file-input" class="file-input-label"><i class="fas fa-paperclip"></i></label>
                     <input type="file" id="file-input" class="file-input">
+                    <div class="mention-suggestions" id="mention-suggestions"></div>
                 </div>
                 <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
             </div>
@@ -58,37 +64,39 @@
     </div>
 
     <div class="task-popup" id="task-popup">
-        <div class="header">
-            <h3 id="popup-title">Add New Task</h3>
-            <button onclick="closeTaskPopup()"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="form-group">
-            <label for="task-title">Task Name</label>
-            <input type="text" id="task-title" placeholder="Enter task name">
-        </div>
-        <div class="form-group">
-            <label for="task-description">Description</label>
-            <textarea id="task-description" placeholder="Enter description" rows="4"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="task-deadline">Deadline</label>
-            <input type="date" id="task-deadline">
-        </div>
-        <div class="form-group">
-            <label for="task-file">Attach Files</label>
-            <input type="file" id="task-file" multiple>
-            <div class="upload-progress" id="task-upload-progress">
-                <div class="upload-progress-bar" id="task-upload-progress-bar"></div>
+        <div class="task-popup-content">
+            <div class="header">
+                <h3 id="popup-title">Add New Task</h3>
+                <button onclick="closeTaskPopup()"><i class="fas fa-times"></i></button>
             </div>
-            <div id="task-file-list" class="file-list"></div>
-        </div>
-        <div class="form-group" style="display: none;">
-            <label for="task-payment">Cash Payment (USD)</label>
-            <input type="number" id="task-payment" placeholder="Enter payment amount">
-        </div>
-        <div class="actions">
-            <button class="cancel-btn" onclick="closeTaskPopup()">Cancel</button>
-            <button class="submit-btn" onclick="confirmAction('submitTask', 'Add Task', 'Are you sure you want to add this task?')">Add Task</button>
+            <div class="form-group">
+                <label for="task-title">Task Name</label>
+                <input type="text" id="task-title" placeholder="Enter task name">
+            </div>
+            <div class="form-group">
+                <label for="task-description">Description</label>
+                <textarea id="task-description" placeholder="Enter description" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="task-deadline">Deadline</label>
+                <input type="date" id="task-deadline">
+            </div>
+            <div class="form-group">
+                <label for="task-file">Attach Files</label>
+                <input type="file" id="task-file" multiple>
+                <div class="upload-progress" id="task-upload-progress">
+                    <div class="upload-progress-bar" id="task-upload-progress-bar"></div>
+                </div>
+                <div id="task-file-list" class="file-list"></div>
+            </div>
+            <div class="form-group" style="display: none;">
+                <label for="task-payment">Cash Payment (USD)</label>
+                <input type="number" id="task-payment" placeholder="Enter payment amount">
+            </div>
+            <div class="actions">
+                <button class="cancel-btn" onclick="closeTaskPopup()">Cancel</button>
+                <button class="submit-btn" onclick="confirmAction('submitTask', 'Add Task', 'Are you sure you want to add this task?')">Add Task</button>
+            </div>
         </div>
     </div>
 
@@ -160,6 +168,7 @@
         let uploadedTaskFiles = [];
         let selectedRating = 0;
         let reviewingTaskId = null;
+        let taskSuggestions = [];
 
         const elements = {
             connectionsList: document.getElementById('connections-list'),
@@ -191,7 +200,9 @@
             taskUploadProgressBar: document.getElementById('task-upload-progress-bar'),
             reviewPopup: document.getElementById('review-popup'),
             reviewFeedback: document.getElementById('review-feedback'),
-            starRating: document.getElementById('star-rating')
+            starRating: document.getElementById('star-rating'),
+            mentionSuggestions: document.getElementById('mention-suggestions'),
+            loadingOverlay: document.getElementById('loading-overlay')
         };
 
         async function fetchStudentData() {
@@ -266,22 +277,23 @@
         }
 
         async function init() {
-            document.addEventListener('DOMContentLoaded', async () => {
-                await fetchStudentData();
-                setupEventListeners();
-                auth.onAuthStateChanged(user => {
-                    if (user) {
-                        userId = user.uid;
-                        fetchCurrentUserProfile().then(() => {
-                            loadConnections();
-                            loadPendingRequests();
-                            loadCompletedTasks();
-                        });
-                    } else {
-                        console.error("User not authenticated");
-                        window.location.href = "../index.html";
-                    }
-                });
+            elements.loadingOverlay.style.display = 'flex';
+            await fetchStudentData();
+            setupEventListeners();
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    userId = user.uid;
+                    fetchCurrentUserProfile().then(() => {
+                        loadConnections();
+                        loadPendingRequests();
+                        loadCompletedTasks();
+                        elements.loadingOverlay.style.display = 'none';
+                    });
+                } else {
+                    console.error("User not authenticated");
+                    elements.loadingOverlay.style.display = 'none';
+                    window.location.href = "../index.html";
+                }
             });
         }
 
@@ -319,6 +331,10 @@
                         confirmAction('deleteTask', 'Delete Task', 'Are you sure you want to delete this task?', { taskId });
                     } else if (action === 'reviewTask') {
                         openReviewPopup(taskId);
+                    } else if (action === 'markComplete') {
+                        confirmAction('updateStatus', 'Mark as Completed', 'Are you sure you want to mark this task as completed?', { taskId, status: 'completed' });
+                    } else if (action === 'reopenTask') {
+                        confirmAction('updateStatus', 'Reopen Task', 'Are you sure you want to reopen this task?', { taskId, status: 'in progress' });
                     }
                 }
                 if (target.matches('.reaction-icon')) {
@@ -332,23 +348,29 @@
                 }
                 if (target.matches('.message-menu-dropdown button')) {
                     const messageId = target.closest('.message').dataset.messageId;
-                    confirmAction('deleteMessage', 'Delete Message', 'Are you sure you want to delete this message?', { messageId });
+                    const action = target.dataset.action;
+                    if (action === 'deleteMessage') {
+                        confirmAction('deleteMessage', 'Delete Message', 'Are you sure you want to delete this message?', { messageId });
+                    } else if (action === 'copyMessage') {
+                        copyMessage(messageId);
+                    }
                 }
                 if (target.matches('.comment-toggle')) {
                     const taskId = target.closest('.workflow-item').dataset.taskId;
                     toggleComments(taskId);
                 }
-                if (target.matches('.comment-input')) {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        const taskId = target.closest('.workflow-item').dataset.taskId;
-                        sendComment(taskId, target.value);
-                        target.value = '';
-                    }
+                if (target.matches('.comment-input') && e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    const taskId = target.closest('.workflow-item').dataset.taskId;
+                    sendComment(taskId, target.value);
+                    target.value = '';
                 }
                 if (target.matches('.star-rating i')) {
                     selectedRating = parseInt(target.dataset.rating);
                     updateStarRating();
+                }
+                if (target.matches('.mention-suggestion')) {
+                    selectMention(target.dataset.taskId, target.dataset.taskTitle);
                 }
             });
 
@@ -372,6 +394,13 @@
                 elements.chatInput.addEventListener('input', () => {
                     elements.chatInput.style.height = 'auto';
                     elements.chatInput.style.height = `${Math.min(elements.chatInput.scrollHeight, 100)}px`;
+                    handleMentionInput();
+                });
+                elements.chatInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        navigateMentionSuggestions(e.key);
+                    }
                 });
             }
 
@@ -405,6 +434,9 @@
                     document.querySelectorAll('.message-menu-dropdown.active').forEach(dropdown => {
                         dropdown.classList.remove('active');
                     });
+                }
+                if (!e.target.closest('.chat-input')) {
+                    elements.mentionSuggestions.classList.remove('active');
                 }
             });
         }
@@ -640,6 +672,23 @@
             }
         }
 
+        async function copyMessage(messageId) {
+            try {
+                const chatId = [userId, selectedStudentId].sort().join("+");
+                const messageRef = ref(db, `chats/${chatId}/messages/${messageId}`);
+                const snapshot = await get(messageRef);
+                if (snapshot.exists()) {
+                    const message = snapshot.val();
+                    const text = message.file ? `[File] ${message.file.name}` : message.content;
+                    await navigator.clipboard.writeText(text);
+                    alert('Message copied to clipboard!');
+                }
+            } catch (error) {
+                console.error("Error copying message:", error);
+                alert("Failed to copy message.");
+            }
+        }
+
         function selectStudent(studentId) {
             selectedStudentId = studentId;
             document.querySelectorAll('.user-item').forEach(item => {
@@ -651,6 +700,7 @@
             loadChat();
             loadWorkflows();
             loadCompletedTasks();
+            loadTaskSuggestions();
         }
 
         async function loadChatHeader() {
@@ -759,6 +809,13 @@
                                     <span class="reaction">${reaction} ${count}</span>
                                 `).join('');
                             }
+                            let contentHTML = msg.content || '';
+                            if (msg.mentionedTask) {
+                                contentHTML = contentHTML.replace(
+                                    `@${msg.mentionedTask.title}`,
+                                    `<a href="#" class="task-mention" data-task-id="${msg.mentionedTask.id}">@${msg.mentionedTask.title}</a>`
+                                );
+                            }
                             if (msg.file) {
                                 const fileSize = msg.file.size ? (msg.file.size / 1024).toFixed(2) + ' KB' : 'Unknown size';
                                 messageDiv.innerHTML = `
@@ -785,6 +842,7 @@
                                         <div class="message-menu">
                                             <i class="fas fa-ellipsis-h message-menu-icon"></i>
                                             <div class="message-menu-dropdown">
+                                                <button data-action="copyMessage">Copy Message</button>
                                                 <button data-action="deleteMessage">Delete Message</button>
                                             </div>
                                         </div>
@@ -797,7 +855,7 @@
                                         <div class="name">${senderName}</div>
                                         <div class="time">${time}</div>
                                     </div>
-                                    <div class="content">${msg.content}</div>
+                                    <div class="content">${contentHTML}</div>
                                     <div class="read-status">${msg.read ? 'Seen' : 'Sent'}</div>
                                     <div class="reactions">${reactionsHTML}</div>
                                     <div class="reaction-bar">
@@ -807,6 +865,7 @@
                                         <div class="message-menu">
                                             <i class="fas fa-ellipsis-h message-menu-icon"></i>
                                             <div class="message-menu-dropdown">
+                                                <button data-action="copyMessage">Copy Message</button>
                                                 <button data-action="deleteMessage">Delete Message</button>
                                             </div>
                                         </div>
@@ -845,6 +904,86 @@
             }
         }
 
+        async function loadTaskSuggestions() {
+            if (!selectedStudentId) return;
+            taskSuggestions = [];
+            const tasksRef = ref(db, `tasks`);
+            const snapshot = await get(tasksRef);
+            if (snapshot.exists()) {
+                const tasks = snapshot.val();
+                for (const taskId in tasks) {
+                    const task = tasks[taskId];
+                    if (task.professionalId === userId && task.studentId === selectedStudentId) {
+                        taskSuggestions.push({ id: taskId, title: task.title });
+                    }
+                }
+            }
+        }
+
+        function handleMentionInput() {
+            const input = elements.chatInput.value;
+            const cursorPos = elements.chatInput.selectionStart;
+            const textBeforeCursor = input.substring(0, cursorPos);
+            const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+            
+            if (lastAtIndex !== -1 && cursorPos > lastAtIndex) {
+                const query = textBeforeCursor.substring(lastAtIndex + 1).toLowerCase();
+                const suggestions = taskSuggestions.filter(task => 
+                    task.title.toLowerCase().includes(query)
+                );
+                
+                if (suggestions.length > 0) {
+                    elements.mentionSuggestions.innerHTML = suggestions.map(task => `
+                        <div class="mention-suggestion" data-task-id="${task.id}" data-task-title="${task.title}">
+                            ${task.title}
+                        </div>
+                    `).join('');
+                    elements.mentionSuggestions.classList.add('active');
+                } else {
+                    elements.mentionSuggestions.classList.remove('active');
+                }
+            } else {
+                elements.mentionSuggestions.classList.remove('active');
+            }
+        }
+
+        function navigateMentionSuggestions(key) {
+            const suggestions = elements.mentionSuggestions.querySelectorAll('.mention-suggestion');
+            if (suggestions.length === 0) return;
+            
+            let selectedIndex = -1;
+            suggestions.forEach((suggestion, index) => {
+                if (suggestion.classList.contains('selected')) {
+                    selectedIndex = index;
+                }
+            });
+
+            if (key === 'ArrowDown') {
+                selectedIndex = (selectedIndex + 1) % suggestions.length;
+            } else if (key === 'ArrowUp') {
+                selectedIndex = (selectedIndex - 1 + suggestions.length) % suggestions.length;
+            }
+
+            suggestions.forEach(suggestion => suggestion.classList.remove('selected'));
+            suggestions[selectedIndex].classList.add('selected');
+        }
+
+        function selectMention(taskId, taskTitle) {
+            const input = elements.chatInput.value;
+            const cursorPos = elements.chatInput.selectionStart;
+            const textBeforeCursor = input.substring(0, cursorPos);
+            const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+            if (lastAtIndex !== -1) {
+                const textBeforeAt = input.substring(0, lastAtIndex);
+                const textAfterCursor = input.substring(cursorPos);
+                elements.chatInput.value = `${textBeforeAt}@${taskTitle}${textAfterCursor}`;
+                elements.chatInput.focus();
+                const newCursorPos = lastAtIndex + taskTitle.length + 1;
+                elements.chatInput.setSelectionRange(newCursorPos, newCursorPos);
+            }
+            elements.mentionSuggestions.classList.remove('active');
+        }
+
         async function sendMessage() {
             if (!elements.chatInput) return;
             const content = elements.chatInput.value.trim();
@@ -853,16 +992,27 @@
             const messageRef = ref(db, `chats/${chatId}/messages`);
             try {
                 const currentUser = await fetchCurrentUserProfile();
+                const mentionedTaskMatch = content.match(/@([\w\s]+)/);
+                let mentionedTask = null;
+                if (mentionedTaskMatch) {
+                    const taskTitle = mentionedTaskMatch[1];
+                    const task = taskSuggestions.find(t => t.title === taskTitle);
+                    if (task) {
+                        mentionedTask = { id: task.id, title: task.title };
+                    }
+                }
                 const newMessage = {
                     senderId: userId,
                     senderName: currentUser.name,
                     content,
                     timestamp: new Date().toISOString(),
-                    read: false
+                    read: false,
+                    mentionedTask
                 };
                 await push(messageRef, newMessage);
                 elements.chatInput.value = '';
                 elements.chatInput.style.height = 'auto';
+                elements.mentionSuggestions.classList.remove('active');
                 if (elements.messageDing) {
                     elements.messageDing.play().catch(error => console.error("Error playing ding sound:", error));
                 }
@@ -1086,7 +1236,9 @@
                                     `).join('');
                                 }
                                 let commentsHTML = '';
+                                let commentCount = 0;
                                 if (task.comments) {
+                                    commentCount = Object.keys(task.comments).length;
                                     commentsHTML = Object.entries(task.comments)
                                         .map(([id, comment]) => {
                                             const isSent = comment.senderId === userId;
@@ -1109,11 +1261,16 @@
                                             <i class="fas fa-ellipsis-v task-menu-icon"></i>
                                             <div class="task-menu-dropdown">
                                                 <button data-action="editTask">Edit Task</button>
+                                                <button data-action="markComplete">Mark as Completed</button>
                                                 <button data-action="deleteTask" class="delete-task-btn">Delete Task</button>
                                             </div>
                                         </div>
                                     </div>
                                     <p>${task.description}</p>
+                                    <div class="task-meta">
+                                        <span class="created-at">Created: ${new Date(task.createdAt).toLocaleDateString()}</span>
+                                        <span class="comment-count">${commentCount} Comments</span>
+                                    </div>
                                     <div class="deadline-container">
                                         <div class="deadline-slider" style="width: ${calculateDeadlineProgress(task.deadline)}%; background: ${getDeadlineColor(task.deadline)};"></div>
                                         <span class="days-left">${calculateDaysLeft(task.deadline)} days left</span>
@@ -1125,7 +1282,7 @@
                                     </select>
                                     <div class="file-icons">${fileIcons}</div>
                                     <div class="comment-toggle">
-                                        <i class="fas fa-comment"></i> Comments
+                                        <i class="fas fa-comment"></i> Comments (${commentCount})
                                     </div>
                                     <div class="comment-section">
                                         <div class="comments-list">${commentsHTML}</div>
@@ -1178,6 +1335,7 @@
                                         </div>
                                     `;
                                 }
+                                let commentCount = task.comments ? Object.keys(task.comments).length : 0;
                                 completedItem.innerHTML = `
                                     <div class="task-header">
                                         <h4>${task.title}</h4>
@@ -1185,12 +1343,17 @@
                                             <i class="fas fa-ellipsis-v task-menu-icon"></i>
                                             <div class="task-menu-dropdown">
                                                 <button data-action="reviewTask">Review Task</button>
+                                                <button data-action="reopenTask">Reopen Task</button>
                                                 <button data-action="deleteTask" class="delete-task-btn">Delete Task</button>
                                             </div>
                                         </div>
                                     </div>
                                     <span class="status-label completed">Completed</span>
                                     <p>${task.description}</p>
+                                    <div class="task-meta">
+                                        <span class="created-at">Created: ${new Date(task.createdAt).toLocaleDateString()}</span>
+                                        <span class="comment-count">${commentCount} Comments</span>
+                                    </div>
                                     <div class="file-icons">${fileIcons}</div>
                                     ${reviewHTML}
                                 `;
@@ -1310,6 +1473,7 @@
         window.deleteConnection = deleteConnection;
         window.deleteTask = deleteTask;
         window.deleteMessage = deleteMessage;
+        window.copyMessage = copyMessage;
         window.confirmAction = confirmAction;
         window.closeConfirmation = closeConfirmation;
         window.sendComment = sendComment;
@@ -1318,6 +1482,7 @@
         window.openReviewPopup = openReviewPopup;
         window.closeReviewPopup = closeReviewPopup;
         window.submitReview = submitReview;
+        window.removeTaskFile = removeTaskFile;
 
         init();
     </script>
