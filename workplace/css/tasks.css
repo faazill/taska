@@ -86,7 +86,7 @@ body {
 .dashboard-content { 
     display: flex; 
     flex: 1; 
-    margin-top: 3rem; 
+    margin-top: 0rem; 
     height: calc(100vh - 60px); 
 }
 
