@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: #F9FAFB; min-height: 100vh; color: #6B7280; padding-bottom: 60px; }
+        body { background: #f4f5eb; min-height: 100vh; color: #6B7280; padding-bottom: 60px; }
         .navbar {
             background: rgba(255, 255, 255, 0.95);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -30,142 +30,302 @@
         .dashboard-section h1 { font-size: 2rem; color: #374151; margin-bottom: 0.5rem; }
         .dashboard-section p { font-size: 1rem; margin-bottom: 1.5rem; }
         .search-container {
-    background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    margin: 2rem 0;
-    position: relative;
-    overflow: hidden;
-}
-
-.search-container::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(43, 108, 176, 0.1) 0%, transparent 70%);
-    pointer-events: none;
-}
-
-/* Enhanced Search Box */
-.search-box {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: #ffffff;
-    padding: 0.5rem;
-    border-radius: 50px;
-    border: none;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 1;
-}
-
-.search-box:hover,
-.search-box:focus-within {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-}
-
-.search-icon {
-    color: #2B6CB0;
-    font-size: 1.4rem;
-    margin-left: 1rem;
-    transition: transform 0.3s ease;
-}
-
-.search-box:hover .search-icon {
-    transform: scale(1.1);
-}
-
-.search-input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    padding: 1rem 0.5rem;
-    font-size: 1.1rem;
-    color: #374151;
-    outline: none;
-    font-weight: 400;
-    border-radius: 50px;
-}
-
-.search-input::placeholder {
-    color: #9CA3AF;
-    font-style: italic;
-}
-
-.search-btn {
-    padding: 0.9rem 2rem;
-    background: linear-gradient(90deg, #2B6CB0 0%, #1E4A80 100%);
-    color: #FFFFFF;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.search-btn:hover {
-    background: linear-gradient(90deg, #2C5282 0%, #1A3A66 100%);
-    transform: scale(1.05);
-}
-
-.search-btn::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: rgba(255, 255, 255, 0.2);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.search-btn:hover::after {
-    opacity: 1;
-}
-
-.btn-text {
-    font-size: 1.1rem;
-}
-
-.btn-icon {
-    font-size: 1rem;
-    transition: transform 0.3s ease;
-}
-
-.search-btn:hover .btn-icon {
-    transform: translateX(4px);
-}
+            background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .search-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(43, 108, 176, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: #ffffff;
+            padding: 0.5rem;
+            border-radius: 50px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .search-box:hover,
+        .search-box:focus-within {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        .search-icon {
+            color: #2B6CB0;
+            font-size: 1.4rem;
+            margin-left: 1rem;
+            transition: transform 0.3s ease;
+        }
+        .search-box:hover .search-icon {
+            transform: scale(1.1);
+        }
+        .search-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 1rem 0.5rem;
+            font-size: 1.1rem;
+            color: #374151;
+            outline: none;
+            font-weight: 400;
+            border-radius: 50px;
+        }
+        .search-input::placeholder {
+            color: #9CA3AF;
+            font-style: italic;
+        }
+        .search-btn {
+            padding: 0.9rem 2rem;
+            background: linear-gradient(90deg, #2B6CB0 0%, #1E4A80 100%);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .search-btn:hover {
+            background: linear-gradient(90deg, #2C5282 0%, #1A3A66 100%);
+            transform: scale(1.05);
+        }
+        .search-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .search-btn:hover::after {
+            opacity: 1;
+        }
+        .btn-text {
+            font-size: 1.1rem;
+        }
+        .btn-icon {
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+        .search-btn:hover .btn-icon {
+            transform: translateX(4px);
+        }
+        .search-info {
+            margin-top: 1.5rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(43, 108, 176, 0.15);
+            text-align: center;
+            transition: opacity 0.3s ease, max-height 0.3s ease;
+            max-height: 600px;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        .search-info::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: -20%;
+            width: 140%;
+            height: 140%;
+            background: radial-gradient(circle, rgba(43, 108, 176, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        .search-info.hidden {
+            opacity: 0;
+            max-height: 0;
+            padding: 0;
+            margin-top: 0;
+        }
+        .search-info h3 {
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #2B6CB0, #1E4A80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .search-info p {
+            font-size: 1.0 rem;
+            color: #4B5563;
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+        .search-info .highlight {
+            color: #2B6CB0;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .search-info .highlight:hover {
+            color: #1E4A80;
+        }
+        .search-info .ai-icon {
+            font-size: 2rem;
+            color: #2B6CB0;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
         .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(249, 250, 251, 0.9); display: none; justify-content: center; align-items: center; z-index: 1001; }
         .loader { width: 200px; height: 4px; background: #E5E7EB; position: relative; overflow: hidden; border-radius: 2px; }
         .loader::before { content: ''; position: absolute; left: -50%; height: 100%; width: 50%; background: #374151; animation: lineLoading 1.5s infinite ease-in-out; }
         @keyframes lineLoading { 0% { left: -50%; } 50% { left: 50%; } 100% { left: 150%; } }
-        .students-list { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 3rem; }
-        .student-card { background: #FFFFFF; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); }
-        .student-card h3 { font-size: 1.25rem; color: #374151; margin-bottom: 0.25rem; }
-        .student-card h4 { font-size: 1rem; color: #6B7280; font-weight: 400; margin-bottom: 0.5rem; }
-        .student-card p { font-size: 0.9rem; color: #6B7280; margin-bottom: 0.75rem; }
-        .student-actions { display: flex; justify-content: space-between; align-items: center; }
-        .ai-intro-btn { padding: 0.5rem 1rem; background: #2B6CB0; color: #FFFFFF; border: none; border-radius: 20px; cursor: pointer; font-weight: 500; }
-        .ai-intro-btn:hover { background: #2C5282; }
-        .view-profile { color: #374151; text-decoration: underline; cursor: pointer; font-size: 0.9rem; }
-        .view-profile:hover { opacity: 0.7; }
-        .social-icons { display: flex; gap: 0.75rem; }
-        .social-icon { font-size: 1.25rem; color: #374151; cursor: pointer; }
-        .social-icon:hover { transform: scale(1.1); }
-        .social-icon.linkedin:hover { color: #0077B5; }
+        .students-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+            align-items: center;
+        }
+        .student-card {
+            background: #FFFFFF;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 900px;
+            min-height: 200px;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+        .student-card:hover {
+            transform: translateY(-5px);
+        }
+        .student-card img.profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .student-card .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .student-card h3 {
+            font-size: 1.5rem;
+            color: #374151;
+            font-weight: 600;
+        }
+        .student-card h4 {
+            font-size: 1rem;
+            color: #6B7280;
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .student-card .year-badge {
+            background: #E5E7EB;
+            color: #374151;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .student-card p.description {
+            font-size: 0.95rem;
+            color: #4B5563;
+            line-height: 1.5;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            max-height: 4.5em;
+        }
+        .student-card p.description.expanded {
+            -webkit-line-clamp: unset;
+            max-height: none;
+        }
+        .student-card a.read-more {
+            color: #2B6CB0;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: underline;
+            align-self: flex-start;
+        }
+        .student-card a.read-more:hover {
+            opacity: 0.7;
+        }
+        .student-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            align-items: center;
+        }
+        .ai-intro-btn {
+            padding: 0.6rem 1.5rem;
+            background: #2B6CB0;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: background 0.3s ease;
+        }
+        .ai-intro-btn:hover {
+            background: #2C5282;
+        }
+        .view-profile {
+            color: #374151;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        .view-profile:hover {
+            opacity: 0.7;
+        }
+        .social-icons {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .social-icon {
+            font-size: 1.25rem;
+            color: #374151;
+            cursor: pointer;
+        }
+        .social-icon:hover {
+            transform: scale(1.1);
+        }
+        .social-icon.linkedin:hover {
+            color: #0077B5;
+        }
         .pagination { display: none; }
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.3); z-index: 999; }
         .overlay.active { display: block; }
@@ -175,190 +335,192 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #FFFFFF;
+            background: #ffffff;
             padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             max-height: 80vh;
             overflow-y: auto;
             z-index: 1000;
+            border: 1px solid #e5e7eb;
         }
         .profile-popup.active { display: block; }
-        .profile-section { padding: 1rem; }
-        .profile-section h2 { font-size: 1.5rem; color: #374151; margin-bottom: 1rem; text-align: center; }
-        .profile-section p { font-size: 0.9rem; margin-bottom: 0.75rem; line-height: 1.4; }
-        .profile-section p strong { color: #374151; font-weight: 500; display: inline-block; width: 100px; }
+        .profile-section {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 1rem;
+            align-items: start;
+        }
+        .profile-section img.profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e5e7eb;
+        }
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .profile-details h2 {
+            font-size: 1.5rem;
+            color: #1F2937;
+            font-weight: 600;
+            margin: 0;
+        }
+        .profile-details h3 {
+            font-size: 1rem;
+            color: #6B7280;
+            font-weight: 400;
+            margin: 0;
+        }
+        .profile-content p {
+            font-size: 0.9rem;
+            color: #4B5563;
+            line-height: 1.5;
+            margin-top: 0.5rem;
+        }
+        .profile-content p strong {
+            color: #1F2937;
+            font-weight: 500;
+            display: inline-block;
+            width: 100px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #2B6CB0;
+            color: #FFFFFF;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .close-btn:hover {
+            background: #1E4A80;
+            transform: rotate(90deg);
+        }
         .message-popup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #FFFFFF;
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 450px;
-    height: 65vh;
-    z-index: 1000;
-    border: 1px solid #F0F0F0;
-}
-.message-popup.active { display: flex; flex-direction: column; }
-.message-popup h2 {
-    font-size: 1.5rem;
-    color: #1A1A1A;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    font-weight: 600;
-}
-.message-popup textarea {
-    width: 100%;
-    flex-grow: 1;
-    padding: 1rem;
-    border: 1px solid #E0E0E0;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    resize: none;
-    font-size: 1rem;
-    background: #FAFAFA;
-    color: #333;
-    outline: none;
-    transition: border-color 0.3s ease;
-}
-.message-popup textarea:focus { border-color: #2B6CB0; }
-.message-popup .send-btn {
-    padding: 0.75rem;
-    width: 100%;
-    background: #2B6CB0;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 1rem;
-    transition: background 0.3s ease;
-}
-.message-popup .send-btn:hover { background: #2C5282; } .close-btn { position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6B7280; }
-        .close-btn:hover { color: #374151; }
-        @media (max-width: 768px) {
-    .message-popup { padding: 1.5rem; max-width: 90%; height: 65vh; }
-    .message-popup h2 { font-size: 1.25rem; margin-bottom: 1rem; }
-    .message-popup textarea { font-size: 0.9rem; }
-    .message-popup .send-btn { font-size: 0.9rem; }
-}
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #FFFFFF;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 450px;
+            height: 65vh;
+            z-index: 1000;
+            border: 1px solid #F0F0F0;
+        }
+        .message-popup.active { display: flex; flex-direction: column; }
+        .message-popup h2 {
+            font-size: 1.5rem;
+            color: #1A1A1A;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        .message-popup textarea {
+            width: 100%;
+            flex-grow: 1;
+            padding: 1rem;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            resize: none;
+            font-size: 1rem;
+            background: #FAFAFA;
+            color: #333;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        .message-popup textarea:focus { border-color: #2B6CB0; }
+        .message-popup .send-btn {
+            padding: 0.75rem;
+            width: 100%;
+            background: #2B6CB0;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+        .message-popup .send-btn:hover { background: #2C5282; }
         footer { background: #FFFFFF; padding: 1rem; text-align: center; position: fixed; bottom: 0; width: 100%; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); }
         @media (max-width: 768px) {
-            .search-container {
-        padding: 1rem;
-        margin: 1.5rem 0;
-        border-radius: 6px; /* Consistent with desktop */
-    }
-
-    .search-box {
-        gap: 0.6rem; /* Slightly reduced but keeps layout */
-        padding: 1rem;
-        border-radius: 6px; /* Consistent with desktop */
-    }
-
-    .search-icon {
-        display: none; /* Hide icon on mobile */
-        font-size: 1.2rem; /* Slightly smaller */
-        margin-left: 0.8rem;
-    }
-
-    .search-input {
-        padding: 0.8rem 0.4rem;
-        font-size: 0.95rem; /* Scaled down proportionally */
-    }
-
-    .search-btn {
-        padding: 0.8rem 1rem; /* Adjusted for icon-only */
-        border-radius: 6px; /* Consistent with desktop */
-    }
-    .btn-text {
-        font-size: 0.95rem;
-    }
-
-    .btn-icon {
-        font-size: 0.9rem;
-    }
-            .navbar { padding: 1rem; }
+            .search-container { padding: 1rem; margin: 1.5rem 0; border-radius: 8px; }
+            .search-box { flex-direction: row; gap: 0.5rem; padding: 0.8rem; }
+            .search-icon { font-size: 1.2rem; margin-left: 0.5rem; }
+            .search-input { padding: 0.8rem 0.4rem; font-size: 0.95rem; }
+            .search-btn { padding: 0.8rem 1.5rem; border-radius: 50px; }
+            .btn-text { font-size: 0.95rem; }
+            .btn-icon { font-size: 0.9rem; }
+            .search-info { padding: 1.5rem; font-size: 0.9rem; }
+            .search-info h3 { font-size: 1.2rem; }
+            .search-info .ai-icon { font-size: 1.5rem; }
+            .navbar { padding: 0.8rem; }
             .nav-menu { display: none; position: absolute; top: 60px; left: 0; width: 100%; background: #FFFFFF; flex-direction: column; padding: 1rem; }
             .nav-menu.active { display: flex; }
             .hamburger { display: block; }
-            .search-box { flex-direction: column; align-items: stretch; gap: 0.5rem; }
-            .search-btn { margin-top: 0.5rem; }
-            .message-popup { padding: 1rem; }
-            .message-popup h2 { font-size: 1.1rem; }
-            .message-popup textarea { font-size: 0.85rem; }
+            .student-card {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1rem;
+                max-width: 100%;
+            }
+            .student-card img.profile-pic {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 0.5rem;
+            }
+            .student-card h3 { font-size: 1.25rem; }
+            .student-card h4 { font-size: 0.9rem; }
+            .student-card .year-badge { font-size: 0.8rem; }
+            .student-card p.description { font-size: 0.9rem; }
+            .student-actions { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .profile-popup {
+                width: 95%;
+                max-width: 400px;
+                max-height: 80vh;
+                padding: 1rem;
+                border-radius: 10px;
+            }
+            .profile-section {
+                grid-template-columns: 80px 1fr;
+                gap: 0.75rem;
+            }
+            .profile-section img.profile-pic { width: 80px; height: 80px; }
+            .profile-details h2 { font-size: 1.25rem; }
+            .profile-details h3 { font-size: 0.9rem; }
+            .profile-content p { font-size: 0.85rem; }
+            .profile-content p strong { width: 90px; }
+            .close-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            .message-popup { padding: 1.5rem; max-width: 90%; height: 65vh; }
+            .message-popup h2 { font-size: 1.25rem; margin-bottom: 1rem; }
+            .message-popup textarea { font-size: 0.9rem; }
             .message-popup .send-btn { font-size: 0.9rem; }
         }
         @media (min-width: 768px) {
-            .students-list { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
-        }
-
-        .ai-explanation {
-            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            margin: 2rem 0;
-            text-align: left;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-            font-family: 'Roboto', sans-serif;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .ai-explanation h2 {
-            font-size: 1.75rem;
-            color: #2B6CB0;
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-        }
-
-        .ai-explanation p {
-            font-size: 1rem;
-            line-height: 1.7;
-            color: #4B5563;
-            margin-bottom: 1.25rem;
-            font-weight: 400;
-        }
-
-        .ai-explanation p strong {
-            color: #374151;
-            font-weight: 700;
-        }
-
-        .ai-explanation span#totalStudents {
-            font-weight: 700;
-            color: #2B6CB0;
-        }
-
-        .ai-explanation ul {
-            list-style-type: disc;
-            margin-left: 2rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .ai-explanation ul li {
-            font-size: 1rem;
-            color: #4B5563;
-            line-height: 1.7;
-            margin-bottom: 0.75rem;
-        }
-
-        .ai-explanation.hidden {
-            opacity: 0;
-            transform: translateY(20px);
-            height: 0;
-            padding: 0;
-            margin: 0;
-            overflow: hidden;
+            .students-list { align-items: center; }
         }
     </style>
 </head>
@@ -376,19 +538,36 @@
     <main class="dashboard-content">
         <section class="dashboard-section">
             <br><br>
-            <h1>Explore IIT Talent</h1>
-            <p>Find and connect with top IIT prodigies using AI-powered search.</p>
+            <h1>Explore Talents from Top Colleges in India</h1>
+            <p>Find and connect with top students using AI-powered search.</p>
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" id="ai-search-input" 
+                       placeholder="e.g., IIT Delhi B.Tech Applied Mechanics student with Python skill">
+                <button class="search-btn" onclick="performSearch()">
+                    <span class="btn-text">Search Talent</span>
+                    <i class="fas fa-arrow-right btn-icon"></i>
+                </button>
+            </div>
+            <br>
+            <br>
+            <div class="search-info" id="searchInfo">
+                <i class="fas fa-brain ai-icon"></i>
+                <h3>Discover Talent That Fits — Powered by Smart AI</h3>
+                <p>Our <span class="highlight">AI-powered search engine</span> understands your exact needs by analyzing keywords and context. It intelligently scans thousands of verified student profiles, evaluating their <span class="highlight">colleges, degrees, skills, and project experiences</span> to surface the most relevant candidates.</p>
+                
+                <p>Whether you're looking for a <span class="highlight">Python developer from IIT Madras skilled in SQL</span> or a <span class="highlight">B.Tech student experienced in AI and Flutter</span>, just type your requirements in natural language — and let our AI do the magic.</p>
             
-                <div class="search-box">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="search-input" id="ai-search-input" 
-                           placeholder="e.g., IIT Delhi B.Tech Applied Mechanics student with Python skill">
-                    <button class="search-btn" onclick="performSearch()">
-                        <span class="btn-text">Search Talent</span>
-                        <i class="fas fa-arrow-right btn-icon"></i>
-                    </button>
-                </div>
+                <p>The more specific your query, the better the results. Try searches like:</p>
+                <ul>
+                    "IIT Delhi CSE student with React and backend experience"<br>
+                    "Python + SQL developer from NIT with internship experience"<br>
+                   "Machine learning enthusiast with Kaggle profile and TensorFlow projects"
+                   <br>
+                </ul>
             
+                <p>Our smart algorithms <span class="highlight">understand your intent</span> and do a deep dive into every profile to ensure you connect with <span class="highlight">only the best-fit candidates</span>.</p>
+            </div>
             <div class="loading-overlay" id="loadingOverlay">
                 <div class="loader"></div>
             </div>
@@ -403,7 +582,7 @@
 
     <div class="overlay" id="overlay"></div>
     <div class="profile-popup" id="profilePopup">
-        <button class="close-btn" onclick="closeProfilePopup()">×</button>
+        <button class="close-btn" onclick="closeProfilePopup()"><i class="fas fa-times"></i></button>
         <div class="profile-content" id="profileContent"></div>
     </div>
 
@@ -414,12 +593,12 @@
         <button class="send-btn" onclick="sendMessage()">Send via WhatsApp</button>
     </div>
 
-    <!-- Add Firebase SDK -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
-    <script >
+    <script>
         // Initialize Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
@@ -431,21 +610,29 @@
             appId: "1:205487498813:web:0de2c9eab567482781ec54",
             measurementId: "G-G0G1F6GQ9B"
         };
-        
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        // Hamburger menu toggle
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.hamburger').addEventListener('click', () => {
                 document.querySelector('.nav-menu').classList.toggle('active');
+            });
+
+            // Search on Enter key
+            document.getElementById('ai-search-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
             });
         });
 
         const part1 = 'sk-proj-3F9d8rVuPthYn2jvKneznUYN-ZYaFSy0nKkKIJ5IOEVdjRQdGebYsRkkmJqn25YfZNDLUY12S6T3BlbkFJVBfH9b';
         const part2 = 'EfOVjVB3iRmikjAcyzHapDxOwLArvNo2eln91xFnjyR_D-Mo7XeXcjgcdjRiTueSh8MA';
-        const apiKey = part1 + part2;        
+        const apiKey = part1 + part2;
         let studentsData = [];
         let currentStudentId = null;
+        let connectedStudents = new Set();
 
         const studentsList = document.getElementById('students-list');
         const profilePopup = document.getElementById('profilePopup');
@@ -454,21 +641,57 @@
         const loadingOverlay = document.getElementById('loadingOverlay');
         const messagePopup = document.getElementById('messagePopup');
         const introMessage = document.getElementById('introMessage');
+        const searchInfo = document.getElementById('searchInfo');
 
+        // Fetch student data and connected students
         document.addEventListener('DOMContentLoaded', () => {
-            fetch('manualstudentlist.json')
-                .then(response => response.json())
-                .then(data => {
+            Promise.all([
+                fetch('manualstudentlist.json').then(response => response.json()),
+                getConnectedStudents()
+            ])
+                .then(([data, connections]) => {
                     studentsData = data.map((student, index) => ({
                         ...student,
                         id: student.id || `student_${index}`
                     }));
+                    connectedStudents = new Set(connections);
                 })
                 .catch(error => {
-                    console.error('Error loading JSON:', error);
+                    console.error('Error loading data:', error);
                     studentsList.innerHTML = '<p>Error loading student data.</p>';
                 });
         });
+
+        // Fetch connected students from Firebase
+        async function getConnectedStudents() {
+            const user = firebase.auth().currentUser;
+            if (!user) return [];
+            try {
+                const snapshot = await database.ref(`users/${user.uid}/connections`).once('value');
+                const connections = snapshot.val() || {};
+                return Object.keys(connections);
+            } catch (error) {
+                console.error('Error fetching connections:', error);
+                return [];
+            }
+        }
+
+        // Map education year to label
+        function getYearLabel(year) {
+            if (!year || year === 'Not set') return 'Student';
+            const yearNum = parseInt(year);
+            if (isNaN(yearNum)) return 'Student';
+            if (yearNum >= 2025) {
+                return 'Alumni';
+            }
+            switch (yearNum) {
+                case 1: return 'Freshman';
+                case 2: return 'Sophomore';
+                case 3: return 'Junior';
+                case 4: return 'Senior';
+                default: return 'Alumni';
+            }
+        }
 
         async function aiSearch(query = '') {
             if (!query) {
@@ -477,8 +700,8 @@
             }
 
             loadingOverlay.style.display = 'flex';
+            searchInfo.classList.add('hidden');
 
-            // Prepare CSV data from studentsData
             const csvText = [
                 ['id', 'personal.name', 'education.college', 'education.degree', 'education.branch', 'education.year', 'skills', 'experience'].join(','),
                 ...studentsData.map(student => [
@@ -493,7 +716,6 @@
                 ].join(','))
             ].join('\n');
 
-            // Enhanced prompt with clearer instructions and examples
             const prompt = `
                 You are an expert at analyzing student data for talent matching. Given the following CSV data of students:
                 ${csvText}
@@ -525,10 +747,10 @@
                         'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
-                        model: 'gpt-4o', // Ensure you're using a capable model
+                        model: 'gpt-4o',
                         messages: [{ role: 'user', content: prompt }],
                         max_tokens: 2000,
-                        temperature: 0.3 // Lower temperature for more precise responses
+                        temperature: 0.3
                     })
                 });
 
@@ -541,43 +763,50 @@
                     if (!Array.isArray(shortlistedIds) || shortlistedIds.length !== 10 || !shortlistedIds.every(id => typeof id === 'string')) {
                         throw new Error('Invalid response format: Expected an array of 10 student IDs');
                     }
-                    // Verify that all IDs exist in studentsData
                     const validIds = shortlistedIds.filter(id => studentsData.some(student => student.id === id));
                     if (validIds.length < 10) {
                         console.warn('AI returned fewer valid IDs than expected:', validIds);
-                        // Supplement with additional relevant students if needed
                         const remainingCount = 10 - validIds.length;
                         const additionalIds = studentsData
-                            .filter(student => !validIds.includes(student.id))
+                            .filter(student => !validIds.includes(student.id) && !connectedStudents.has(student.id))
                             .slice(0, remainingCount)
                             .map(student => student.id);
                         shortlistedIds = [...validIds, ...additionalIds];
                     }
                 } catch (parseError) {
                     console.error('JSON Parse Error:', parseError, 'Response:', data.choices[0].message.content);
-                    // Improved fallback: Basic keyword matching instead of first 10
                     shortlistedIds = basicKeywordMatch(query);
                 }
 
                 const filteredStudents = studentsData
-                    .filter(student => shortlistedIds.includes(student.id))
+                    .filter(student => shortlistedIds.includes(student.id) && !connectedStudents.has(student.id))
                     .sort((a, b) => shortlistedIds.indexOf(a.id) - shortlistedIds.indexOf(b.id));
 
                 studentsList.innerHTML = filteredStudents.length > 0
-                    ? filteredStudents.map(student => `
-                        <div class="student-card">
-                            <h3>${student.personal?.name || 'Unnamed'}</h3>
-                            <h4>${student.education?.college || 'Not set'} - ${student.education?.branch || 'Not set'}</h4>
-                            <p>${student.about || student.experience || 'No description available'}</p>
-                            <div class="student-actions">
-                                <button class="ai-intro-btn" onclick="generateAIIntro('${student.id}')">Connect</button>
-                                <span class="view-profile" onclick="showProfile('${student.id}')">View Profile</span>
-                                <div class="social-icons">
-                                    <i class="fab fa-linkedin social-icon linkedin" onclick="window.open('${student.personal?.linkedin || '#'}', '_blank')"></i>
+                    ? filteredStudents.map(student => {
+                        const description = student.about || student.experience || 'No description available';
+                        const isLong = description.length > 100;
+                        const subheading = `${student.education?.college || 'Not set'} - ${student.education?.branch || 'Not set'}`;
+                        const yearLabel = getYearLabel(student.education?.year);
+                        return `
+                            <div class="student-card">
+                                <img src="${student.personal?.profilePic || '../assets/avatar/1.png'}" alt="Profile Picture" class="profile-pic">
+                                <div class="card-content">
+                                    <h3>${student.personal?.name || 'Unnamed'}</h3>
+                                    <h4>${subheading}<span class="year-badge">${yearLabel}</span></h4>
+                                    <p class="description${isLong ? '' : ' expanded'}">${description}</p>
+                                    ${isLong ? `<a class="read-more" onclick="toggleReadMore(this)">Read More</a>` : ''}
+                                    <div class="student-actions">
+                                        <button class="ai-intro-btn" onclick="generateAIIntro('${student.id}')">Connect</button>
+                                        <span class="view-profile" onclick="showProfile('${student.id}')">View Profile</span>
+                                        <div class="social-icons">
+                                            <i class="fab fa-linkedin social-icon linkedin" onclick="window.open('${student.personal?.linkedin || '#'}', '_blank')"></i>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    `).join('')
+                        `;
+                    }).join('')
                     : '<p>No matching students found.</p>';
             } catch (error) {
                 console.error('AI Search Error:', error);
@@ -587,17 +816,18 @@
             loadingOverlay.style.display = 'none';
         }
 
-        // Basic fallback keyword matching function
         function basicKeywordMatch(query) {
             const keywords = query.toLowerCase().split(' ');
-            const scoredStudents = studentsData.map(student => {
-                let score = 0;
-                const studentText = `${student.personal?.name || ''} ${student.education?.college || ''} ${student.education?.degree || ''} ${student.education?.branch || ''} ${student.skills || ''} ${student.experience || ''}`.toLowerCase();
-                keywords.forEach(keyword => {
-                    if (studentText.includes(keyword)) score += 1;
+            const scoredStudents = studentsData
+                .filter(student => !connectedStudents.has(student.id))
+                .map(student => {
+                    let score = 0;
+                    const studentText = `${student.personal?.name || ''} ${student.education?.college || ''} ${student.education?.degree || ''} ${student.education?.branch || ''} ${student.skills || ''} ${student.experience || ''}`.toLowerCase();
+                    keywords.forEach(keyword => {
+                        if (studentText.includes(keyword)) score += 1;
+                    });
+                    return { id: student.id, score };
                 });
-                return { id: student.id, score };
-            });
             return scoredStudents
                 .sort((a, b) => b.score - a.score)
                 .slice(0, 10)
@@ -609,13 +839,15 @@
             aiSearch(query);
         };
 
+        window.toggleReadMore = (element) => {
+            const description = element.previousElementSibling;
+            description.classList.toggle('expanded');
+            element.textContent = description.classList.contains('expanded') ? 'Read Less' : 'Read More';
+        };
+
         window.generateAIIntro = async (studentId) => {
             currentStudentId = studentId;
             loadingOverlay.style.display = 'flex';
-            
-           
-        
-            
             const message = await generateIntroMessage(studentId);
             introMessage.value = message;
             loadingOverlay.style.display = 'none';
@@ -628,34 +860,28 @@
             if (user) {
                 const userId = user.uid;
                 const timestamp = new Date().toISOString();
-                
-                // Store the connection under the user's connections
                 database.ref(`users/${userId}/connections/${studentId}`).set({
                     timestamp: timestamp,
                     status: "pending"
                 }).then(() => {
                     console.log("Connection stored successfully");
+                    connectedStudents.add(studentId);
                 }).catch((error) => {
                     console.error("Error storing connection:", error);
                 });
-
                 database.ref(`users/${studentId}/connections/${userId}`).set({
                     timestamp: timestamp,
                     status: "pending"
-                }).then(() => {
-                    console.log("Connection stored successfully");
                 }).catch((error) => {
                     console.error("Error storing connection:", error);
                 });
             } else {
                 console.log("User not authenticated, connection not stored");
-                // You might want to prompt the user to log in here
             }
         }
 
         async function generateIntroMessage(studentId) {
             const student = studentsData.find(s => s.id === studentId);
-            
             const prompt = `
                 Given the student's details:
                 - Name: ${student.personal?.name || 'Unnamed'}
@@ -686,7 +912,6 @@
 
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.error?.message || 'API request failed');
-
                 return data.choices[0].message.content.trim();
             } catch (error) {
                 console.error('AI Intro Generation Error:', error);
@@ -697,17 +922,23 @@
         window.showProfile = (targetUserId) => {
             const student = studentsData.find(s => s.id === targetUserId);
             if (student) {
+                const fields = [
+                    { label: 'Degree', value: student.education?.degree },
+                    { label: 'Year', value: student.education?.year },
+                    { label: 'Skills', value: student.skills },
+                    { label: 'Experience', value: student.experience },
+                    { label: 'Email', value: student.personal?.email },
+                    { label: 'LinkedIn', value: student.personal?.linkedin ? `<a href="${student.personal.linkedin}" target="_blank">View LinkedIn</a>` : null }
+                ].filter(field => field.value && field.value !== 'Not set');
+
                 profileContent.innerHTML = `
                     <div class="profile-section">
-                        <h2>${student.personal?.name || 'Unnamed'}</h2>
-                        <p><strong>College:</strong> ${student.education?.college || 'Not set'}</p>
-                        <p><strong>Branch:</strong> ${student.education?.branch || 'Not set'}</p>
-                        <p><strong>Degree:</strong> ${student.education?.degree || 'Not set'}</p>
-                        <p><strong>Year:</strong> ${student.education?.year || 'Not set'}</p>
-                        <p><strong>Skills:</strong> ${student.skills || 'Not set'}</p>
-                        <p><strong>Experience:</strong> ${student.experience || 'Not set'}</p>
-                        <p><strong>Email:</strong> ${student.personal?.email || 'Not set'}</p>
-                        
+                        <img src="${student.personal?.profilePic || '../assets/avatar/1.png'}" alt="Profile Picture" class="profile-pic">
+                        <div class="profile-details">
+                            <h2>${student.personal?.name || 'Unnamed'}</h2>
+                            <h3>${student.education?.college || 'Not set'} - ${student.education?.branch || 'Not set'}</h3>
+                            ${fields.map(field => `<p><strong>${field.label}:</strong> ${field.value}</p>`).join('')}
+                        </div>
                     </div>
                 `;
                 profilePopup.classList.add('active');
@@ -732,19 +963,15 @@
 
         window.sendMessage = () => {
             if (!currentStudentId) return;
-            
             const student = studentsData.find(s => s.id === currentStudentId);
             const message = introMessage.value.trim();
-            
             if (!message) return;
-
             const phone = student.personal?.whatsapp || '';
             if (phone) {
-                storeConnection(currentStudentId); // Add this line
+                storeConnection(currentStudentId);
                 const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
                 window.open(whatsappUrl, '_blank');
             }
-            
             closeMessagePopup();
         };
 
