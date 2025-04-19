@@ -193,21 +193,47 @@
             }
         }
 
-        async function fetchCurrentUserProfile() {
-            if (currentUserProfile) return currentUserProfile;
-            try {
-                const snapshot = await get(ref(db, `users/${userId}`));
-                const user = snapshot.exists() ? snapshot.val() : {};
-                currentUserProfile = {
-                    name: user.name || "Unnamed",
-                    profilePic: user.profilePic || "../assets/avatar/1.png"
-                };
-                return currentUserProfile;
-            } catch (error) {
-                console.error('Error fetching current user profile:', error);
-                return { name: "Unnamed", profilePic: "../assets/avatar/1.png" };
-            }
-        }
+
+let professionalData = null;
+
+// Fetch professional data from JSON
+async function fetchProfessionalData() {
+    if (professionalData) return professionalData;
+    try {
+        const response = await fetch('../professional/manualstudentlist.json');
+        if (!response.ok) throw new Error(`Failed to fetch professional data: ${response.statusText}`);
+        professionalData = await response.json();
+        professionalData = professionalData.map((professional, index) => ({
+            ...professional,
+            id: professional.id || `professional_${index}`
+        }));
+        return professionalData;
+    } catch (error) {
+        console.error('Error fetching professional data:', error);
+        return [];
+    }
+}
+        
+// Fetch current user profile from JSON
+async function fetchCurrentUserProfile() {
+    if (currentUserProfile) return currentUserProfile;
+    try {
+        const professionals = await fetchProfessionalData();
+        const user = professionals.find(p => p.id === userId) || {};
+        currentUserProfile = {
+            name: user.personal?.name || "Unnamed",
+            profilePic: user.personal?.profilePic 
+                ? user.personal.profilePic 
+                : user.personal?.linkedin 
+                    ? `https://via.placeholder.com/40?text=${user.personal?.name?.[0] || 'U'}`
+                    : "../assets/avatar/1.png"
+        };
+        return currentUserProfile;
+    } catch (error) {
+        console.error('Error fetching current user profile:', error);
+        return { name: "Unnamed", profilePic: "../assets/avatar/1.png" };
+    }
+}
 
         function confirmAction(action, title, message, actionParams = {}) {
             elements.dialogTitle.textContent = title;
