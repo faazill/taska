@@ -246,7 +246,7 @@ body {
     width: 42%; 
     background: #fff; 
     border-right: 1px solid #e0e0e0; 
-    overflow-y: auto; 
+    overflow: hidden; 
     min-width: 200px; 
     max-width: 600px; 
     display: none; 
@@ -335,7 +335,7 @@ body {
 .messages { 
     height: calc(100% - 120px); 
     padding: 1rem; 
-    overflow-y: auto; 
+    overflow: hidden; 
 }
 
 .date-divider {
