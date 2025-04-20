@@ -97,7 +97,7 @@ body.dark-mode {
 }
 
 .dashboard-content {
-    margin-top: 60px;
+    margin-top: 50px;
     padding: 2rem;
     width: 100%; /* Full width to allow chat-interface to stretch */
 }
