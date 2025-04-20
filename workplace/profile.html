@@ -409,121 +409,138 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const hamburger = document.querySelector('.hamburger');
-            const navMenu = document.querySelector('.nav-menu');
-            hamburger.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-            });
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
-            const userId = localStorage.getItem('userId');
-            if (!userId) {
-                setTimeout(() => {
-                    alert("Please log in or sign up first.");
-                    window.location.href = '../login.html';
-                }, 1000);
-            } else {
-                loadProfileData(userId);
-            }
-        });
+const firebaseConfig = {
+    apiKey: "AIzaSyDZIDlEtaNRxODoFhRw0xF2yYFBqqBexqo",
+    authDomain: "taska-45011.firebaseapp.com",
+    databaseURL: "https://taska-45011-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "taska-45011",
+    storageBucket: "gs://taska-45011.firebasestorage.app",
+    messagingSenderId: "205487498813",
+    appId: "1:205487498813:web:0de2c9eab567482781ec54",
+    measurementId: "G-G0G1F6GQ9B"
+};
 
-        async function loadProfileData(userId) {
-            try {
-                const response = await fetch('../professional/manualstudentlist.json');
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch student data: ${response.statusText}`);
-                }
-                const students = await response.json();
-                const data = students.find(student => student.id === userId);
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const auth = getAuth(app);
 
-                if (data) {
-                    // Profile Picture
-                    const profilePic = data.personal?.profilePic 
-                        ? data.personal.profilePic 
-                        : data.personal?.linkedin 
-                            ? `https://via.placeholder.com/120?text=${data.personal?.name?.[0] || 'U'}` 
-                            : '../assets/avatar/1.jpeg';
-                    document.getElementById('profile-pic').src = profilePic;
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    hamburger.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+    });
 
-                    // Personal Details
-                    const name = data.personal?.name || 'Not set';
-                    document.getElementById('profile-name').textContent = name;
-                    document.getElementById('profile-role').textContent = data.education?.college || '';
-                    document.getElementById('email').textContent = data.personal?.email || 'Not set';
-                    document.getElementById('whatsapp').textContent = data.personal?.whatsapp || 'Not set';
-                    document.getElementById('gender').textContent = data.personal?.gender || 'Not set';
-                    document.getElementById('location').textContent = data.personal?.location || 'Not set';
-                    const linkedin = data.personal?.linkedin || 'Not set';
-                    document.getElementById('linkedin').textContent = linkedin;
-                    document.getElementById('linkedin').href = linkedin.startsWith('http') ? linkedin : '#';
-
-                    // Educational Details
-                    document.getElementById('college').textContent = data.education?.college || 'Not set';
-                    document.getElementById('degree').textContent = data.education?.degree || 'Not set';
-                    document.getElementById('branch').textContent = data.education?.branch || 'Not set';
-                    document.getElementById('year').textContent = data.education?.year || 'Not set';
-
-                    // Skills & Experience
-                    document.getElementById('skills').textContent = data.skills || 'Not set';
-                    document.getElementById('experience').textContent = data.experience || 'Not set';
-
-                    // Profiles
-                    const github = data.profiles?.github;
-                    document.getElementById('github').textContent = github?.username ? `${github.username} (Repos: ${github.details?.repos || 0})` : 'Not set';
-                    const codeforces = data.profiles?.codeforces;
-                    document.getElementById('codeforces').textContent = codeforces?.username ? `${codeforces.username} (Rating: ${codeforces.details?.rating || 'N/A'})` : 'Not set';
-                    const leetcode = data.profiles?.leetcode;
-                    document.getElementById('leetcode').textContent = leetcode?.username ? `${leetcode.username} (Solved: ${leetcode.details?.totalSolved || 0})` : 'Not set';
-
-                    // Availability
-                    document.getElementById('hours').textContent = data.availability?.hours || 'Not set';
-                    document.getElementById('worktime').textContent = data.availability?.worktime || 'Not set';
-                    document.getElementById('remote').textContent = data.availability?.remote || 'Not set';
-                    document.getElementById('duration').textContent = data.availability?.duration || 'Not set';
-
-                    // Portfolio
-                    const portfolioList = document.getElementById('portfolio');
-                    const portfolio = data.portfolio || [];
-                    portfolioList.innerHTML = portfolio.length > 0 
-                        ? portfolio.map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`).join('')
-                        : '<li>Not set</li>';
-
-                    // Preferences
-                    document.getElementById('roles').textContent = data.preferences?.roles || 'Not set';
-                    document.getElementById('why').textContent = data.preferences?.why || 'Not set';
-
-                    // Soft Skills
-                    document.getElementById('communication').textContent = data.softSkills?.communication || 'Not set';
-                    document.getElementById('deadlines').textContent = data.softSkills?.deadlines || 'Not set';
-                } else {
-                    alert("No profile data found. Please update your profile.");
-                    document.getElementById('profile-name').textContent = 'Profile Not Found';
-                    document.getElementById('profile-role').textContent = 'Please update your profile';
-                    document.getElementById('profile-pic').src = '../assets/avatar/1.jpeg';
-                    ['email', 'whatsapp', 'gender', 'location', 'linkedin', 'college', 'degree', 'branch', 'year', 'skills', 'experience', 'github', 'codeforces', 'leetcode', 'hours', 'worktime', 'remote', 'duration', 'roles', 'why', 'communication', 'deadlines'].forEach(id => {
-                        document.getElementById(id).textContent = 'Not set';
-                    });
-                    document.getElementById('linkedin').href = '#';
-                    document.getElementById('portfolio').innerHTML = '<li>Not set</li>';
-                }
-            } catch (error) {
-                alert(`Failed to load profile: ${error.message}`);
-                document.getElementById('profile-name').textContent = 'Error';
-                document.getElementById('profile-role').textContent = 'Failed to load';
-                document.getElementById('profile-pic').src = '../assets/avatar/1.jpeg';
-                ['email', 'whatsapp', 'gender', 'location', 'linkedin', 'college', 'degree', 'branch', 'year', 'skills', 'experience', 'github', 'codeforces', 'leetcode', 'hours', 'worktime', 'remote', 'duration', 'roles', 'why', 'communication', 'deadlines'].forEach(id => {
-                    document.getElementById(id).textContent = 'Not set';
-                });
-                document.getElementById('linkedin').href = '#';
-                document.getElementById('portfolio').innerHTML = '<li>Not set</li>';
-            }
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            loadProfileData(user.uid);
+        } else {
+            setTimeout(() => {
+                alert("Please log in or sign up first.");
+                window.location.href = '../login.html';
+            }, 1000);
         }
+    });
 
-        document.getElementById('logout-btn').addEventListener('click', function(e) {
-            e.preventDefault();
-            localStorage.clear();
+    document.getElementById('logout-btn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            await signOut(auth);
             window.location.href = '../index.html';
+        } catch (error) {
+            console.error("Error signing out:", error);
+            alert("Failed to log out. Please try again.");
+        }
+    });
+});
+
+async function loadProfileData(userId) {
+    try {
+        const snapshot = await get(ref(db, `studentslist/${userId}`));
+        const data = snapshot.val();
+
+        if (data) {
+            // Profile Picture
+            const profileImage = data.personal?.profileImage || '../assets/avatar/1.jpeg';
+            document.getElementById('profile-pic').src = profileImage;
+
+            // Personal Details
+            const name = data.personal?.name || 'Not set';
+            document.getElementById('profile-name').textContent = name;
+            document.getElementById('profile-role').textContent = data.education?.college || 'Student';
+            document.getElementById('email').textContent = data.personal?.email || 'Not set';
+            document.getElementById('whatsapp').textContent = data.personal?.whatsapp || 'Not set';
+            document.getElementById('gender').textContent = data.personal?.gender || 'Not set';
+            document.getElementById('location').textContent = data.personal?.location || 'Not set';
+            const linkedin = data.personal?.linkedin || 'Not set';
+            document.getElementById('linkedin').textContent = linkedin;
+            document.getElementById('linkedin').href = linkedin.startsWith('http') ? linkedin : '#';
+
+            // Educational Details
+            document.getElementById('college').textContent = data.education?.college || 'Not set';
+            document.getElementById('degree').textContent = data.education?.degree || 'Not set';
+            document.getElementById('branch').textContent = data.education?.branch || 'Not set';
+            document.getElementById('year').textContent = data.education?.year || 'Not set';
+
+            // Skills & Experience
+            document.getElementById('skills').textContent = data.skills || 'Not set';
+            document.getElementById('experience').textContent = data.experience || 'Not set';
+
+            // Profiles
+            const github = data.profiles?.github;
+            document.getElementById('github').textContent = github?.username ? `${github.username} (Repos: ${github.details?.repos || 0})` : 'Not set';
+            const codeforces = data.profiles?.codeforces;
+            document.getElementById('codeforces').textContent = codeforces?.username ? `${codeforces.username} (Rating: ${codeforces.details?.rating || 'N/A'})` : 'Not set';
+            const leetcode = data.profiles?.leetcode;
+            document.getElementById('leetcode').textContent = leetcode?.username ? `${leetcode.username} (Solved: ${leetcode.details?.totalSolved || 0})` : 'Not set';
+
+            // Availability
+            document.getElementById('hours').textContent = data.availability?.hours || 'Not set';
+            document.getElementById('worktime').textContent = data.availability?.worktime || 'Not set';
+            document.getElementById('remote').textContent = data.availability?.remote || 'Not set';
+            document.getElementById('duration').textContent = data.availability?.duration || 'Not set';
+
+            // Portfolio
+            const portfolioList = document.getElementById('portfolio');
+            const portfolio = data.portfolio || [];
+            portfolioList.innerHTML = portfolio.length > 0 
+                ? portfolio.map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`).join('')
+                : '<li>Not set</li>';
+
+            // Preferences
+            document.getElementById('roles').textContent = data.preferences?.roles || 'Not set';
+            document.getElementById('why').textContent = data.preferences?.why || 'Not set';
+
+            // Soft Skills
+            document.getElementById('communication').textContent = data.softSkills?.communication || 'Not set';
+            document.getElementById('deadlines').textContent = data.softSkills?.deadlines || 'Not set';
+        } else {
+            alert("No profile data found. Please update your profile.");
+            document.getElementById('profile-name').textContent = 'Profile Not Found';
+            document.getElementById('profile-role').textContent = 'Please update your profile';
+            document.getElementById('profile-pic').src = '../assets/avatar/1.jpeg';
+            ['email', 'whatsapp', 'gender', 'location', 'linkedin', 'college', 'degree', 'branch', 'year', 'skills', 'experience', 'github', 'codeforces', 'leetcode', 'hours', 'worktime', 'remote', 'duration', 'roles', 'why', 'communication', 'deadlines'].forEach(id => {
+                document.getElementById(id).textContent = 'Not set';
+            });
+            document.getElementById('linkedin').href = '#';
+            document.getElementById('portfolio').innerHTML = '<li>Not set</li>';
+        }
+    } catch (error) {
+        alert(`Failed to load profile: ${error.message}`);
+        document.getElementById('profile-name').textContent = 'Error';
+        document.getElementById('profile-role').textContent = 'Failed to load';
+        document.getElementById('profile-pic').src = '../assets/avatar/1.jpeg';
+        ['email', 'whatsapp', 'gender', 'location', 'linkedin', 'college', 'degree', 'branch', 'year', 'skills', 'experience', 'github', 'codeforces', 'leetcode', 'hours', 'worktime', 'remote', 'duration', 'roles', 'why', 'communication', 'deadlines'].forEach(id => {
+            document.getElementById(id).textContent = 'Not set';
         });
+        document.getElementById('linkedin').href = '#';
+        document.getElementById('portfolio').innerHTML = '<li>Not set</li>';
+    }
+}
     </script>
 </body>
 </html>
