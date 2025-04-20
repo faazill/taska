@@ -470,8 +470,8 @@
         }
 
         let cropper;
-        const profileImageInput = document.getElementById('profile-image');
-        const profileImagePreview = document.getElementById('profile-image-preview');
+        const profilePicInput = document.getElementById('profile-image');
+        const profilePicPreview = document.getElementById('profile-image-preview');
         const cropperModal = document.getElementById('cropper-modal');
         const cropperImage = document.getElementById('cropper-image');
         const zoomInBtn = document.querySelector('.cropper-btn.zoom-in');
@@ -480,7 +480,7 @@
         const saveBtn = document.querySelector('.cropper-btn.save');
         const cancelBtn = document.querySelector('.cropper-btn.cancel');
 
-        profileImageInput.addEventListener('change', (e) => {
+        profilePicInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
@@ -509,7 +509,7 @@
         cancelBtn.addEventListener('click', () => {
             cropperModal.style.display = 'none';
             cropper.destroy();
-            profileImageInput.value = '';
+            profilePicInput.value = '';
             document.body.style.overflow = 'auto';
         });
 
@@ -541,12 +541,12 @@
                     const downloadURL = await getDownloadURL(imageRef);
 
                     // Update preview
-                    profileImagePreview.src = downloadURL;
+                    profilePicPreview.src = downloadURL;
 
                     // Store verification data
                     const verificationRef = ref(db, `verification/${userId}`);
                     await push(verificationRef, {
-                        field: 'profileImage',
+                        field: 'profilePic',
                         value: downloadURL,
                         timestamp: Date.now(),
                         status: 'pending'
@@ -554,7 +554,7 @@
 
                     cropperModal.style.display = 'none';
                     cropper.destroy();
-                    profileImageInput.value = '';
+                    profilePicInput.value = '';
                     document.body.style.overflow = 'auto';
                 } catch (error) {
                     alert("Failed to upload image: " + error.message);
@@ -590,7 +590,7 @@
                 document.getElementById('github').value = data.profiles?.github?.username || '';
                 document.getElementById('codeforces').value = data.profiles?.codeforces?.username || '';
                 document.getElementById('leetcode').value = data.profiles?.leetcode?.username || '';
-                profileImagePreview.src = data.personal?.profileImage || '../assets/avatar/1.png';
+                profilePicPreview.src = data.personal?.profilePic || '../assets/avatar/1.png';
                 loadPortfolio(data.portfolio || []);
                 if (data.profiles) {
                     displaySummary('github', data.profiles.github?.details);
@@ -800,7 +800,7 @@
                     whatsapp: document.getElementById('whatsapp').value.trim(),
                     location: document.getElementById('location').value.trim(),
                     about: document.getElementById('about').value.trim(),
-                    profileImage: profileImagePreview.src
+                    profilePic: profilePicPreview.src
                 },
                 education: {
                     college: document.getElementById('college').value.trim(),
@@ -827,8 +827,8 @@
             if (updatedData.personal.about !== (originalData.personal?.about || '')) {
                 changedFields.push({ field: 'personal.about', value: updatedData.personal.about, timestamp: Date.now(), status: 'pending' });
             }
-            if (updatedData.personal.profileImage !== (originalData.personal?.profileImage || '../assets/avatar/1.png')) {
-                changedFields.push({ field: 'personal.profileImage', value: updatedData.personal.profileImage, timestamp: Date.now(), status: 'pending' });
+            if (updatedData.personal.profilePic !== (originalData.personal?.profilePic || '../assets/avatar/1.png')) {
+                changedFields.push({ field: 'personal.profilePic', value: updatedData.personal.profilePic, timestamp: Date.now(), status: 'pending' });
             }
             if (updatedData.education.college !== (originalData.education?.college || '')) {
                 changedFields.push({ field: 'education.college', value: updatedData.education.college, timestamp: Date.now(), status: 'pending' });
