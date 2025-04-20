@@ -565,9 +565,7 @@ async function fetchCurrentUserProfile() {
                             const userName = student.personal?.name || "Unnamed";
                             const profilePic = student.personal?.profilePic 
                                 ? student.personal.profilePic 
-                                : student.personal?.linkedin 
-                                    ? `https://via.placeholder.com/40?text=${userName[0]}`
-                                    : "../assets/avatar/1.png";
+                                :  "../assets/avatar/1.png";
                             const pendingItem = document.createElement('div');
                             pendingItem.className = 'pending-item user-item';
                             pendingItem.dataset.studentId = studentId;
