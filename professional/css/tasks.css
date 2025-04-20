@@ -335,7 +335,7 @@ body {
 .messages { 
     height: calc(100% - 120px); 
     padding: 1rem; 
-    overflow: hidden; 
+    overflow-y: auto; 
 }
 
 .date-divider {
