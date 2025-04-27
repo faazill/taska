@@ -888,7 +888,7 @@ async function aiSearch(query = '') {
                 const isConnected = connectedStudents.has(student.id);
                 return `
                     <div class="student-card">
-                        <img src="${student.personal?.profileImage || '../assets/avatar/1.png'}" alt="Profile Picture" class="profile-pic">
+                        <img src="${student.personal?.profilePic || '../assets/avatar/1.png'}" alt="Profile Picture" class="profile-pic">
                         <div class="card-content">
                             <h3>${student.personal?.name || 'Unnamed'}</h3>
                             <h4>${subheading}<span class="year-badge">${yearLabel}</span></h4>
@@ -1064,7 +1064,7 @@ window.showProfile = (targetUserId) => {
         ].filter(field => field.value && field.value !== 'Not set');
         profileContent.innerHTML = `
             <div class="profile-section">
-                <img src="${student.personal?.profileImage || '../assets/avatar/1.png'}" alt="Profile Picture" class="profile-pic">
+                <img src="${student.personal?.profilePic || '../assets/avatar/1.png'}" alt="Profile Picture" class="profile-pic">
                 <div class="profile-details">
                     <h2>${student.personal?.name || 'Unnamed'}</h2>
                     <h3>${student.education?.college || 'Not set'} - ${student.education?.branch || 'Not set'}</h3>

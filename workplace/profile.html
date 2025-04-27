@@ -321,7 +321,7 @@
 
     <main class="profile-container">
         <div class="profile-header">
-            <img id="profile-pic" class="profile-pic" src="../assets/avatar/1.jpeg" alt="Profile Picture">
+            <img id="profile-pic" class="profile-pic" src="../assets/avatar/1.png" alt="Profile Picture">
             <div class="profile-name" id="profile-name">Loading...</div>
             <div class="profile-role" id="profile-role">Professional</div>
         </div>
@@ -525,7 +525,7 @@ async function loadProfileData(userId) {
             alert("No profile data found. Please update your profile.");
             document.getElementById('profile-name').textContent = 'Profile Not Found';
             document.getElementById('profile-role').textContent = 'Please update your profile';
-            document.getElementById('profile-pic').src = '../assets/avatar/1.jpeg';
+            document.getElementById('profile-pic').src = '../assets/avatar/1.png';
             ['email', 'whatsapp', 'location', 'gender', 'linkedin', 'college', 'degree', 
              'branch', 'year', 'skills', 'experience', 'github', 'codeforces', 'leetcode', 
              'hours', 'worktime', 'remote', 'duration', 'roles', 'why', 'communication', 
@@ -539,7 +539,7 @@ async function loadProfileData(userId) {
         alert(`Failed to load profile: ${error.message}`);
         document.getElementById('profile-name').textContent = 'Error';
         document.getElementById('profile-role').textContent = 'Failed to load';
-        document.getElementById('profile-pic').src = '../assets/avatar/1.jpeg';
+        document.getElementById('profile-pic').src = '../assets/avatar/1.png';
         ['email', 'whatsapp', 'location', 'gender', 'linkedin', 'college', 'degree', 
          'branch', 'year', 'skills', 'experience', 'github', 'codeforces', 'leetcode', 
          'hours', 'worktime', 'remote', 'duration', 'roles', 'why', 'communication', 
