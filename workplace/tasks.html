@@ -147,12 +147,17 @@ async function fetchProfessionalData() {
         const professionalIds = snapshot.exists() 
             ? Object.keys(snapshot.val()).filter(id => snapshot.val()[id].status === "connected" || snapshot.val()[id].status === "pending")
             : [];
+        
         const professionals = [];
+        const professionalsSnapshot = await get(ref(db, 'professionalslist'));
+        const professionalsData = professionalsSnapshot.val() || {};
+        console.log('Raw professionalslist data:', professionalsData); // Debug log
+        
         for (const id of professionalIds) {
-            const profileSnapshot = await get(ref(db, `professionalslist/${id}/personal`));
-            const personal = profileSnapshot.val() || {};
-            const educationSnapshot = await get(ref(db, `professionalslist/${id}/education`));
-            const education = educationSnapshot.val() || {};
+            const professional = professionalsData[id] || {};
+            const personal = professional.personal || {};
+            const education = professional.education || {};
+            console.log(`Professional ID: ${id}, Personal Data:`, personal); // Debug log
             professionals.push({
                 id,
                 personal: {
@@ -162,6 +167,7 @@ async function fetchProfessionalData() {
                 education
             });
         }
+        
         professionalData = professionals;
         return professionalData;
     } catch (error) {
@@ -514,9 +520,9 @@ async function acceptRequest({ professionalId }) {
         const professionalConnectionRef = ref(db, `users/${professionalId}/connections/${userId}`);
         await update(studentConnectionRef, { status: "connected" });
         await update(professionalConnectionRef, { status: "connected" });
-        professionalData = null; // Clear cache to refresh professional data
-        loadConnections();
-        loadPendingRequests();
+        professionalData = null; // Clear cache
+        await loadConnections();
+        await loadPendingRequests();
     } catch (error) {
         console.error("Error accepting request:", error);
         alert("Failed to accept request.");
