@@ -149,12 +149,17 @@ async function fetchProfessionalData() {
             : [];
         const professionals = [];
         for (const id of professionalIds) {
-            const profileSnapshot = await get(ref(db, `users/${id}/profile`));
-            const profile = profileSnapshot.val() || {};
+            const profileSnapshot = await get(ref(db, `professionalslist/${id}/personal`));
+            const personal = profileSnapshot.val() || {};
+            const educationSnapshot = await get(ref(db, `professionalslist/${id}/education`));
+            const education = educationSnapshot.val() || {};
             professionals.push({
                 id,
-                personal: profile.personal || {},
-                education: profile.education || {}
+                personal: {
+                    name: personal.name || "Unnamed",
+                    profilePic: personal.profileImage || "../assets/avatar/1.png"
+                },
+                education
             });
         }
         professionalData = professionals;

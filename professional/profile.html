@@ -264,24 +264,6 @@
             .profile-header h1 { font-size: 1.5rem; }
             .cropper-container { padding: 1rem; }
         }
-        @media (min-width: 769px) {
-            .chat-interface { flex-direction: row; gap: 2rem; padding: 1.8rem; }
-            .sidebar { flex: 1; max-width: 320px; }
-            .chat-area { flex: 2; }
-            .contact { display: flex; align-items: center; }
-            .contact-avatar { 
-                display: flex; 
-                width: 40px; 
-                height: 40px; 
-                border-radius: 50%; 
-                background: #e5e5e5; 
-                color: #333333; 
-                align-items: center; 
-                justify-content: center; 
-                font-size: 1.2rem; 
-                margin-right: 1rem; 
-            }
-        }
     </style>
 </head>
 <body>
@@ -313,24 +295,23 @@
                 <h2>Personal Details</h2>
                 <p><strong>Name:</strong> <span id="name">Loading...</span></p>
                 <p><strong>Email:</strong> <span id="email">Loading...</span></p>
-                <p><strong>Location:</strong> <span id="location">Loading...</span></p>
                 <p><strong>Phone:</strong> <span id="phone">Loading...</span></p>
-                <p><strong>Hobbies:</strong> <span id="hobbies">Loading...</span></p>
+                <p><strong>Location:</strong> <span id="location">Loading...</span></p>
                 <p><strong>Bio:</strong> <span id="bio">Loading...</span></p>
             </div>
 
             <div class="details-grid">
-                <h2>Educational Details</h2>
-                <p><strong>Degree:</strong> <span id="degree">Loading...</span></p>
-                <p><strong>College:</strong> <span id="education">Loading...</span></p>
-                <p><strong>Area of Study:</strong> <span id="study">Loading...</span></p>
+                <h2>Professional Details</h2>
+                <p><strong>Job Role:</strong> <span id="jobRole">Loading...</span></p>
+                <p><strong>Company:</strong> <span id="company">Loading...</span></p>
+                <p><strong>Experience:</strong> <span id="experience">Loading...</span></p>
             </div>
 
             <div class="details-grid">
-                <h2>Professional Details</h2>
-                <p><strong>Profession:</strong> <span id="profession">Loading...</span></p>
-                <p><strong>Company:</strong> <span id="company">Loading...</span></p>
-                <p><strong>Experience:</strong> <span id="experience">Loading...</span></p>
+                <h2>Educational Details</h2>
+                <p><strong>College:</strong> <span id="college">Loading...</span></p>
+                <p><strong>Degree:</strong> <span id="degree">Loading...</span></p>
+                <p><strong>Area of Study:</strong> <span id="areaOfStudy">Loading...</span></p>
             </div>
 
             <div class="profile-actions">
@@ -382,10 +363,8 @@
         const userId = localStorage.getItem('userId');
 
         if (!userId) {
-            setTimeout(() => {
-                alert("Please log in or sign up first.");
-                window.location.href = '../login.html';
-            }, 1000);
+            alert("Please log in or sign up first.");
+            window.location.href = '../login.html';
         } else {
             loadProfileData();
         }
@@ -429,12 +408,13 @@
         rotateBtn.addEventListener('click', () => cropper.rotate(90));
         cancelBtn.addEventListener('click', () => {
             cropperModal.style.display = 'none';
-            cropper.destroy();
+            if (cropper) cropper.destroy();
             profileImageInput.value = '';
             document.body.style.overflow = 'auto';
         });
 
         saveBtn.addEventListener('click', async () => {
+            if (!cropper) return;
             const canvas = cropper.getCroppedCanvas({
                 width: 200,
                 height: 200,
@@ -442,7 +422,6 @@
             });
             canvas.toBlob(async (blob) => {
                 try {
-                    // Convert to WebP
                     const webpBlob = await new Promise((resolve) => {
                         const img = new Image();
                         img.src = canvas.toDataURL('image/webp', 0.8);
@@ -455,35 +434,36 @@
                         };
                     });
 
-                    // Upload to Firebase Storage
                     const storagePath = `profile/${userId}.webp`;
                     const imageRef = storageRef(storage, storagePath);
                     await uploadBytes(imageRef, webpBlob);
                     const downloadURL = await getDownloadURL(imageRef);
 
-                    // Update preview
                     profileImagePreview.src = downloadURL;
 
-                    // Store verification data
                     const verificationRef = ref(database, `verification/${userId}`);
                     await push(verificationRef, {
-                        field: 'profileImage',
+                        field: 'personal.profilePic',
                         value: downloadURL,
                         timestamp: Date.now(),
                         status: 'pending'
                     });
 
-                    // Update profile data
                     const userRef = ref(database, `professionalslist/${userId}`);
                     const snapshot = await get(userRef);
                     if (snapshot.exists()) {
                         const data = snapshot.val();
-                        await set(userRef, { ...data, profileImage: downloadURL });
+                        await set(userRef, {
+                            ...data,
+                            personal: {
+                                ...data.personal,
+                                profilePic: downloadURL
+                            }
+                        });
                     }
 
-                   
                     cropperModal.style.display = 'none';
-                    cropper.destroy();
+                    if (cropper) cropper.destroy();
                     profileImageInput.value = '';
                     document.body.style.overflow = 'auto';
                 } catch (error) {
@@ -506,20 +486,18 @@
                 const snapshot = await get(userRef);
                 if (snapshot.exists()) {
                     const data = snapshot.val();
-                    const name = data.name || 'Not set';
-                    document.getElementById('name').textContent = name;
-                    document.getElementById('email').textContent = data.email || 'Not set';
-                    document.getElementById('location').textContent = data.location || 'Not set';
-                    document.getElementById('phone').textContent = data.phone || 'Not set';
-                    document.getElementById('hobbies').textContent = data.hobbies || 'Not set';
-                    document.getElementById('bio').textContent = data.bio || 'Not set';
-                    document.getElementById('degree').textContent = data.degree || 'Not set';
-                    document.getElementById('education').textContent = data.college || 'Not set';
-                    document.getElementById('study').textContent = data.areaOfStudy || 'Not set';
-                    document.getElementById('profession').textContent = data.jobRole || 'Not set';
-                    document.getElementById('company').textContent = data.company || 'Not set';
-                    document.getElementById('experience').textContent = data.experience ? `${data.experience} Years` : 'Not set';
-                    profileImagePreview.src = data.profileImage || '../assets/avatar/1.png';
+                    document.getElementById('name').textContent = data.personal?.name || 'Not set';
+                    document.getElementById('email').textContent = data.personal?.email || 'Not set';
+                    document.getElementById('phone').textContent = data.personal?.phone || 'Not set';
+                    document.getElementById('location').textContent = data.personal?.location || 'Not set';
+                    document.getElementById('bio').textContent = data.personal?.bio || 'Not set';
+                    document.getElementById('jobRole').textContent = data.professional?.jobRole || 'Not set';
+                    document.getElementById('company').textContent = data.professional?.company || 'Not set';
+                    document.getElementById('experience').textContent = data.professional?.experience || 'Not set';
+                    document.getElementById('college').textContent = data.education?.college || 'Not set';
+                    document.getElementById('degree').textContent = data.education?.degree || 'Not set';
+                    document.getElementById('areaOfStudy').textContent = data.education?.areaOfStudy || 'Not set';
+                    profileImagePreview.src = data.personal?.profilePic || '../assets/avatar/1.png';
                 } else {
                     alert("No profile data found. Please update your profile.");
                 }
