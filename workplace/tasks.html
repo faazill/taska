@@ -88,7 +88,6 @@
     <audio id="message-ding" src="../assets/ding.mp3"></audio>
 
     <script type="module">
-    
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
 import { getDatabase, ref, get, push, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
@@ -142,33 +141,17 @@ const elements = {
 async function fetchProfessionalData() {
     if (professionalData) return professionalData;
     try {
-        const connectionsRef = ref(db, `users/${userId}/connections`);
-        const snapshot = await get(connectionsRef);
-        const professionalIds = snapshot.exists() 
-            ? Object.keys(snapshot.val()).filter(id => snapshot.val()[id].status === "connected" || snapshot.val()[id].status === "pending")
-            : [];
-        
-        const professionals = [];
-        const professionalsSnapshot = await get(ref(db, 'professionalslist'));
-        const professionalsData = professionalsSnapshot.val() || {};
-        console.log('Raw professionalslist data:', professionalsData); // Debug log
-        
-        for (const id of professionalIds) {
-            const professional = professionalsData[id] || {};
-            const personal = professional.personal || {};
-            const education = professional.education || {};
-            console.log(`Professional ID: ${id}, Personal Data:`, personal); // Debug log
-            professionals.push({
-                id,
-                personal: {
-                    name: personal.name || "Unnamed",
-                    profilePic: personal.profilePic || personal.profileImage || "../assets/avatar/1.png"
-                },
-                education
-            });
-        }
-        
-        professionalData = professionals;
+        const snapshot = await get(ref(db, 'professionalslist'));
+        const data = snapshot.val() || {};
+        professionalData = Object.keys(data).map(id => ({
+            id,
+            ...data[id],
+            personal: data[id].personal || {},
+            education: data[id].education || {},
+            skills: data[id].skills || '',
+            profiles: data[id].profiles || {},
+            portfolio: data[id].portfolio || []
+        }));
         return professionalData;
     } catch (error) {
         console.error('Error fetching professional data:', error);
@@ -273,7 +256,7 @@ function setupEventListeners() {
             const professionalId = target.closest('.pending-item').dataset.professionalId;
             confirmAction('acceptRequest', 'Accept Request', 'Are you sure you want to accept this connection request?', { professionalId });
         }
-        if (target.matches('.delete-btn')) {
+        if (target.matches('.delete 붕n')) {
             const professionalId = target.closest('.pending-item').dataset.professionalId;
             confirmAction('deleteRequest', 'Delete Request', 'Are you sure you want to delete this connection request?', { professionalId });
         }
@@ -792,7 +775,7 @@ async function loadChat() {
 async function toggleReaction(messageId, reaction) {
     try {
         const chatId = [userId, selectedProfessionalId].sort().join("+");
-        const messageRef = ref(db, `chats/${chatId}/messages/${messageId}`);
+        const messageRef = ref(db, `chats/${professionalId}/messages/${messageId}`);
         const snapshot = await get(messageRef);
         if (snapshot.exists()) {
             const message = snapshot.val();
@@ -1118,5 +1101,6 @@ window.toggleReaction = toggleReaction;
 init();
 
 </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93b153f5ba4ebd25',t:'MTc0NjQ1OTUzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
