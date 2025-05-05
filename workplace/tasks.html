@@ -157,7 +157,7 @@ async function fetchProfessionalData() {
                 id,
                 personal: {
                     name: personal.name || "Unnamed",
-                    profilePic: personal.profileImage || "../assets/avatar/1.png"
+                    profilePic: personal.profilePic || personal.profileImage || "../assets/avatar/1.png"
                 },
                 education
             });

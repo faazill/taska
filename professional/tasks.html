@@ -202,7 +202,7 @@ async function fetchStudentData() {
 async function fetchCurrentUserProfile() {
     if (currentUserProfile) return currentUserProfile;
     try {
-        const snapshot = await get(ref(db, `users/${userId}/profile`));
+        const snapshot = await get(ref(db, `professionalslist/${userId}`));
         const user = snapshot.val() || {};
         currentUserProfile = {
             name: user.personal?.name || "Unnamed",
@@ -214,6 +214,8 @@ async function fetchCurrentUserProfile() {
         return { name: "Unnamed", profilePic: "../assets/avatar/1.png" };
     }
 }
+
+
 
 function confirmAction(action, title, message, actionParams = {}) {
     elements.dialogTitle.textContent = title;
