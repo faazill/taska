@@ -2912,6 +2912,39 @@ async function submitWork() {
         };
         
         await push(submissionsRef, submission);
+        
+        // Send email notification to employer
+        try {
+            const taskSnapshot = await get(taskRef);
+            if (taskSnapshot.exists()) {
+                const task = taskSnapshot.val();
+                const professionals = await fetchProfessionalData();
+                const employer = professionals.find(p => p.id === task.professionalId);
+                
+                if (employer) {
+                    const employerEmail = employer?.personal?.email || employer?.email;
+                    if (employerEmail) {
+                        await fetch('/api/added-submission.js', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                to: employerEmail,
+                                studentName: currentUser.name,
+                                employerName: employer.personal?.name || 'Employer',
+                                taskTitle: task.title,
+                                submissionCount: Object.keys(uploadedFiles).length
+                            })
+                        });
+                    }
+                }
+            }
+        } catch (emailError) {
+            console.error('Error sending email notification:', emailError);
+            // Don't fail the submission if email fails
+        }
+        
         closeSubmissionModal();
         
         // Refresh the timeline

@@ -2483,6 +2483,39 @@ async function confirmApproval() {
             }
             
             if (taskFound) {
+                // Send email notification to student
+                try {
+                    const studentSnapshot = await get(ref(db, `studentslist/${selectedStudentId}`));
+                    if (studentSnapshot.exists()) {
+                        const student = studentSnapshot.val();
+                        const studentEmail = student?.personal?.email || student?.email;
+                        
+                        if (studentEmail) {
+                            // Get current professional's name
+                            const professionalSnapshot = await get(ref(db, `professionalslist/${userId}`));
+                            const professional = professionalSnapshot.exists() ? professionalSnapshot.val() : {};
+                            const employerName = professional?.personal?.name || 'Employer';
+                            
+                            await fetch('/api/submission-approved.js', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    to: studentEmail,
+                                    studentName: student.personal?.name || 'Student',
+                                    employerName: employerName,
+                                    taskTitle: task.title,
+                                    feedback: feedback || null
+                                })
+                            });
+                        }
+                    }
+                } catch (emailError) {
+                    console.error('Error sending email notification:', emailError);
+                    // Don't fail the approval if email fails
+                }
+                
                 closeApprovalModal();
                 loadWorkflows(); // Refresh the timeline
                 alert('Submission approved successfully!');
