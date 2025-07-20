@@ -105,6 +105,10 @@
             </div>
         </div>
         <div class="chat-area" id="chat-area">
+            <div class="chat-professional-banner">
+                <i class="fas fa-shield-alt"></i>
+                <span>Please maintain professionalism in this chat. Conversations may be reviewed to help ensure a high quality and respectful work environment.</span>
+            </div>
             <div class="chat-header skeleton-loading" id="chat-header">
                 <div class="skeleton-header"></div>
                 <div class="chat-actions">
@@ -464,6 +468,7 @@ async function init() {
             if (user) {
                 userId = user.uid;
                 fetchCurrentUserProfile().then(() => {
+                    updateOnlineStatus();
                     loadConnections();
                     loadPendingRequests();
                     loadCompletedTasks();
@@ -957,7 +962,7 @@ async function loadChatHeader() {
                 </a>
                 <div>
                     <div class="name">${userName}</div>
-                    <div class="title">${userTitle}</div>
+                    <div class="last-seen">Active now</div>
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -975,6 +980,23 @@ async function loadChatHeader() {
                 </button>
             </div>
         `;
+        
+        // Start periodic updates of last seen status
+        startLastSeenUpdates(selectedStudentId);
+        
+        // Set up real-time listener for user status
+        const userStatusRef = ref(db, `userStatus/${selectedStudentId}`);
+        onValue(userStatusRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const statusData = snapshot.val();
+                const lastSeenElement = document.querySelector('.chat-header .last-seen');
+                if (lastSeenElement) {
+                    const lastSeenText = formatLastSeen(statusData.lastSeen);
+                    lastSeenElement.textContent = lastSeenText;
+                    lastSeenElement.style.color = lastSeenText === 'Active now' ? '#4CAF50' : '#6c757d';
+                }
+            }
+        });
     } catch (error) {
         console.error("Error loading chat header:", error);
         elements.chatHeader.innerHTML = `
@@ -984,7 +1006,7 @@ async function loadChatHeader() {
                 </a>
                 <div>
                     <div class="name">Unnamed</div>
-                    <div class="title"></div>
+                    <div class="last-seen">Active now</div>
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -1273,6 +1295,12 @@ async function createMessageElement(msg, currentUser, student, taskTitles, chatI
         : await loadProfileImage(selectedStudentId);
     const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     
+    // Check if this is a message sent by AI agent
+    let isAIAgentMessage = false;
+    if (!isSent && msg.senderId === selectedStudentId && msg.isAIAgent === true) {
+        isAIAgentMessage = true;
+    }
+    
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isSent ? 'sent' : 'received'} ${msg.file ? 'file-message' : ''}`;
     messageDiv.dataset.messageId = msg.id;
@@ -1287,6 +1315,9 @@ async function createMessageElement(msg, currentUser, student, taskTitles, chatI
     if (msg.reactions && msg.reactions[userId]) {
         reactionsHTML = `<span class="reaction">${msg.reactions[userId]}</span>`;
     }
+    
+    // AI Agent label HTML
+    const aiAgentLabel = isAIAgentMessage ? '<div class="ai-agent-label">Agent</div>' : '';
     
     if (msg.file) {
         const fileSize = msg.file.size ? (msg.file.size / 1024).toFixed(2) + ' KB' : 'Unknown size';
@@ -1324,6 +1355,7 @@ async function createMessageElement(msg, currentUser, student, taskTitles, chatI
                     </div>
                 </div>
             </div>
+            ${aiAgentLabel}
         `;
     } else {
         messageDiv.innerHTML = `
@@ -1346,6 +1378,7 @@ async function createMessageElement(msg, currentUser, student, taskTitles, chatI
                     </div>
                 </div>
             </div>
+            ${aiAgentLabel}
         `;
     }
     
@@ -1395,10 +1428,358 @@ async function sendMessage() {
         if (elements.messageDing) {
             elements.messageDing.play().catch(error => console.error("Error playing ding sound:", error));
         }
+        
+        // Check if student has AI agent enabled and trigger response
+        await triggerAIAgentResponse(content, selectedStudentId, chatId);
     } catch (error) {
         console.error("Error sending message:", error);
         alert("Failed to send message.");
     }
+}
+
+// Function to trigger AI agent response
+async function triggerAIAgentResponse(professionalMessage, studentId, chatId) {
+    try {
+        // Check if student has AI agent enabled
+        const agentRef = ref(db, `aiagents/${studentId}/agent`);
+        const agentSnapshot = await get(agentRef);
+        
+        if (!agentSnapshot.exists()) {
+            return; // No AI agent configured
+        }
+        
+        const agentData = agentSnapshot.val();
+        if (!agentData.isEnabled) {
+            return; // AI agent is disabled
+        }
+        
+        // Get student profile data for context (excluding sensitive contact info)
+        const studentRef = ref(db, `studentslist/${studentId}`);
+        const studentSnapshot = await get(studentRef);
+        const studentData = studentSnapshot.exists() ? studentSnapshot.val() : {};
+        
+        // Filter out sensitive contact information
+        const filteredStudentData = {
+            ...studentData,
+            personal: studentData.personal ? {
+                ...studentData.personal,
+                whatsapp: undefined // Remove WhatsApp number
+            } : studentData.personal
+        };
+        
+        // Get all chat history for context
+        const chatRef = ref(db, `chats/${chatId}/messages`);
+        const chatSnapshot = await get(chatRef);
+        const chatHistory = chatSnapshot.exists() ? Object.values(chatSnapshot.val()) : [];
+        
+        // Get all messages sorted by timestamp
+        const allMessages = chatHistory
+            .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        
+        // Get tasks for this connection with timeline and submissions
+        const tasksRef = ref(db, `tasks`);
+        const tasksSnapshot = await get(tasksRef);
+        let connectionTasks = [];
+        let taskTimelines = [];
+        let taskSubmissions = [];
+        
+        if (tasksSnapshot.exists()) {
+            const allTasks = tasksSnapshot.val();
+            connectionTasks = Object.entries(allTasks)
+                .filter(([taskId, task]) => 
+                    task.studentId === studentId && task.professionalId === userId
+                )
+                .map(([taskId, task]) => ({
+                    taskId,
+                    title: task.title,
+                    description: task.description,
+                    deadline: task.deadline,
+                    status: task.status
+                }));
+            
+            // Get task timelines and submissions for each task
+            for (const [taskId, task] of Object.entries(allTasks)) {
+                if (task.studentId === studentId && task.professionalId === userId) {
+                    // Get task timeline
+                    const timelineRef = ref(db, `taskTimeline/${taskId}`);
+                    const timelineSnapshot = await get(timelineRef);
+                    if (timelineSnapshot.exists()) {
+                        taskTimelines.push({
+                            taskId,
+                            timeline: Object.values(timelineSnapshot.val())
+                        });
+                    }
+                    
+                    // Get task submissions
+                    const submissionsRef = ref(db, `taskSubmissions/${taskId}`);
+                    const submissionsSnapshot = await get(submissionsRef);
+                    if (submissionsSnapshot.exists()) {
+                        taskSubmissions.push({
+                            taskId,
+                            submissions: Object.values(submissionsSnapshot.val())
+                        });
+                    }
+                }
+            }
+        }
+        
+        // Prepare enhanced system prompt with tasks context
+        const enhancedSystemPrompt = generateEnhancedSystemPrompt(agentData, filteredStudentData, connectionTasks, taskTimelines, taskSubmissions);
+        
+        // Prepare messages for AI with full chat history
+        const messages = [
+            { role: 'system', content: enhancedSystemPrompt },
+            ...allMessages.map(msg => ({
+                role: msg.senderId === userId ? 'user' : 'assistant',
+                content: msg.content || ''
+            })),
+            { role: 'user', content: professionalMessage }
+        ];
+        
+        // Call OpenAI API
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer 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'
+            },
+            body: JSON.stringify({
+                model: 'gpt-4o-mini',
+                messages: messages,
+                max_tokens: 2000,
+                temperature: 0.3
+            })
+        });
+
+        if (!response.ok) {
+            console.error('AI API request failed:', response.status);
+            return;
+        }
+
+        const data = await response.json();
+        const aiResponse = data.choices[0].message.content;
+        
+        // Send AI response as student
+        const aiMessage = {
+            senderId: studentId,
+            senderName: studentData.personal?.name || "Student",
+            content: aiResponse,
+            timestamp: new Date().toISOString(),
+            read: false,
+            isAIAgent: true
+        };
+        
+        await push(chatRef, aiMessage);
+        
+    } catch (error) {
+        console.error('Error triggering AI agent response:', error);
+    }
+}
+
+// Function to generate enhanced system prompt with tasks context
+function generateEnhancedSystemPrompt(agentData, studentData, connectionTasks, taskTimelines, taskSubmissions) {
+    const skills = studentData.skills || 'General skills';
+    const experience = studentData.workExperience || 'Student experience';
+    const about = studentData.personal?.about || 'Student';
+    
+    let tasksContext = '';
+    if (connectionTasks.length > 0) {
+        tasksContext = '\n\nCurrent Tasks for this Connection:\n';
+        connectionTasks.forEach(task => {
+            const deadline = new Date(task.deadline).toLocaleDateString();
+            tasksContext += `- Task: ${task.title}\n  Description: ${task.description}\n  Deadline: ${deadline}\n  Status: ${task.status}\n\n`;
+        });
+    }
+    
+    // Add task timelines context
+    let timelineContext = '';
+    if (taskTimelines.length > 0) {
+        timelineContext = '\n\nTask Timeline Context:\n';
+        taskTimelines.forEach(({ taskId, timeline }) => {
+            const task = connectionTasks.find(t => t.taskId === taskId);
+            if (task) {
+                timelineContext += `\nTask: ${task.title}\nTimeline Events:\n`;
+                timeline.forEach(event => {
+                    const date = new Date(event.timestamp).toLocaleDateString();
+                    timelineContext += `- ${date}: ${event.type} - ${event.comment || event.description || 'No details'}\n`;
+                });
+            }
+        });
+    }
+    
+    // Add task submissions context
+    let submissionsContext = '';
+    if (taskSubmissions.length > 0) {
+        submissionsContext = '\n\nTask Submissions Context:\n';
+        taskSubmissions.forEach(({ taskId, submissions }) => {
+            const task = connectionTasks.find(t => t.taskId === taskId);
+            if (task) {
+                submissionsContext += `\nTask: ${task.title}\nSubmissions:\n`;
+                submissions.forEach(submission => {
+                    const date = new Date(submission.timestamp).toLocaleDateString();
+                    submissionsContext += `- ${date}: ${submission.comment || 'No comment'} (Status: ${submission.status || 'Pending'})\n`;
+                });
+            }
+        });
+    }
+    
+    const basePrompt = agentData.systemPrompt || generateDefaultSystemPrompt(studentData);
+    
+    return `${basePrompt}${tasksContext}${timelineContext}${submissionsContext}
+
+IMPORTANT CONTEXT:
+- You have access to the complete chat history with this professional
+- You can reference previous conversations and agreements
+- You can discuss ongoing tasks and their progress
+- You have access to task timelines and submission history
+- Use this context to provide more personalized and relevant responses
+- Maintain consistency with previous discussions and commitments
+- Remember to prioritize privacy and only share relevant information when appropriate`;
+}
+
+// Function to update online status
+async function updateOnlineStatus() {
+    if (!userId) return;
+    
+    const userStatusRef = ref(db, `userStatus/${userId}`);
+    const statusData = {
+        isOnline: true,
+        lastSeen: new Date().toISOString(),
+        userType: 'professional'
+    };
+    
+    await set(userStatusRef, statusData);
+    
+    // Set up periodic updates
+    setInterval(async () => {
+        if (document.visibilityState === 'visible') {
+            await update(ref(userStatusRef), {
+                isOnline: true,
+                lastSeen: new Date().toISOString()
+            });
+        }
+    }, 30000); // Update every 30 seconds
+    
+    // Update status when page becomes visible
+    document.addEventListener('visibilitychange', async () => {
+        if (document.visibilityState === 'visible') {
+            await update(ref(userStatusRef), {
+                isOnline: true,
+                lastSeen: new Date().toISOString()
+            });
+        } else {
+            await update(ref(userStatusRef), {
+                isOnline: false,
+                lastSeen: new Date().toISOString()
+            });
+        }
+    });
+    
+    // Update status when page is about to unload
+    window.addEventListener('beforeunload', async () => {
+        await update(ref(userStatusRef), {
+            isOnline: false,
+            lastSeen: new Date().toISOString()
+        });
+    });
+}
+
+// Function to format last seen time
+function formatLastSeen(lastSeenTimestamp) {
+    if (!lastSeenTimestamp) return 'Active now';
+    
+    const now = new Date();
+    const lastSeen = new Date(lastSeenTimestamp);
+    const diffInSeconds = Math.floor((now - lastSeen) / 1000);
+    
+    // Show "Active now" for first 5 minutes (300 seconds)
+    if (diffInSeconds < 300) {
+        return 'Active now';
+    } else if (diffInSeconds < 3600) {
+        const minutes = Math.floor(diffInSeconds / 60);
+        return `Last seen ${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    } else if (diffInSeconds < 86400) {
+        const hours = Math.floor(diffInSeconds / 3600);
+        return `Last seen ${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else {
+        const days = Math.floor(diffInSeconds / 86400);
+        return `Last seen ${days} day${days > 1 ? 's' : ''} ago`;
+    }
+}
+
+// Function to update chat header with last seen
+async function updateChatHeaderWithLastSeen(studentId) {
+    if (!studentId) return;
+    
+    try {
+        const userStatusRef = ref(db, `userStatus/${studentId}`);
+        const statusSnapshot = await get(userStatusRef);
+        
+        const lastSeenElement = document.querySelector('.chat-header .last-seen');
+        if (lastSeenElement) {
+            if (statusSnapshot.exists()) {
+                const statusData = statusSnapshot.val();
+                const lastSeenText = formatLastSeen(statusData.lastSeen);
+                lastSeenElement.textContent = lastSeenText;
+                lastSeenElement.style.color = lastSeenText === 'Active now' ? '#4CAF50' : '#6c757d';
+            } else {
+                lastSeenElement.textContent = 'Active now';
+                lastSeenElement.style.color = '#4CAF50';
+            }
+        }
+    } catch (error) {
+        console.error('Error updating last seen:', error);
+    }
+}
+
+// Function to start periodic updates of last seen status
+function startLastSeenUpdates(studentId) {
+    // Clear any existing interval
+    if (window.lastSeenUpdateInterval) {
+        clearInterval(window.lastSeenUpdateInterval);
+    }
+    
+    // Update immediately
+    updateChatHeaderWithLastSeen(studentId);
+    
+    // Update every 5 minutes (300000 milliseconds)
+    window.lastSeenUpdateInterval = setInterval(() => {
+        updateChatHeaderWithLastSeen(studentId);
+    }, 300000);
+}
+
+// Function to generate default system prompt if none exists
+function generateDefaultSystemPrompt(studentData) {
+    const skills = studentData.skills || 'General skills';
+    const experience = studentData.workExperience || 'Student experience';
+    const about = studentData.personal?.about || 'Student';
+    
+    return `You are a professional freelancer AI assistant representing a student. Make the chat very much concise and don't use text formatting. Ask how many hours they expect to spend on the project and how much they are willing to pay.
+
+Your Profile:
+- Skills & Expertise: ${skills}
+- Experience: ${experience}
+- About: ${about}
+
+When interacting with clients:
+- Be professional yet approachable
+- Ask clarifying questions to understand project requirements
+- Provide detailed, actionable responses
+- Suggest relevant solutions and alternatives
+- Be transparent about rates, timelines, and availability
+- Maintain clear communication throughout the process
+- Follow up on important points and deadlines
+
+PRIVACY & CONTEXT GUIDELINES:
+- You have access to task timeline, submission comments, and profile details of both parties
+- Use this information only when directly relevant to the conversation
+- Prioritize privacy - do not share personal details unless specifically asked and appropriate
+- NEVER share contact information (WhatsApp numbers, phone numbers, etc.) - this data is not available to you
+- Reference task progress and submissions only when discussing project status
+- Keep profile information minimal and professional
+- If asked about platform functionality, features, how to edit tasks, or anything not related to tasks, work, or freelancing services, direct them to visit docs.html for platform-related questions
+
+Always represent your user professionally and help them achieve their business goals while maintaining fair and transparent communication.`;
 }
 
 async function sendFileMessage(file) {

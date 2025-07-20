@@ -200,6 +200,470 @@
             background: #1557b0;
         }
 
+        /* AI Agent Styles */
+        .agent-customization-section {
+            background: #ffffff;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .agent-details {
+            width: 100%;
+            height: 100%;
+            padding: 2rem;
+        }
+
+        .agent-header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #dadce0;
+        }
+
+        .agent-header-info {
+            flex: 1;
+        }
+
+        .agent-header-info h3 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #202124;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .agent-header-info p {
+            color: #5f6368;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .agent-header-toggle {
+            flex-shrink: 0;
+            margin-left: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .agent-header-section {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .agent-header-toggle {
+                margin-left: 0;
+                align-self: flex-start;
+            }
+        }
+
+        .agent-header {
+            margin-bottom: 2rem;
+        }
+
+        .agent-header h3 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #202124;
+            margin-bottom: 0.5rem;
+        }
+
+        .agent-header p {
+            color: #5f6368;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .form-group-enhanced {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group-enhanced label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #202124;
+            font-size: 0.875rem;
+        }
+
+        .form-group-enhanced .form-input,
+        .form-group-enhanced .form-textarea,
+        .form-group-enhanced .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            transition: border-color 0.3s ease;
+            background: #ffffff;
+        }
+
+        .form-group-enhanced .form-input:focus,
+        .form-group-enhanced .form-textarea:focus,
+        .form-group-enhanced .form-select:focus {
+            outline: none;
+            border-color: #1a73e8;
+        }
+
+        .form-group-enhanced .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-actions-enhanced {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-start;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #dadce0;
+        }
+
+        .btn-enhanced {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary-enhanced {
+            background: #1a73e8;
+            color: white;
+            border-color: #1a73e8;
+        }
+
+        .btn-primary-enhanced:hover {
+            background: #1557b0;
+        }
+
+        .btn-secondary-enhanced {
+            background: #ffffff;
+            color: #5f6368;
+        }
+
+        .btn-secondary-enhanced:hover {
+            background: #f8f9fa;
+        }
+
+        .btn-test-enhanced {
+            background: #34a853;
+            color: white;
+            border-color: #34a853;
+        }
+
+        .btn-test-enhanced:hover {
+            background: #2d8f47;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-grid .form-group-enhanced {
+            margin-bottom: 1rem;
+        }
+
+        /* Toggle Switch Styles */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #1a73e8;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions-enhanced {
+                flex-direction: column;
+            }
+            
+            .btn-enhanced {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .form-group-enhanced .form-input,
+            .form-group-enhanced .form-textarea,
+            .form-group-enhanced .form-select {
+                width: 100%;
+                min-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .agent-details {
+                padding: 1rem;
+            }
+            
+            .agent-customization-section {
+                margin: 0;
+                width: 100%;
+            }
+        }
+
+        /* Test Agent Modal Styles */
+        .test-agent-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .test-agent-modal.active {
+            display: flex;
+        }
+
+        .test-agent-content {
+            background: #ffffff;
+            border-radius: 8px;
+            width: 95%;
+            max-width: 900px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid #dadce0;
+            overflow: hidden;
+        }
+
+        .test-agent-header {
+            background: #ffffff;
+            color: #202124;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #dadce0;
+        }
+
+        .test-agent-header h3 {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+
+        .close-test-modal {
+            background: none;
+            border: none;
+            color: #5f6368;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-test-modal:hover {
+            background: #f1f3f4;
+            color: #202124;
+        }
+
+        .test-agent-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .suggestions-section {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #dadce0;
+        }
+
+        .suggestions-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #5f6368;
+            margin-bottom: 0.75rem;
+        }
+
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .suggestion-chip {
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            border-radius: 16px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+            color: #5f6368;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .suggestion-chip:hover {
+            background: #1a73e8;
+            color: white;
+            border-color: #1a73e8;
+        }
+
+        .test-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            min-height: 0;
+        }
+
+        .test-message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        .test-message.user {
+            background: #e3f2fd;
+            color: #1565c0;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .test-message.assistant {
+            background: #f5f5f5;
+            color: #424242;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .test-chat-input-container {
+            border-top: 1px solid #dadce0;
+            padding: 1rem 1.5rem;
+            background: #ffffff;
+        }
+
+        .test-chat-input-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-end;
+        }
+
+        .test-chat-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            resize: none;
+            min-height: 40px;
+            max-height: 100px;
+            transition: border-color 0.3s ease;
+        }
+
+        .test-chat-input:focus {
+            outline: none;
+            border-color: #1a73e8;
+        }
+
+        .test-send-btn {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            min-width: 70px;
+        }
+
+        .test-send-btn:hover {
+            background: #1557b0;
+        }
+
+        .test-send-btn:disabled {
+            background: #dadce0;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .agent-customization-section {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            .form-actions-enhanced {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .btn-enhanced {
+                width: 100%;
+            }
+            
+            .test-agent-content {
+                width: 95%;
+                max-height: 90vh;
+            }
+            
+            .suggestion-chips {
+                justify-content: center;
+            }
+        }
+
         .form-actions {
             display: flex;
             justify-content: center;
@@ -430,6 +894,31 @@
             color: #1a73e8;
             border-bottom: 3px solid #1a73e8;
             background: #f8f9fa;
+        }
+        
+        .tab-badge {
+            background: #ea4335;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            margin-left: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
@@ -1322,6 +1811,7 @@
         <div class="logo"><img src="../assets/logo.png" alt="Taska Logo" style="height:48px;vertical-align:middle;"></div>
         </a>
         <ul class="nav-menu">
+           
             <li><a href="tasks.html">Workplace</a></li>
             <li><a href="profile.html" class="active">Account</a></li>
         </ul>
@@ -1332,6 +1822,7 @@
         <div class="tabs">
             <button class="tab-btn active" id="profile-tab-btn">Profile</button>
             <button class="tab-btn" id="portfolio-tab-btn">Portfolio</button>
+            <button class="tab-btn" id="ai-agent-tab-btn">AI Agent <span class="tab-badge">NEW</span></button>
             <button class="tab-btn" id="settings-tab-btn">Settings</button>
         </div>
         <div id="profile-tab" class="tab-content active" style="padding-bottom: 4.5rem;">
@@ -1576,6 +2067,200 @@
           </div>
         </div>
 
+        <!-- AI Agent Tab Content -->
+        <div id="ai-agent-tab" class="tab-content" style="display:none; padding-bottom: 4.5rem;">
+            <div class="form-container">
+                <div class="agent-customization-section">
+                    <div class="agent-details">
+                        <div class="agent-header-section">
+                            <div class="agent-header-info">
+                                <h3>AI Agent Configuration</h3>
+                                <p>The AI agent will imitate you in the chat section when an employer chats. Make sure it's customized well for your work needs. You can turn on or off the AI agent any time.</p>
+                            </div>
+                            <div class="agent-header-toggle">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="agent-status-toggle">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                    <span id="agent-status-text" style="font-size: 0.875rem; color: #5f6368;">AI Agent is disabled</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group-enhanced">
+                                <label>Your Skills & Expertise</label>
+                                <textarea id="agent-skills" class="form-textarea" placeholder="List your technical skills, tools, and areas of expertise (e.g., React, Python, UI/UX Design, AWS)"></textarea>
+                            </div>
+                            
+                            <div class="form-group-enhanced">
+                                <label>Years of Experience</label>
+                                <select id="agent-experience" class="form-select">
+                                    <option value="">Select experience level</option>
+                                    <option value="0-1">0-1 years (Entry Level)</option>
+                                    <option value="1-3">1-3 years (Junior)</option>
+                                    <option value="3-5">3-5 years (Mid-level)</option>
+                                    <option value="5-8">5-8 years (Senior)</option>
+                                    <option value="8+">8+ years (Expert)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label>Hourly Rate Range</label>
+                            <div class="form-grid">
+                                <div class="form-group-enhanced">
+                                    <input type="number" id="agent-rate-min" class="form-input" placeholder="Minimum rate (₹)" min="0">
+                                </div>
+                                <div class="form-group-enhanced">
+                                    <input type="number" id="agent-rate-max" class="form-input" placeholder="Maximum rate (₹)" min="0">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label>Availability</label>
+                            <select id="agent-availability" class="form-select">
+                                <option value="">Select availability</option>
+                                <option value="full-time">Full-time (40+ hours/week)</option>
+                                <option value="part-time">Part-time (20-30 hours/week)</option>
+                                <option value="flexible">Flexible hours</option>
+                                <option value="weekends">Weekends only</option>
+                                <option value="evenings">Evenings only</option>
+                                <option value="project-based">Project-based</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label>Preferred Project Types</label>
+                            <textarea id="agent-project-types" class="form-textarea" placeholder="What types of projects do you prefer? (e.g., Web development, Mobile apps, Data analysis, Design projects)"></textarea>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label>Communication Style</label>
+                            <select id="agent-communication" class="form-select">
+                                <option value="">Select communication style</option>
+                                <option value="formal">Formal and professional</option>
+                                <option value="friendly">Friendly and approachable</option>
+                                <option value="direct">Direct and concise</option>
+                                <option value="detailed">Detailed and thorough</option>
+                                <option value="casual">Casual and relaxed</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label>Negotiation Flexibility</label>
+                            <select id="agent-negotiation" class="form-select">
+                                <option value="">Select negotiation approach</option>
+                                <option value="flexible">Very flexible - willing to negotiate on price and terms</option>
+                                <option value="moderate">Moderately flexible - some room for negotiation</option>
+                                <option value="firm">Firm on rates - limited negotiation</option>
+                                <option value="case-by-case">Case-by-case basis</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label>When Will You Be Flexible on Negotiations?</label>
+                            <textarea id="agent-negotiation-details" class="form-textarea" placeholder="Explain when you're willing to negotiate: long-term projects, bulk work, interesting projects, specific circumstances, etc."></textarea>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label>Response Time</label>
+                            <select id="agent-response-time" class="form-select">
+                                <option value="">Select response time</option>
+                                <option value="immediate">Immediate (within 1 hour)</option>
+                                <option value="same-day">Same day (within 8 hours)</option>
+                                <option value="24-hours">Within 24 hours</option>
+                                <option value="48-hours">Within 48 hours</option>
+                                <option value="flexible">Flexible based on project</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label>Additional Prompt</label>
+                            <textarea id="agent-additional" class="form-textarea" placeholder="Any additional information about your work style, preferences, or special requirements"></textarea>
+                        </div>
+                        
+                        <div class="form-group-enhanced">
+                            <label>Welcome Message</label>
+                            <textarea id="agent-welcome-message" class="form-textarea" placeholder="Custom welcome message that your AI agent will use when starting conversations with clients"></textarea>
+                        </div>
+                        
+
+                        
+                        <div class="form-group-enhanced">
+                            <button type="button" id="show-system-prompt-btn" style="display:none;" class="btn-enhanced btn-secondary-enhanced">
+                                <i class="fas fa-cog"></i> Advanced Settings
+                            </button>
+                            <div id="system-prompt-container" style="display: none; margin-top: 1rem;">
+                                <label>System Prompt</label>
+                                <textarea id="system-prompt" class="form-textarea" style="min-height: 120px;"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions-enhanced">
+                            <button type="button" id="save-agent-btn" class="btn-enhanced btn-primary-enhanced">
+                                <i class="fas fa-save"></i> Save Agent
+                            </button>
+                            <button type="button" id="test-agent-btn" class="btn-enhanced btn-test-enhanced">
+                                <i class="fas fa-comments"></i> Test Agent
+                            </button>
+                            <button type="button" id="reset-agent-btn" class="btn-enhanced btn-secondary-enhanced">
+                                <i class="fas fa-undo"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Agent Modal -->
+        <div id="test-agent-modal" class="test-agent-modal">
+            <div class="test-agent-content">
+                <div class="test-agent-header">
+                    <h3 id="test-agent-title">Test AI Agent</h3>
+                    <button class="close-test-modal" id="close-test-modal">×</button>
+                </div>
+                
+                <div class="test-agent-body">
+                    <div class="suggestions-section">
+                        <div class="suggestions-title">Try these typical employer questions:</div>
+                        <div class="suggestion-chips">
+                            <div class="suggestion-chip" data-question="What are your technical skills and experience?">Technical skills</div>
+                            <div class="suggestion-chip" data-question="Can you tell me about your previous projects?">Previous projects</div>
+                            <div class="suggestion-chip" data-question="What's your availability and timeline for this project?">Availability</div>
+                            <div class="suggestion-chip" data-question="What's your hourly rate or project budget?">Pricing</div>
+                            <div class="suggestion-chip" data-question="How do you handle project deadlines and communication?">Communication</div>
+                            <div class="suggestion-chip" data-question="Can you provide references or portfolio examples?">References</div>
+                            <div class="suggestion-chip" data-question="What tools and technologies do you prefer to work with?">Tools & tech</div>
+                            <div class="suggestion-chip" data-question="How do you approach problem-solving in projects?">Problem-solving</div>
+                        </div>
+                    </div>
+                    
+                    <div class="test-chat-messages" id="test-chat-messages">
+                        <div class="test-message assistant">
+                            Hello! I'm your AI agent. I'm here to help you test how I would respond to potential client questions. Feel free to ask me anything or try the suggested questions above.
+                        </div>
+                    </div>
+                    
+                    <div class="test-chat-input-container">
+                        <div class="test-chat-input-wrapper">
+                            <textarea 
+                                id="test-chat-input" 
+                                class="test-chat-input" 
+                                placeholder="Type your message here..."
+                                rows="1"
+                            ></textarea>
+                            <button id="test-send-btn" class="test-send-btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="settings-tab" class="tab-content" style="display:none; padding-bottom: 4.5rem;">
             <div class="form-container" style="max-width:400px;margin:0 auto;">
                 <h2 class="section-title" style="text-align: center; margin-bottom: 2rem;">Account Settings</h2>
@@ -1637,6 +2322,13 @@ let currentUserId = null;
 let selectedFile = null;
 let selectedFileType = null;
 
+// AI Agent variables
+let testChatHistory = [];
+let currentTestPrompt = '';
+
+// Default agent configuration
+
+
 document.addEventListener('DOMContentLoaded', () => {
     // Hamburger menu toggle
     const hamburger = document.querySelector('.hamburger');
@@ -1648,37 +2340,60 @@ document.addEventListener('DOMContentLoaded', () => {
     // Tab switching functionality
     const profileTabBtn = document.getElementById('profile-tab-btn');
     const portfolioTabBtn = document.getElementById('portfolio-tab-btn');
+    const aiAgentTabBtn = document.getElementById('ai-agent-tab-btn');
     const settingsTabBtn = document.getElementById('settings-tab-btn');
     const profileTab = document.getElementById('profile-tab');
     const portfolioTab = document.getElementById('portfolio-tab');
+    const aiAgentTab = document.getElementById('ai-agent-tab');
     const settingsTab = document.getElementById('settings-tab');
 
     profileTabBtn.addEventListener('click', () => {
         profileTabBtn.classList.add('active');
         portfolioTabBtn.classList.remove('active');
+        aiAgentTabBtn.classList.remove('active');
         settingsTabBtn.classList.remove('active');
         profileTab.style.display = 'block';
         portfolioTab.style.display = 'none';
+        aiAgentTab.style.display = 'none';
         settingsTab.style.display = 'none';
     });
 
     portfolioTabBtn.addEventListener('click', () => {
         portfolioTabBtn.classList.add('active');
         profileTabBtn.classList.remove('active');
+        aiAgentTabBtn.classList.remove('active');
         settingsTabBtn.classList.remove('active');
         portfolioTab.style.display = 'block';
         profileTab.style.display = 'none';
+        aiAgentTab.style.display = 'none';
         settingsTab.style.display = 'none';
         loadDrivePortfolio();
+    });
+
+    aiAgentTabBtn.addEventListener('click', () => {
+        aiAgentTabBtn.classList.add('active');
+        profileTabBtn.classList.remove('active');
+        portfolioTabBtn.classList.remove('active');
+        settingsTabBtn.classList.remove('active');
+        aiAgentTab.style.display = 'block';
+        profileTab.style.display = 'none';
+        portfolioTab.style.display = 'none';
+        settingsTab.style.display = 'none';
+        loadAIAgentData();
+        
+        // Add event listeners for real-time prompt updates
+        addPromptUpdateListeners();
     });
 
     settingsTabBtn.addEventListener('click', () => {
         settingsTabBtn.classList.add('active');
         profileTabBtn.classList.remove('active');
         portfolioTabBtn.classList.remove('active');
+        aiAgentTabBtn.classList.remove('active');
         settingsTab.style.display = 'block';
         profileTab.style.display = 'none';
         portfolioTab.style.display = 'none';
+        aiAgentTab.style.display = 'none';
     });
 
     // Check authentication state
@@ -1748,6 +2463,77 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }
+
+            // AI Agent event listeners
+            const saveAgentBtn = document.getElementById('save-agent-btn');
+            const resetAgentBtn = document.getElementById('reset-agent-btn');
+            const testAgentBtn = document.getElementById('test-agent-btn');
+            const showSystemPromptBtn = document.getElementById('show-system-prompt-btn');
+            const closeTestModalBtn = document.getElementById('close-test-modal');
+            const testSendBtn = document.getElementById('test-send-btn');
+            const testChatInput = document.getElementById('test-chat-input');
+            
+            if (saveAgentBtn) {
+                saveAgentBtn.addEventListener('click', saveAIAgent);
+            }
+            
+            if (resetAgentBtn) {
+                resetAgentBtn.addEventListener('click', async () => {
+                    await resetAgent();
+                });
+            }
+            
+            if (testAgentBtn) {
+                testAgentBtn.addEventListener('click', openTestAgentModal);
+            }
+            
+            if (showSystemPromptBtn) {
+                showSystemPromptBtn.addEventListener('click', toggleSystemPrompt);
+            }
+            
+            if (closeTestModalBtn) {
+                closeTestModalBtn.addEventListener('click', closeTestAgentModal);
+            }
+            
+            if (testSendBtn) {
+                testSendBtn.addEventListener('click', sendTestMessage);
+            }
+            
+            if (testChatInput) {
+                testChatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendTestMessage();
+                    }
+                });
+                
+                // Auto-resize textarea
+                testChatInput.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+                });
+            }
+            
+            // Add click handlers for suggestion chips
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('suggestion-chip')) {
+                    const question = e.target.getAttribute('data-question');
+                    if (question) {
+                        testChatInput.value = question;
+                        testChatInput.focus();
+                    }
+                }
+            });
+            
+            // Close modal when clicking outside
+            const testAgentModal = document.getElementById('test-agent-modal');
+            if (testAgentModal) {
+                testAgentModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeTestAgentModal();
+                    }
+                });
+            }
         } else {
             setTimeout(() => {
                 alert("Please log in or sign up first.");
@@ -1755,6 +2541,482 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1000);
         }
     });
+
+    // AI Agent Functions
+    // Load AI agent data
+    async function loadAIAgentData() {
+        if (!currentUserId) {
+            console.log('No user ID found');
+            return;
+        }
+
+        try {
+            const agentRef = ref(db, `aiagents/${currentUserId}/agent`);
+            const snapshot = await get(agentRef);
+            
+            if (snapshot.exists()) {
+                const agentData = snapshot.val();
+                
+                // Load all form fields
+                document.getElementById('agent-skills').value = agentData.skills || '';
+                document.getElementById('agent-experience').value = agentData.experience || '';
+                document.getElementById('agent-rate-min').value = agentData.rateMin || '';
+                document.getElementById('agent-rate-max').value = agentData.rateMax || '';
+                document.getElementById('agent-availability').value = agentData.availability || '';
+                document.getElementById('agent-project-types').value = agentData.projectTypes || '';
+                document.getElementById('agent-communication').value = agentData.communication || '';
+                document.getElementById('agent-negotiation').value = agentData.negotiation || '';
+                document.getElementById('agent-negotiation-details').value = agentData.negotiationDetails || '';
+                document.getElementById('agent-response-time').value = agentData.responseTime || '';
+                document.getElementById('agent-additional').value = agentData.additional || '';
+                document.getElementById('agent-welcome-message').value = agentData.welcomeMessage || '';
+                
+                // Load agent status
+                const statusToggle = document.getElementById('agent-status-toggle');
+                if (statusToggle) {
+                    statusToggle.checked = agentData.isEnabled === true; // Default to false if not set
+                    updateAgentStatus();
+                }
+                
+                // Generate prompt from loaded data
+                updateSystemPrompt();
+            } else {
+                // Load default values
+                document.getElementById('agent-skills').value = '';
+                document.getElementById('agent-experience').value = '';
+                document.getElementById('agent-rate-min').value = '';
+                document.getElementById('agent-rate-max').value = '';
+                document.getElementById('agent-availability').value = '';
+                document.getElementById('agent-project-types').value = '';
+                document.getElementById('agent-communication').value = '';
+                document.getElementById('agent-negotiation').value = '';
+                document.getElementById('agent-negotiation-details').value = '';
+                document.getElementById('agent-response-time').value = '';
+                document.getElementById('agent-additional').value = '';
+                document.getElementById('agent-welcome-message').value = '';
+                
+                // Reset agent status
+                const statusToggle = document.getElementById('agent-status-toggle');
+                if (statusToggle) {
+                    statusToggle.checked = false;
+                    updateAgentStatus();
+                }
+                
+                // Generate initial prompt
+                updateSystemPrompt();
+            }
+            
+        } catch (error) {
+            console.error('Error loading AI agent data:', error);
+            // Load default values on error
+            document.getElementById('agent-skills').value = '';
+            document.getElementById('agent-experience').value = '';
+            document.getElementById('agent-rate-min').value = '';
+            document.getElementById('agent-rate-max').value = '';
+            document.getElementById('agent-availability').value = '';
+            document.getElementById('agent-project-types').value = '';
+            document.getElementById('agent-communication').value = '';
+            document.getElementById('agent-negotiation').value = '';
+            document.getElementById('agent-negotiation-details').value = '';
+            document.getElementById('agent-response-time').value = '';
+            document.getElementById('agent-additional').value = '';
+            document.getElementById('agent-welcome-message').value = '';
+            
+            // Reset agent status
+            const statusToggle = document.getElementById('agent-status-toggle');
+            if (statusToggle) {
+                statusToggle.checked = false;
+                await updateAgentStatus();
+            }
+            
+            // Generate initial prompt
+            updateSystemPrompt();
+        }
+    }
+
+    // Generate system prompt from form data
+    function generateSystemPrompt() {
+        const skills = document.getElementById('agent-skills').value.trim();
+        const experience = document.getElementById('agent-experience').value;
+        const rateMin = document.getElementById('agent-rate-min').value;
+        const rateMax = document.getElementById('agent-rate-max').value;
+        const availability = document.getElementById('agent-availability').value;
+        const projectTypes = document.getElementById('agent-project-types').value.trim();
+        const communication = document.getElementById('agent-communication').value;
+        const negotiation = document.getElementById('agent-negotiation').value;
+        const negotiationDetails = document.getElementById('agent-negotiation-details').value.trim();
+        const responseTime = document.getElementById('agent-response-time').value;
+        const additional = document.getElementById('agent-additional').value.trim();
+
+        let prompt = `You are a professional freelancer AI assistant specializing in client communication and project management.Make the chat very much concise and dont use text formatting.Ask how many hours they expect to spend on the project and how much they are willing to pay.
+
+Your Profile:
+- Skills & Expertise: ${skills || 'General freelancing skills'}
+- Experience Level: ${experience || 'Not specified'}
+- Hourly Rate: ${rateMin && rateMax ? `₹${rateMin}-₹${rateMax}/hour` : rateMin ? `₹${rateMin}+/hour` : 'Rate negotiable'}
+- Availability: ${availability || 'Flexible'}
+- Preferred Projects: ${projectTypes || 'Various project types'}
+- Communication Style: ${communication || 'Professional'}
+- Response Time: ${responseTime || 'Within 24 hours'}
+
+Your Approach:
+- Negotiation Style: ${negotiation || 'Professional and fair'}
+${negotiationDetails ? `- Negotiation Flexibility: ${negotiationDetails}` : ''}
+${additional ? `- Additional Notes: ${additional}` : ''}
+
+When interacting with clients:
+- Be professional yet approachable
+- Ask clarifying questions to understand project requirements
+- Provide detailed, actionable responses
+- Suggest relevant solutions and alternatives
+- Be transparent about rates, timelines, and availability
+- Maintain clear communication throughout the process
+- Follow up on important points and deadlines
+
+Always represent your user professionally and help them achieve their business goals while maintaining fair and transparent communication.`;
+
+        return prompt;
+    }
+
+    // Update system prompt in real-time
+    function updateSystemPrompt() {
+        const systemPromptTextarea = document.getElementById('system-prompt');
+        const generatedPrompt = generateSystemPrompt();
+        systemPromptTextarea.value = generatedPrompt;
+    }
+
+    // Add event listeners for real-time prompt updates
+    function addPromptUpdateListeners() {
+        const formFields = [
+            'agent-skills',
+            'agent-experience', 
+            'agent-rate-min',
+            'agent-rate-max',
+            'agent-availability',
+            'agent-project-types',
+            'agent-communication',
+            'agent-negotiation',
+            'agent-negotiation-details',
+            'agent-response-time',
+            'agent-additional',
+            'agent-welcome-message'
+        ];
+
+        formFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                // Update on input/change events
+                field.addEventListener('input', updateSystemPrompt);
+                field.addEventListener('change', updateSystemPrompt);
+            }
+        });
+
+        // Add toggle switch event listener
+        const statusToggle = document.getElementById('agent-status-toggle');
+        if (statusToggle) {
+            statusToggle.addEventListener('change', async () => {
+                await updateAgentStatus();
+            });
+        }
+    }
+
+    // Update agent status display and save to database
+    async function updateAgentStatus() {
+        const toggle = document.getElementById('agent-status-toggle');
+        const statusText = document.getElementById('agent-status-text');
+        
+        if (toggle.checked) {
+            statusText.textContent = 'AI Agent is enabled';
+            statusText.style.color = '#34a853';
+        } else {
+            statusText.textContent = 'AI Agent is disabled';
+            statusText.style.color = '#5f6368';
+        }
+        
+        // Save the status change to database immediately
+        if (currentUserId) {
+            try {
+                const agentRef = ref(db, `aiagents/${currentUserId}/agent`);
+                const snapshot = await get(agentRef);
+                
+                if (snapshot.exists()) {
+                    // Update existing agent data with new status
+                    const agentData = snapshot.val();
+                    agentData.isEnabled = toggle.checked;
+                    agentData.updatedAt = new Date().toISOString();
+                    await set(agentRef, agentData);
+                } else {
+                    // Create new agent data with just the status
+                    const agentData = {
+                        isEnabled: toggle.checked,
+                        updatedAt: new Date().toISOString()
+                    };
+                    await set(agentRef, agentData);
+                }
+                
+                console.log('AI Agent status updated successfully');
+            } catch (error) {
+                console.error('Error updating AI agent status:', error);
+                // Revert the toggle if save failed
+                toggle.checked = !toggle.checked;
+                updateAgentStatus();
+                alert('Failed to update AI agent status. Please try again.');
+            }
+        }
+    }
+
+    // Toggle system prompt visibility
+    function toggleSystemPrompt() {
+        const container = document.getElementById('system-prompt-container');
+        const button = document.getElementById('show-system-prompt-btn');
+        const icon = button.querySelector('i');
+        
+        if (container.style.display === 'none') {
+            container.style.display = 'block';
+            icon.className = 'fas fa-cog fa-spin';
+            button.innerHTML = '<i class="fas fa-cog fa-spin"></i> Advanced Settings';
+        } else {
+            container.style.display = 'none';
+            icon.className = 'fas fa-cog';
+            button.innerHTML = '<i class="fas fa-cog"></i> Advanced Settings';
+        }
+    }
+
+    // Save AI agent to Firebase
+    async function saveAIAgent() {
+        if (!currentUserId) {
+            alert('Please log in to save your AI agent.');
+            return;
+        }
+
+        const systemPrompt = document.getElementById('system-prompt').value.trim();
+
+        try {
+            const saveAgentBtn = document.getElementById('save-agent-btn');
+            saveAgentBtn.disabled = true;
+            saveAgentBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            const agentData = {
+                skills: document.getElementById('agent-skills').value.trim(),
+                experience: document.getElementById('agent-experience').value,
+                rateMin: document.getElementById('agent-rate-min').value,
+                rateMax: document.getElementById('agent-rate-max').value,
+                availability: document.getElementById('agent-availability').value,
+                projectTypes: document.getElementById('agent-project-types').value.trim(),
+                communication: document.getElementById('agent-communication').value,
+                negotiation: document.getElementById('agent-negotiation').value,
+                negotiationDetails: document.getElementById('agent-negotiation-details').value.trim(),
+                responseTime: document.getElementById('agent-response-time').value,
+                additional: document.getElementById('agent-additional').value.trim(),
+                welcomeMessage: document.getElementById('agent-welcome-message').value.trim(),
+                isEnabled: document.getElementById('agent-status-toggle').checked,
+                systemPrompt: systemPrompt,
+                updatedAt: new Date().toISOString()
+            };
+
+            const agentRef = ref(db, `aiagents/${currentUserId}/agent`);
+            await set(agentRef, agentData);
+            
+            alert('AI Agent saved successfully!');
+            
+        } catch (error) {
+            console.error('Error saving AI agent:', error);
+            alert('Failed to save AI agent. Please try again.');
+        } finally {
+            const saveAgentBtn = document.getElementById('save-agent-btn');
+            saveAgentBtn.disabled = false;
+            saveAgentBtn.innerHTML = '<i class="fas fa-save"></i> Save Agent';
+        }
+    }
+
+    // Reset agent to default
+    async function resetAgent() {
+        if (confirm('Are you sure you want to reset your AI agent to default settings? This will clear all your customizations.')) {
+            document.getElementById('agent-skills').value = '';
+            document.getElementById('agent-experience').value = '';
+            document.getElementById('agent-rate-min').value = '';
+            document.getElementById('agent-rate-max').value = '';
+            document.getElementById('agent-availability').value = '';
+            document.getElementById('agent-project-types').value = '';
+            document.getElementById('agent-communication').value = '';
+            document.getElementById('agent-negotiation').value = '';
+            document.getElementById('agent-negotiation-details').value = '';
+            document.getElementById('agent-response-time').value = '';
+            document.getElementById('agent-additional').value = '';
+            document.getElementById('agent-welcome-message').value = '';
+            
+            // Reset agent status
+            const statusToggle = document.getElementById('agent-status-toggle');
+            if (statusToggle) {
+                statusToggle.checked = false;
+                await updateAgentStatus();
+            }
+            
+            // Generate initial prompt
+            updateSystemPrompt();
+            
+            alert('Agent reset to default settings.');
+        }
+    }
+
+    // Open test agent modal
+    function openTestAgentModal() {
+        const systemPrompt = document.getElementById('system-prompt').value.trim();
+        
+        if (!systemPrompt) {
+            alert('Please configure your AI agent first before testing.');
+            return;
+        }
+        
+        // Update modal title
+        document.getElementById('test-agent-title').textContent = 'Test AI Agent';
+        
+        // Set current test prompt
+        currentTestPrompt = systemPrompt;
+        
+        // Reset chat history
+        testChatHistory = [];
+        
+        // Clear chat messages except welcome message
+        const chatMessages = document.getElementById('test-chat-messages');
+        const welcomeMessage = document.getElementById('agent-welcome-message').value.trim();
+        const defaultWelcome = 'Hello! I\'m your AI agent. I\'m here to help you test how I would respond to potential client questions. Feel free to ask me anything or try the suggested questions above.';
+        chatMessages.innerHTML = `<div class="test-message assistant">${welcomeMessage || defaultWelcome}</div>`;
+        
+        // Show modal
+        document.getElementById('test-agent-modal').classList.add('active');
+        
+        // Focus on input
+        setTimeout(() => {
+            document.getElementById('test-chat-input').focus();
+        }, 100);
+    }
+
+    // Close test agent modal
+    function closeTestAgentModal() {
+        document.getElementById('test-agent-modal').classList.remove('active');
+    }
+
+    // Send test message
+    async function sendTestMessage() {
+        const input = document.getElementById('test-chat-input');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        // Add user message to chat
+        addTestMessage('user', message);
+        input.value = '';
+        
+        // Show loading state
+        const loadingMessage = addTestMessage('assistant', '<div class="loading"></div> Thinking...');
+        const sendBtn = document.getElementById('test-send-btn');
+        sendBtn.disabled = true;
+        
+        try {
+            // Prepare messages for API
+            const messages = [
+                { role: 'system', content: currentTestPrompt },
+                ...testChatHistory,
+                { role: 'user', content: message }
+            ];
+
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer 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'
+                },
+                body: JSON.stringify({
+                    model: 'gpt-4o-mini',
+                    messages: messages,
+                    max_tokens: 2000,
+                    temperature: 0.3
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API request failed: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const assistantMessage = data.choices[0].message.content;
+
+            // Remove loading message and add assistant response
+            loadingMessage.remove();
+            addTestMessage('assistant', assistantMessage);
+
+            // Update chat history
+            testChatHistory.push({ role: 'user', content: message });
+            testChatHistory.push({ role: 'assistant', content: assistantMessage });
+
+            // Keep only last 10 messages to manage context
+            if (testChatHistory.length > 10) {
+                testChatHistory = testChatHistory.slice(-10);
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            loadingMessage.remove();
+            addTestMessage('assistant', 'Sorry, I encountered an error. Please try again.');
+        } finally {
+            sendBtn.disabled = false;
+        }
+    }
+
+    // Add test message to chat
+    function addTestMessage(role, content) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `test-message ${role}`;
+        
+        // Convert markdown to HTML for assistant messages
+        if (role === 'assistant') {
+            messageDiv.innerHTML = markdownToHtml(content);
+        } else {
+            messageDiv.innerHTML = content;
+        }
+        
+        const chatMessages = document.getElementById('test-chat-messages');
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return messageDiv;
+    }
+
+    // Simple markdown to HTML converter for test messages
+    function markdownToHtml(text) {
+        return text
+            // Headers
+            .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+            .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+            .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+            // Bold
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/__(.*?)__/g, '<strong>$1</strong>')
+            // Italic
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/_(.*?)_/g, '<em>$1</em>')
+            // Code blocks
+            .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+            .replace(/`([^`]+)`/g, '<code>$1</code>')
+            // Lists
+            .replace(/^\* (.*$)/gim, '<li>$1</li>')
+            .replace(/^- (.*$)/gim, '<li>$1</li>')
+            .replace(/^\d+\. (.*$)/gim, '<li>$1</li>')
+            // Wrap lists in ul/ol
+            .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+            // Paragraphs
+            .replace(/\n\n/g, '</p><p>')
+            .replace(/^(?!<[h|u|o|p|b|pre])(.*$)/gim, '<p>$1</p>')
+            // Clean up empty paragraphs
+            .replace(/<p><\/p>/g, '')
+            .replace(/<p>(<h[1-6]>.*<\/h[1-6]>)<\/p>/g, '$1')
+            .replace(/<p>(<ul>.*<\/ul>)<\/p>/gs, '$1')
+            .replace(/<p>(<pre>.*<\/pre>)<\/p>/gs, '$1')
+            // Blockquotes
+            .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
+            // Line breaks
+            .replace(/\n/g, '<br>');
+    }
 
     // Logout button handler
     document.getElementById('logout-btn').addEventListener('click', async (e) => {
@@ -3614,6 +4876,277 @@ async function loadDrivePortfolio() {
                 localStorage.removeItem('isNewUser');
             }
         });
+
+
+        const defaultAgent = {
+            name: 'Alex',
+            systemPrompt: `You are Alex, a professional AI assistant specializing in client communication and project management.
+
+Your personality:
+- Professional yet friendly
+- Detail-oriented and thorough
+- Proactive in identifying client needs
+- Clear and concise communicator
+
+Your expertise:
+- Project requirements analysis
+- Timeline and budget discussions
+- Technical consultation
+- Client relationship management
+
+When interacting with clients:
+- Ask clarifying questions to understand their needs
+- Provide detailed, actionable responses
+- Suggest relevant solutions and alternatives
+- Maintain a helpful and professional tone
+- Follow up on important points
+
+Always represent your user professionally and help them achieve their business goals.`
+        };
+
+
+
+        // Load AI agent data
+        async function loadAIAgentData() {
+            if (!currentUserId) {
+                console.log('No user ID found');
+                return;
+            }
+
+            try {
+                const agentRef = ref(db, `aiagents/${currentUserId}/agent`);
+                const snapshot = await get(agentRef);
+                
+                const agentName = document.getElementById('agent-name');
+                const systemPrompt = document.getElementById('system-prompt');
+                
+                if (snapshot.exists()) {
+                    const agentData = snapshot.val();
+                    agentName.value = agentData.name || defaultAgent.name;
+                    systemPrompt.value = agentData.systemPrompt || defaultAgent.systemPrompt;
+                } else {
+                    // Load default agent
+                    agentName.value = defaultAgent.name;
+                    systemPrompt.value = defaultAgent.systemPrompt;
+                }
+                
+            } catch (error) {
+                console.error('Error loading AI agent data:', error);
+                // Load default agent on error
+                const agentName = document.getElementById('agent-name');
+                const systemPrompt = document.getElementById('system-prompt');
+                agentName.value = defaultAgent.name;
+                systemPrompt.value = defaultAgent.systemPrompt;
+            }
+        }
+
+        // Save AI agent to Firebase
+        async function saveAIAgent() {
+            if (!currentUserId) {
+                alert('Please log in to save your AI agent.');
+                return;
+            }
+
+            const agentName = document.getElementById('agent-name');
+            const systemPrompt = document.getElementById('system-prompt');
+            
+            const name = agentName.value.trim();
+            const prompt = systemPrompt.value.trim();
+
+            if (!name || !prompt) {
+                alert('Please fill in both agent name and system prompt.');
+                return;
+            }
+
+            try {
+                const saveAgentBtn = document.getElementById('save-agent-btn');
+                saveAgentBtn.disabled = true;
+                saveAgentBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+                const agentData = {
+                    name: name,
+                    systemPrompt: prompt,
+                    updatedAt: new Date().toISOString()
+                };
+
+                const agentRef = ref(db, `aiagents/${currentUserId}/agent`);
+                await set(agentRef, agentData);
+                
+                alert('AI Agent saved successfully!');
+                
+            } catch (error) {
+                console.error('Error saving AI agent:', error);
+                alert('Failed to save AI agent. Please try again.');
+            } finally {
+                const saveAgentBtn = document.getElementById('save-agent-btn');
+                saveAgentBtn.disabled = false;
+                saveAgentBtn.innerHTML = '<i class="fas fa-save"></i> Save Agent';
+            }
+        }
+
+
+
+        // Test Agent Modal Functionality
+
+        // Open test agent modal
+        function openTestAgentModal() {
+            const agentName = document.getElementById('agent-name').value.trim() || 'AI Agent';
+            const systemPrompt = document.getElementById('system-prompt').value.trim();
+            
+            if (!systemPrompt) {
+                alert('Please configure your AI agent first before testing.');
+                return;
+            }
+            
+            // Update modal title with agent name
+            document.getElementById('test-agent-title').textContent = `Test ${agentName}`;
+            
+            // Set current test prompt
+            currentTestPrompt = systemPrompt;
+            
+            // Reset chat history
+            testChatHistory = [];
+            
+            // Clear chat messages except welcome message
+            const chatMessages = document.getElementById('test-chat-messages');
+            chatMessages.innerHTML = '<div class="test-message assistant">Hello! I\'m your AI agent. I\'m here to help you test how I would respond to potential client questions. Feel free to ask me anything or try the suggested questions above!</div>';
+            
+            // Show modal
+            document.getElementById('test-agent-modal').classList.add('active');
+            
+            // Focus on input
+            setTimeout(() => {
+                document.getElementById('test-chat-input').focus();
+            }, 100);
+        }
+
+        // Close test agent modal
+        function closeTestAgentModal() {
+            document.getElementById('test-agent-modal').classList.remove('active');
+        }
+
+        // Send test message
+        async function sendTestMessage() {
+            const input = document.getElementById('test-chat-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message to chat
+            addTestMessage('user', message);
+            input.value = '';
+            
+            // Show loading state
+            const loadingMessage = addTestMessage('assistant', '<div class="loading"></div> Thinking...');
+            const sendBtn = document.getElementById('test-send-btn');
+            sendBtn.disabled = true;
+            
+            try {
+                // Prepare messages for API
+                const messages = [
+                    { role: 'system', content: currentTestPrompt },
+                    ...testChatHistory,
+                    { role: 'user', content: message }
+                ];
+
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer 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'
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o-mini',
+                        messages: messages,
+                        max_tokens: 2000,
+                        temperature: 0.3
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const assistantMessage = data.choices[0].message.content;
+
+                // Remove loading message and add assistant response
+                loadingMessage.remove();
+                addTestMessage('assistant', assistantMessage);
+
+                // Update chat history
+                testChatHistory.push({ role: 'user', content: message });
+                testChatHistory.push({ role: 'assistant', content: assistantMessage });
+
+                // Keep only last 10 messages to manage context
+                if (testChatHistory.length > 10) {
+                    testChatHistory = testChatHistory.slice(-10);
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                loadingMessage.remove();
+                addTestMessage('assistant', 'Sorry, I encountered an error. Please try again.');
+            } finally {
+                sendBtn.disabled = false;
+            }
+        }
+
+        // Add test message to chat
+        function addTestMessage(role, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `test-message ${role}`;
+            
+            // Convert markdown to HTML for assistant messages
+            if (role === 'assistant') {
+                messageDiv.innerHTML = markdownToHtml(content);
+            } else {
+                messageDiv.innerHTML = content;
+            }
+            
+            const chatMessages = document.getElementById('test-chat-messages');
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return messageDiv;
+        }
+
+        // Simple markdown to HTML converter for test messages
+        function markdownToHtml(text) {
+            return text
+                // Headers
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                // Bold
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/__(.*?)__/g, '<strong>$1</strong>')
+                // Italic
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/_(.*?)_/g, '<em>$1</em>')
+                // Code blocks
+                .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                // Lists
+                .replace(/^\* (.*$)/gim, '<li>$1</li>')
+                .replace(/^- (.*$)/gim, '<li>$1</li>')
+                .replace(/^\d+\. (.*$)/gim, '<li>$1</li>')
+                // Wrap lists in ul/ol
+                .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+                // Paragraphs
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/^(?!<[h|u|o|p|b|pre])(.*$)/gim, '<p>$1</p>')
+                // Clean up empty paragraphs
+                .replace(/<p><\/p>/g, '')
+                .replace(/<p>(<h[1-6]>.*<\/h[1-6]>)<\/p>/g, '$1')
+                .replace(/<p>(<ul>.*<\/ul>)<\/p>/gs, '$1')
+                .replace(/<p>(<pre>.*<\/pre>)<\/p>/gs, '$1')
+                // Blockquotes
+                .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
+                // Line breaks
+                .replace(/\n/g, '<br>');
+        }
+
+
     </script>
 </body>
 </html>

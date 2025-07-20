@@ -271,6 +271,29 @@ h3.fashion-minimal {
     position: relative; 
 }
 
+.chat-professional-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chat-professional-banner i {
+    font-size: 0.9rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.chat-professional-banner span {
+    line-height: 1.3;
+    font-weight: 400;
+}
+
 .chat-header { 
     padding: 1rem; 
     border-bottom: 1px solid #e0e0e0; 
@@ -300,6 +323,12 @@ h3.fashion-minimal {
 .chat-header .title { 
     font-size: 0.85rem; 
     color: #6c757d; 
+}
+
+.chat-header .last-seen { 
+    font-size: 0.75rem; 
+    color: #6c757d; 
+    font-weight: 400;
 }
 
 .chat-header .menu {
@@ -372,6 +401,7 @@ h3.fashion-minimal {
 .messages { 
     height: calc(100% - 120px); 
     padding: 1rem; 
+    padding-bottom: 8rem;
     overflow-y: auto; 
 }
 
@@ -503,6 +533,21 @@ h3.fashion-minimal {
     font-style: italic;
 }
 
+/* AI Agent Label Styles */
+.message .ai-agent-label {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    font-size: 0.65rem;
+    color: #1a73e8;
+    font-weight: 500;
+    padding: 0.15rem 0.4rem;
+    background: rgba(26, 115, 232, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(26, 115, 232, 0.2);
+    z-index: 1;
+}
+
 .message .content {
     word-break: break-word;
 }
@@ -547,7 +592,7 @@ h3.fashion-minimal {
     z-index: 100;
 }
 
-.message:hover .reaction-bar {
+.message.sent:hover .reaction-bar {
     display: flex;
     gap: 0.5rem;
 }
@@ -623,6 +668,7 @@ h3.fashion-minimal {
     box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
     position: sticky; 
     bottom: 0;
+    z-index: 10;
 }
 
 .chat-input .input-container {
@@ -3069,6 +3115,7 @@ h3.fashion-minimal {
     .messages {
         height: calc(100vh - 140px);
         padding: 1rem;
+        padding-bottom: 8rem;
         overflow-y: auto;
         background: #f8f9fa;
     }
@@ -3255,6 +3302,7 @@ h3.fashion-minimal {
     .messages {
         height: calc(100vh - 120px);
         padding: 0.75rem;
+        padding-bottom: 8rem;
     }
     
     .chat-input {
@@ -3294,6 +3342,13 @@ h3.fashion-minimal {
     
     .message .message-header .time {
         font-size: 0.7rem;
+    }
+    
+    .message .ai-agent-label {
+        font-size: 0.6rem;
+        padding: 0.1rem 0.3rem;
+        bottom: 0.3rem;
+        right: 0.3rem;
     }
 }
 
