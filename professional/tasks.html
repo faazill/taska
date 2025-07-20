@@ -2464,6 +2464,8 @@ async function confirmApproval() {
         if (tasksSnapshot.exists()) {
             const tasks = tasksSnapshot.val();
             let taskFound = false;
+            let foundTask = null;
+            let foundTaskId = null;
             
             for (const taskId in tasks) {
                 const task = tasks[taskId];
@@ -2478,6 +2480,8 @@ async function confirmApproval() {
                     });
                     
                     taskFound = true;
+                    foundTask = task;
+                    foundTaskId = taskId;
                     break;
                 }
             }
@@ -2504,13 +2508,13 @@ async function confirmApproval() {
                             const professional = professionalSnapshot.exists() ? professionalSnapshot.val() : {};
                             const employerName = professional?.personal?.name || 'Employer';
                             console.log('Employer name:', employerName);
-                            console.log('Task title:', task.title);
+                            console.log('Task title:', foundTask.title);
                             
                             const emailData = {
                                 to: studentEmail,
                                 studentName: student.personal?.name || 'Student',
                                 employerName: employerName,
-                                taskTitle: task.title,
+                                taskTitle: foundTask.title,
                                 feedback: feedback || null
                             };
                             console.log('Email data being sent:', emailData);
@@ -2550,7 +2554,7 @@ async function confirmApproval() {
                                                 <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.07);padding:32px 24px;">
                                                     <h2 style="color:#4CAF50;font-size:1.3rem;margin-bottom:18px;">🎉 Submission Approved!</h2>
                                                     <p style="font-size:1.08rem;color:#222;">Hi ${student.personal?.name || 'Student'},</p>
-                                                    <p style="font-size:1.08rem;color:#222;">Great news! Your submission for the task <b>"${task.title}"</b> has been approved by <b>${employerName}</b> on <b>Taska</b>.</p>
+                                                    <p style="font-size:1.08rem;color:#222;">Great news! Your submission for the task <b>"${foundTask.title}"</b> has been approved by <b>${employerName}</b> on <b>Taska</b>.</p>
                                                     ${feedback ? `
                                                         <div style="background:#f8f9fa;border-left:4px solid #4CAF50;padding:16px;margin:20px 0;border-radius:4px;">
                                                             <h4 style="margin:0 0 8px 0;color:#333;font-size:1rem;">Feedback from ${employerName}:</h4>
