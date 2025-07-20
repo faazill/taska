@@ -1537,11 +1537,10 @@ async function triggerAIAgentResponse(professionalMessage, studentId, chatId) {
         ];
         
         // Call OpenAI API
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        const response = await fetch('/api/ai-tasks', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer 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'
             },
             body: JSON.stringify({
                 model: 'gpt-4o-mini',
