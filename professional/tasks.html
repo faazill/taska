@@ -2485,31 +2485,106 @@ async function confirmApproval() {
             if (taskFound) {
                 // Send email notification to student
                 try {
+                    console.log('Starting email notification process...');
+                    console.log('selectedStudentId:', selectedStudentId);
+                    
                     const studentSnapshot = await get(ref(db, `studentslist/${selectedStudentId}`));
+                    console.log('Student snapshot exists:', studentSnapshot.exists());
+                    
                     if (studentSnapshot.exists()) {
                         const student = studentSnapshot.val();
+                        console.log('Student data:', student);
+                        
                         const studentEmail = student?.personal?.email || student?.email;
+                        console.log('Student email:', studentEmail);
                         
                         if (studentEmail) {
                             // Get current professional's name
                             const professionalSnapshot = await get(ref(db, `professionalslist/${userId}`));
                             const professional = professionalSnapshot.exists() ? professionalSnapshot.val() : {};
                             const employerName = professional?.personal?.name || 'Employer';
+                            console.log('Employer name:', employerName);
+                            console.log('Task title:', task.title);
                             
-                            await fetch('/api/submission-approved.js', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    to: studentEmail,
-                                    studentName: student.personal?.name || 'Student',
-                                    employerName: employerName,
-                                    taskTitle: task.title,
-                                    feedback: feedback || null
-                                })
-                            });
+                            const emailData = {
+                                to: studentEmail,
+                                studentName: student.personal?.name || 'Student',
+                                employerName: employerName,
+                                taskTitle: task.title,
+                                feedback: feedback || null
+                            };
+                            console.log('Email data being sent:', emailData);
+                            
+                            // Try the API endpoint
+                            try {
+                                const response = await fetch('/api/submission-approved.js', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(emailData)
+                                });
+                                
+                                console.log('Email API response status:', response.status);
+                                const responseData = await response.json();
+                                console.log('Email API response:', responseData);
+                                
+                                if (!response.ok) {
+                                    throw new Error(`Email API error: ${responseData.error || 'Unknown error'}`);
+                                }
+                            } catch (apiError) {
+                                console.error('API call failed:', apiError);
+                                
+                                // Fallback: try using the generic email API
+                                try {
+                                    console.log('Trying fallback email API...');
+                                    const fallbackResponse = await fetch('/api/send-email.js', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify({
+                                            to: studentEmail,
+                                            subject: 'Your Submission Has Been Approved!',
+                                            html: `
+                                                <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.07);padding:32px 24px;">
+                                                    <h2 style="color:#4CAF50;font-size:1.3rem;margin-bottom:18px;">🎉 Submission Approved!</h2>
+                                                    <p style="font-size:1.08rem;color:#222;">Hi ${student.personal?.name || 'Student'},</p>
+                                                    <p style="font-size:1.08rem;color:#222;">Great news! Your submission for the task <b>"${task.title}"</b> has been approved by <b>${employerName}</b> on <b>Taska</b>.</p>
+                                                    ${feedback ? `
+                                                        <div style="background:#f8f9fa;border-left:4px solid #4CAF50;padding:16px;margin:20px 0;border-radius:4px;">
+                                                            <h4 style="margin:0 0 8px 0;color:#333;font-size:1rem;">Feedback from ${employerName}:</h4>
+                                                            <p style="margin:0;color:#666;font-size:0.95rem;line-height:1.5;">"${feedback}"</p>
+                                                        </div>
+                                                    ` : ''}
+                                                    <div style="margin:32px 0;text-align:center;">
+                                                        <a href="https://jointaska.com/workplace/tasks.html" style="display:inline-block;padding:12px 28px;background:#4CAF50;color:#fff;border-radius:6px;font-weight:600;text-decoration:none;font-size:1.08rem;">View Task</a>
+                                                    </div>
+                                                    <p style="font-size:1.02rem;color:#333;">Congratulations on completing this task successfully!</p>
+                                                    <p style="font-size:0.95rem;color:#aaa;margin-top:32px;">&copy; 2025 Taska</p>
+                                                </div>
+                                            `,
+                                            type: 'submission-approved'
+                                        })
+                                    });
+                                    
+                                    console.log('Fallback API response status:', fallbackResponse.status);
+                                    const fallbackData = await fallbackResponse.json();
+                                    console.log('Fallback API response:', fallbackData);
+                                    
+                                    if (!fallbackResponse.ok) {
+                                        throw new Error(`Fallback API error: ${fallbackData.error || 'Unknown error'}`);
+                                    }
+                                } catch (fallbackError) {
+                                    console.error('Fallback email API also failed:', fallbackError);
+                                    throw fallbackError;
+                                }
+                            }
+                        } else {
+                            console.log('No student email found');
                         }
+                    } else {
+                        console.log('Student snapshot does not exist');
                     }
                 } catch (emailError) {
                     console.error('Error sending email notification:', emailError);
