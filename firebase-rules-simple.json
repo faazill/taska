@@ -1,46 +1,33 @@
 {
   "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null",
-    
     "studentslist": {
-      ".read": "auth != null",
-      ".write": "auth != null",
       "$studentId": {
         ".read": "auth != null",
-        ".write": "auth != null"
+        ".write": "auth != null && auth.uid == $studentId"
       }
     },
     
     "professionalslist": {
-      ".read": "auth != null",
-      ".write": "auth != null",
       "$professionalId": {
         ".read": "auth != null",
-        ".write": "auth != null"
+        ".write": "auth != null && auth.uid == $professionalId"
       }
     },
     
     "chats": {
-      ".read": "auth != null",
-      ".write": "auth != null",
       "$chatId": {
-        ".read": "auth != null",
-        ".write": "auth != null",
+        ".read": "auth != null && $chatId.contains(auth.uid)",
+        ".write": "auth != null && $chatId.contains(auth.uid)",
         "messages": {
-          ".read": "auth != null",
-          ".write": "auth != null",
           "$messageId": {
-            ".read": "auth != null",
-            ".write": "auth != null"
+            ".read": "auth != null && $chatId.contains(auth.uid)",
+            ".write": "auth != null && $chatId.contains(auth.uid)"
           }
         }
       }
     },
     
     "tasks": {
-      ".read": "auth != null",
-      ".write": "auth != null",
       "$taskId": {
         ".read": "auth != null",
         ".write": "auth != null"
@@ -48,8 +35,6 @@
     },
     
     "invites": {
-      ".read": "auth != null",
-      ".write": "auth != null",
       "$inviteId": {
         ".read": "auth != null",
         ".write": "auth != null"
@@ -57,20 +42,16 @@
     },
     
     "loyalty_students": {
-      ".read": "auth != null",
-      ".write": "auth != null",
       "$studentId": {
         ".read": "auth != null",
-        ".write": "auth != null"
+        ".write": "auth != null && auth.uid == $studentId"
       }
     },
     
     "loyalty_professional": {
-      ".read": "auth != null",
-      ".write": "auth != null",
       "$professionalId": {
         ".read": "auth != null",
-        ".write": "auth != null"
+        ".write": "auth != null && auth.uid == $professionalId"
       }
     },
     
@@ -80,13 +61,13 @@
     },
     
     "system": {
-      ".read": "auth != null",
-      ".write": "auth != null"
+      ".read": "false",
+      ".write": "false"
     },
     
     "analytics": {
-      ".read": "auth != null",
-      ".write": "auth != null"
+      ".read": "false",
+      ".write": "false"
     }
   }
-} 
+}
