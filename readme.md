@@ -1,91 +1,192 @@
-<h1 align="center">
-  <br>
-  Taska 🎓
-  <br>
-</h1>
+# Taska
 
-<h4 align="center">A platform connecting elite student talent with professionals for freelance gigs and part-time jobs.</h4>
+**Taska** is a marketplace that connects high-performing university students with professionals and businesses seeking freelance talent, project contributors, and part-time support.
 
-<p align="center">
-  <a href="#features">Features</a> •
-  <a href="#tech-stack">Tech Stack</a> •
-  <a href="#architecture">Architecture</a> •
-  <a href="#getting-started">Getting Started</a>
-</p>
+The platform enables students to gain practical experience while helping employers access skilled talent for a wide range of tasks and projects.
 
 ---
 
-## 📖 About Taska
+## Overview
 
-Taska is a two-sided marketplace designed to bridge the gap between talented students (from premier institutions like IITs, NITs, and IIITs) and employers looking for high-quality, affordable freelance and part-time work. 
+Taska is designed as a two-sided platform serving:
 
-Whether you are a student looking to build your portfolio and gain real-world experience, or a professional looking for top-tier talent to help with tasks, Taska provides the platform to connect, collaborate, and succeed.
+- **Students** seeking freelance opportunities, internships, and portfolio-building projects.
+- **Professionals and Businesses** looking for capable, affordable talent for short-term and ongoing work.
 
-> **Note:** The live demo is hosted on Vercel at [jointaska.com](https://jointaska.com) (Update link if necessary).
+The platform streamlines discovery, application management, communication, and onboarding through a unified web interface.
 
-## ✨ Features
+---
 
-- **Role-Based Authentication:** Distinct onboarding and dashboards for **Students** and **Professionals**.
-- **AI-Powered Search:** Discover the right talent or the right gig quickly using integrated AI search algorithms.
-- **Automated Email Workflows:** Custom welcome and verification emails powered by the Resend API.
-- **Real-Time Data:** Instant updates on task statuses, applications, and profile changes.
-- **Loyalty Scoring System:** Built-in gamification with loyalty scores for both user types.
-- **Responsive UI:** Custom-built, dynamic interface using modern CSS principles and glassmorphism.
+## Key Features
 
-## 🛠️ Tech Stack
+### Authentication and User Management
+- Secure email/password authentication
+- Separate onboarding flows for students and professionals
+- Role-based access control and dashboards
 
-Taska is built using a lightweight, performant stack optimized for speed and simplicity:
+### Opportunity Marketplace
+- Browse and discover available projects and gigs
+- Submit applications directly through the platform
+- Manage project status and user interactions
 
-- **Frontend:** HTML5, CSS3 (Custom Design System), Vanilla JavaScript (ES6 Modules)
-- **Backend/Database:** [Firebase](https://firebase.google.com/) (Realtime Database)
-- **Authentication:** Firebase Authentication (Email/Password)
-- **Serverless APIs:** [Vercel Functions](https://vercel.com/docs/functions) (Node.js)
-- **Email Service:** [Resend API](https://resend.com/)
-- **Hosting:** Vercel
+### Intelligent Search
+- AI-assisted matching and search capabilities
+- Faster discovery of relevant candidates and opportunities
 
-## 🏗️ Architecture Highlights
+### Automated Communication
+- Email verification workflows
+- Automated onboarding and notification emails
+- Transactional email delivery using Resend
 
-- **Client-Side Rendering:** The application relies on vanilla JavaScript to dynamically manipulate the DOM and handle state based on user interactions and Firebase auth state.
-- **Serverless Endpoints:** Located in the `/api` directory, these Node.js functions securely handle sensitive operations like interacting with the Resend API using environment variables (`process.env.RESEND_API_KEY`) to prevent key exposure on the client.
-- **Firebase Security Rules:** Structured rules (`firebase-rules-simple.json`, `firebase-storage-rules.rules`) ensure that user data is protected and users can only access their respective professional/student databases.
+### Reputation System
+- Loyalty and engagement scoring
+- Performance tracking for platform participants
 
-## 🚀 Getting Started
+### Responsive User Experience
+- Mobile-friendly interface
+- Custom-designed UI built without frontend frameworks
+- Optimized for performance and simplicity
 
-To run this project locally, follow these steps:
+---
+
+## Technology Stack
+
+### Frontend
+- HTML5
+- CSS3
+- Vanilla JavaScript (ES6 Modules)
+
+### Backend Services
+- Firebase Realtime Database
+- Firebase Authentication
+
+### Serverless Infrastructure
+- Vercel Functions (Node.js)
+
+### Communication
+- Resend API
+
+### Hosting
+- Vercel
+
+---
+
+## System Architecture
+
+### Client Layer
+The frontend is built using Vanilla JavaScript and follows a client-side rendering approach. User interactions, authentication state management, and data updates are handled directly within the browser.
+
+### Backend Services
+Firebase provides:
+- User authentication
+- Realtime database functionality
+- Data synchronization
+
+### Serverless Functions
+Sensitive operations are handled through Vercel Serverless Functions, including:
+- Email workflows
+- Secure API integrations
+- Environment variable management
+
+### Security
+Firebase security rules enforce:
+- User-specific data access
+- Role-based permissions
+- Protected database operations
+
+---
+
+## Project Structure
+
+```text
+taska/
+│
+├── api/                  # Serverless functions
+├── css/                  # Stylesheets
+├── js/                   # Frontend logic
+├── assets/               # Images and static assets
+├── firebase-rules/       # Database security rules
+├── vercel.json           # Deployment configuration
+└── README.md
+```
+
+---
+
+## Local Development
 
 ### Prerequisites
 
-- Node.js (for local serverless API testing)
-- A Firebase Project (with Auth and Realtime Database enabled)
-- A Resend API Key
+- Node.js
+- Firebase Project
+- Resend API Key
+- Vercel CLI
 
 ### Installation
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/your-username/taska.git
-   cd taska
-   ```
+Clone the repository:
 
-2. **Configure Firebase:**
-   - Go to your Firebase Console.
-   - Replace the `firebaseConfig` object in `js/firebase-config.js` with your own project's configuration.
+```bash
+git clone https://github.com/your-username/taska.git
+cd taska
+```
 
-3. **Configure Environment Variables:**
-   - Create a `.env` file in the root directory.
-   - Add your Resend API key:
-     ```env
-     RESEND_API_KEY=your_resend_api_key_here
-     ```
+Configure Firebase:
 
-4. **Run the Application locally:**
-   Since this project uses Vercel Serverless Functions, the easiest way to run it locally is using the Vercel CLI.
-   ```bash
-   npm install -g vercel
-   vercel dev
-   ```
-   This will start a local server (usually on `http://localhost:3000`) that serves the static HTML/JS/CSS files while also providing the serverless environment for the `/api` routes.
+Update the Firebase configuration in:
 
-## 📝 License
+```text
+js/firebase-config.js
+```
 
-This project is proprietary and confidential. All rights reserved.
+Add environment variables:
+
+```env
+RESEND_API_KEY=your_api_key
+```
+
+Install Vercel CLI:
+
+```bash
+npm install -g vercel
+```
+
+Run locally:
+
+```bash
+vercel dev
+```
+
+The application will be available locally with both static frontend assets and serverless API routes enabled.
+
+---
+
+## Deployment
+
+Taska is deployed using Vercel.
+
+Production deployment includes:
+
+- Static asset hosting
+- Serverless function execution
+- Environment variable management
+- Automatic CI/CD from GitHub
+
+---
+
+## Future Enhancements
+
+- Integrated messaging system
+- Project milestone management
+- Student verification system
+- Ratings and reviews
+- Payment processing
+- Analytics dashboard
+- Recommendation engine
+
+---
+
+## License
+
+This project is proprietary software.
+
+Unauthorized copying, modification, distribution, or commercial use is prohibited.
